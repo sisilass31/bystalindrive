@@ -1,0 +1,363 @@
+/* Styles */
+
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+:root {
+  --orange: #ef7f09;
+  --orangev2: #e14d10;
+  --white: #f5f5f5;
+  --black: #111111;
+  --grey: #252525;
+  --clear-black: rgba(24, 24, 24, 0.90);
+  --clear-white: rgba(244, 244, 244, 0.5);
+
+  /* gradient */
+  --gradient: linear-gradient(90deg, #ef7f09 0%, #e14d10 100%);
+  --gradientv2: linear-gradient(0deg, #e14d10 0%, #ef7f09 100%);
+}
+
+/************* general *************/
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-weight: 300;
+  font-family: "Poppins", serif;
+}
+
+h1 {
+  font-weight: 400;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+
+.content-background-pattern {
+  background-image: url(../images/background-pattern.png),
+    radial-gradient(circle,
+      rgba(43, 23, 2, 1) 0%,
+      rgba(25, 25, 25, 1) 100%);
+  background-repeat: repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
+  width: 100%;
+  height: calc(100vh - 65px);
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+/* buttons */
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+/* gradient orange */
+
+.gradient-button {
+  color: var(--black);
+  cursor: pointer;
+  background: var(--gradientv2);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  height: 46px;
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.3), 0 -1px 3px rgb(0, 0, 0, 0.2);
+}
+
+.gradient-button:hover {
+  transform: translateY(2px);
+}
+
+/* 3d black */
+
+.button-3d {
+  color: var(--white);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
+  border-radius: 10px;
+  background-color: var(--black);
+  background-image: radial-gradient(76% 151% at 52% -52%, rgba(255, 255, 255, 0.23) 0%, transparent 100%);
+  height: 38px;
+  width: 30%;
+  font-size: 20px;
+}
+
+.button-3d:hover {
+  filter: brightness(1.1);
+}
+
+.button-3d:active {
+  transform: scale(.98);
+}
+
+/* buttons */
+
+/************* general end *************/
+
+/************* navbar end *************/
+
+.navbar-container {
+  height: 65px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 28px;
+  align-items: center;
+}
+
+.logo-container {
+  width: 50px;
+}
+
+.logo-container {
+  display: flex;
+  width: 180px;
+}
+
+.logo-container img {
+  width: 100%;
+}
+
+/************* navbar end *************/
+
+/************* login *************/
+
+.box-shadow-3d {
+  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 0 inset;
+  background-color: #1A1B1D;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.07) 0%, transparent 100%);
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 50%;
+  max-width: 600px;
+  min-width: 325px;
+  background-color: var(--clear-black);
+  /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 -2px 5px rgba(255, 255, 255, 0.1) inset; */
+  border-radius: 15px;
+  padding: 30px;
+  margin: auto;
+}
+
+.title-login {
+  text-align: center;
+}
+
+.title-login h1 {
+  font-size: 28px;
+}
+
+.title-login p {
+  font-size: 14px;
+  color: var(--clear-white);
+  padding-top: 10px;
+}
+
+.title-login p a {
+  color: var(--white);
+  cursor: pointer;
+}
+
+.title-login p a:hover {
+  color: var(--orange);
+}
+
+/* form */
+
+.form-container {
+  padding-top: 22px;
+}
+
+/* input */
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login-form-group i {
+  color: var(--white);
+}
+
+.login-form-group input {
+  background-color: var(--black);
+  border: none;
+  height: 44px;
+  align-items: center;
+  padding: 0 50px;
+  border-radius: 8px;
+  outline: 1px solid var(--clear-white);
+  color: var(--white);
+  width: 100%;
+}
+
+.login-form-group input:focus {
+  outline: 1px solid var(--orange);
+}
+
+/* icon mail / password */
+
+.login-form-group label i {
+  font-size: 18px;
+}
+
+.login-form-group label {
+  display: flex;
+  position: absolute;
+  top: 28%;
+  left: 18px;
+}
+
+/* icon mail / password */
+/* eye */
+
+#togglePassword {
+  cursor: pointer;
+  position: absolute;
+  right: 18px;
+  bottom: 26%;
+}
+
+.login-form-group {
+  position: relative;
+}
+
+/* eye end */
+
+/* input end */
+
+/* form end*/
+
+/* social media */
+
+/* separation w line */
+
+.separation-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.line {
+  height: 1px;
+  background-color: var(--clear-white);
+  width: 30%;
+  border-radius: 10px;
+}
+
+.separation-line h3 {
+  font-size: 16px;
+}
+
+.separation-line {
+  gap: 25px;
+}
+
+/* logo social media */
+
+.logo-social-media-box {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.logo-social-media-box a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* social media end */
+
+/************* login end *************/
+
+/************* responsive *************/
+
+
+/* ≥ 480px — petit mobile paysage */
+@media (max-width: 480px) {
+
+  /* general */
+  .content-background-pattern {
+    padding: 10px;
+  }
+
+  .gradient-button {
+    height: 40px;
+  }
+
+  /* login */
+  .login-container {
+    margin: 0;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .login-form-group input {
+    height: 38px;
+  }
+}
+
+/* ≥ 576px — petit mobile grand écran */
+@media (max-width: 576px) {}
+
+/* ≥ 768px — tablette portrait */
+@media (max-width: 768px) {}
+
+/* ≥ 992px — tablette paysage / petit laptop */
+@media (max-width: 992px) {
+
+  /* login */
+  .title-login h1 {
+    font-size: 22px;
+  }
+
+  .title-login {
+    text-align: start;
+  }
+
+  .line {
+    width: 15%;
+  }
+
+  .separation-line {
+    gap: 10px;
+  }
+}
+
+/* ≥ 1200px — laptop standard */
+@media (max-width: 1200px) {}
+
+/* ≥ 1400px — grand écran */
+@media (max-width: 1400px) {}
+
+/************* responsive end *************/
