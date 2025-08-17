@@ -1,0 +1,71 @@
+<!-- Gestion des événements (admin) -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-école By Stalindrive</title>
+    <!-- css -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- icon -->
+    <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar-container">
+                <div class="logo-container">
+                    <a href="../index.html">
+                        <img src="../../assets/images/bystalindrive.png" alt="Bystalindrive logo">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-background-pattern">
+            <div class="crud-sessions">
+                <div class="planification-container container box-shadow-3d">
+                    <div class="title">
+                        <h1><i class='bxr  bx-calendar-detail'></i> Planifier une séance de conduite</h1>
+                    </div>
+                    <form action="#" class="form-container">
+                        <!-- email -->
+                        <div class="form-group">
+
+                            <label for="email">
+                                <p>Nom de l’élève</p>
+                                <input type="search" id="student" name="student" placeholder="Élève" required>
+                                <i class='bxr  bx-search-alt' id="searchIcon"></i>
+                        </div>
+
+                        <!-- mot de passe -->
+                        <div class="form-group">
+                            <label for="password">
+                            </label>
+                            <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+                            <i class='bxr  bx-eye-slash' id="togglePassword"></i>
+                        </div>
+
+                        <button type="submit" class="gradient-button">Se connecter</button>
+                    </form>
+                </div>
+                <div class="cards-sessions-container container box-shadow-3d">
+                    <div class="title">
+                        <h1><i class='bxr  bx-calendar-event'></i>Prochaines séances</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="../../assets/js/script.js"></script>
+</body>
+
+</html>
