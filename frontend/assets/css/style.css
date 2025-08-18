@@ -15,7 +15,7 @@
   --white: #f5f5f5;
   --black: #111111;
   --grey: #252525;
-  --clear-black: rgba(24, 24, 24, 0.90);
+  --clear-black: rgba(24, 24, 24, 0.95);
   --clear-white: rgba(244, 244, 244, 0.5);
 
   /* gradient */
@@ -58,7 +58,8 @@ h6 {
   background-position: center, center;
   background-attachment: fixed, fixed;
   width: 100%;
-  height: calc(100dvh - 65px);
+  /* height: calc(100dvh - 65px); */
+  height: fit-content;
   padding: 50px;
   display: flex;
   flex-direction: column;
@@ -69,6 +70,31 @@ h6 {
 
 a {
   text-decoration: none;
+}
+
+.w-fc {
+  width: fit-content;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.pt-20 {
+  padding-top: 20px !important;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: var(--clear-black);
+  border-radius: 15px;
+  padding: 30px;
 }
 
 /* buttons */
@@ -120,7 +146,9 @@ button {
   transform: scale(.98);
 }
 
-/* buttons */
+/* buttons end */
+
+/* utilities */
 
 .gradient-text {
   background-image: linear-gradient(180deg, #ef7f09, #e75617);
@@ -130,6 +158,23 @@ button {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
+.box-shadow-3d {
+  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 0 inset;
+}
+
+.card-bc-p20-br-15 {
+  background-color: var(--black);
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.clear-white {
+  color: var(--clear-white);
+}
+
+
+/* utilities end */
 
 /************* GENERAL END *************/
 
@@ -156,11 +201,7 @@ button {
 
 /************* LOGIN *************/
 
-.box-shadow-3d {
-  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 0 inset;
-  background-color: #1A1B1D;
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.07) 0%, transparent 100%);
-}
+
 
 .login-container {
   width: 50%;
@@ -169,22 +210,12 @@ button {
   margin: auto;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  background-color: var(--clear-black);
-  border-radius: 15px;
-  padding: 30px;
-}
-
 .title h1 {
   font-size: 28px;
 }
 
 .title p {
   font-size: 16px;
-  color: var(--clear-white);
   padding-top: 10px;
 }
 
@@ -207,11 +238,11 @@ button {
   gap: 22px;
 }
 
-.form-group i {
+.form-group-w-icon i {
   color: var(--white);
 }
 
-.form-group input {
+.form-group-w-icon input {
   background-color: var(--black);
   border: none;
   height: 38px;
@@ -224,17 +255,17 @@ button {
   font-size: 16px;
 }
 
-.form-group input:focus {
+.form-group-w-icon input:focus {
   outline: 1px solid var(--orange);
 }
 
 /* icon mail / password */
 
-.form-group .icon-input {
+.form-group-w-icon .icon-input {
   font-size: 18px;
 }
 
-.form-group .icon-input {
+.form-group-w-icon .icon-input {
   display: flex;
   position: absolute;
   top: 28%;
@@ -251,7 +282,7 @@ button {
   bottom: 26%;
 }
 
-.form-group {
+.form-group-w-icon {
   position: relative;
 }
 
@@ -291,7 +322,6 @@ button {
 .logo-social-media-box {
   display: flex;
   justify-content: space-between;
-  padding-top: 20px;
 }
 
 .logo-social-media-box a {
@@ -304,6 +334,116 @@ button {
 
 /************* LOGIN END *************/
 
+/************* ESPACE CLIENT *************/
+
+.espace-client-container {
+  display: flex;
+  gap: 25px;
+  justify-content: space-between;
+}
+
+.espace-client-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sub-title i {
+  padding-right: 6px;
+}
+
+/* calendrier */
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--black);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.calendar .header-calender {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar .header-calender h2 {
+  font-size: 18px;
+}
+
+.calendar .header-calender button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.calendar .days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  height: 100%;
+}
+
+.calendar .day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.calendar .day:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar .day.active {
+  background: var(--gradientv2);
+  color: var(--black);
+  font-weight: 500;
+}
+
+.calendar .weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 12px;
+  color: var(--clear-white);
+}
+
+/* calendrier */
+
+
+.contact-espace-client {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact-espace-client div {
+  width: 28%;
+}
+
+.sessions-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.gestion-sessions {
+  flex-direction: column;
+}
+
+.text p {
+  padding-top: 8px;
+}
+
+/************* ESPACE CLIENT END *************/
 /************* ADMIN *************/
 
 .crud-sessions {
@@ -311,18 +451,84 @@ button {
   flex-direction: column;
   width: 100%;
   text-align: start;
+  box-sizing: border-box;
 }
 
 /* searchbar */
 
-#searchIcon {
-  cursor: pointer;
-  position: absolute;
-  right: 18px;
-  bottom: 26%;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
 }
 
-/* searchbar end */
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* évite que ça s’étale trop en desktop */
+}
+
+.form-group label {
+  font-size: 16px;
+  color: var(--white);
+}
+
+/* champs */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0 12px;
+  height: 38px;
+  border-radius: 8px;
+  border: none;
+  background: var(--black);
+  outline: 1px solid var(--clear-white);
+  color: var(--white);
+  font-size: 0.95rem;
+  -webkit-appearance: none;
+  /* compatibilité iOS */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: 1px solid var(--orange);
+}
+
+/* groupe heures */
+.time-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  /* mobile friendly */
+}
+
+.time-group div {
+  flex: 1;
+  min-width: 120px;
+  /* évite de trop compresser sur mobile */
+}
+
+.button-create {
+  display: flex;
+  justify-content: end;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: url("data:image/svg+xml;utf8,<svg fill='orange' height='24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center;
+  background-color: #111;
+  /* ton fond */
+  padding-right: 30px;
+  border: 1px solid orange;
+  color: white;
+}
 
 /************* ADMIN END *************/
 
@@ -354,6 +560,16 @@ button {
 
 /************* RESPONSIVE *************/
 
+@media (max-width: 380px) {
+
+  .calendar .days {
+    gap: 8px;
+  }
+
+  .calendar {
+    gap: 12px;
+  }
+}
 
 /* ≥ 480px — petit mobile paysage */
 @media (max-width: 480px) {
@@ -405,7 +621,27 @@ button {
 }
 
 /* ≥ 768px — tablette portrait */
-@media (max-width: 768px) {}
+@media (max-width: 768px) {
+  .time-group {
+    flex-direction: column;
+  }
+
+  .title h1 {
+    font-size: 18px;
+  }
+
+  .form-group-w-icon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .w-fc {
+    width: 100%;
+
+  }
+}
 
 /* ≥ 992px — tablette paysage / petit laptop */
 @media (max-width: 992px) {
@@ -426,6 +662,38 @@ button {
   .separation-line {
     gap: 10px;
   }
+}
+
+/* ≥ 992px — tablette paysage / petit laptop */
+@media (max-width: 1050px) {
+
+  /* espace client */
+  .espace-client-container {
+    flex-direction: column;
+  }
+
+  .espace-client-container .w-50 {
+    width: 100% !important;
+  }
+
+  .social-espace-client {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contact-espace-client.contact-espace-client div {
+    width: 100%;
+  }
+
+  .sub-title h3 {
+    font-size: 18px;
+  }
+
+  .text p {
+    font-size: 14px;
+  }
+
+  /* espace client */
 }
 
 /* ≥ 1200px — laptop standard */

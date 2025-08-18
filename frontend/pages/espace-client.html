@@ -1,1 +1,117 @@
-<!-- Liste des événements pour l'élève -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-école By Stalindrive</title>
+    <!-- css -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- icon -->
+    <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar-container">
+                <div class="logo-container">
+                    <a href="../index.html">
+                        <img src="../assets/images/bystalindrive.png" alt="Bystalindrive logo">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-background-pattern">
+            <div class="container box-shadow-3d w-100">
+                <div class="espace-client-container">
+                    <div class="espace-client-content w-50">
+                        <div class="sub-title">
+                            <h3><i class='bxr  bx-calendar-detail'></i>Calendrier</h3>
+                        </div>
+                        <div class="calendar box-shadow-3d">
+                            <div class="header-calender">
+                                <button id="prev"><i class='bxr  bx-chevron-left'></i></button>
+                                <h2 id="monthYear">September 2021</h2>
+                                <button id="next"><i class='bxr  bx-chevron-right'></i></button>
+                            </div>
+                            <div class="weekdays">
+                                <div>LUN</div>
+                                <div>MAR</div>
+                                <div>MER</div>
+                                <div>JEU</div>
+                                <div>VEN</div>
+                                <div>SAM</div>
+                                <div>DIM</div>
+                            </div>
+                            <div class="days" id="days"></div>
+                        </div>
+                    </div>
+                    <div class="sessions-container w-50">
+                        <div class="espace-client-content next-sessions">
+                            <div class="sub-title">
+                                <h3><i class='bxr  bx-car'></i> Prochaines séances</h3>
+                            </div>
+                            <div class="card-bc-p20-br-15 formulaire box-shadow-3d">
+                                <div class="form-group">
+                                    <label>Date de la séance</label>
+                                    <input type="text" value="18/08/2025" readonly>
+                                </div>
+
+                                <div class="time-group">
+                                    <div class="form-group">
+                                        <label>Heure de début</label>
+                                        <input type="text" value="14:00" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Heure de fin</label>
+                                        <input type="text" value="15:30" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="espace-client-content gestion-sessions">
+                            <div class="sub-title">
+                                <h3><i class='bxr  bx-contact-book'></i> Reporter ou annuler une séance</h3>
+                            </div>
+                            <div class="text box-shadow-3d card-bc-p20-br-15">
+                                <h4>Une organisation simple et flexible</h4>
+                                <p class="clear-white">Un imprévu ? Besoin de reporter ou d’annuler une séance ? Pas de souci, il suffit de prévenir au moins 48h à l’avance par message.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line w-100"></div>
+                <div class="contact-espace-client social-espace-client">
+                    <div class="logo-social-media-box">
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/stalindrive/?hl=fr" target="_blank" class="button-3d">
+                            <i class="bx bxl-instagram"></i>
+                        </a>
+                        <!-- TikTok -->
+                        <a href="https://www.tiktok.com/@bystalindrive" target="_blank" class="button-3d">
+                            <i class="bx bxl-tiktok"></i>
+                        </a>
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/stalindrive75/?locale=fr_FR" target="_blank"
+                            class="button-3d">
+                            <i class="bx bxl-facebook"></i>
+                        </a>
+                    </div>
+                    <a href="../index.html" class="gradient-button">Contactez-nous</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="../assets/js/script.js"></script>
+</body>
+
+</html>

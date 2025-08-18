@@ -1,0 +1,107 @@
+<!-- Gestion des événements (admin) -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-école By Stalindrive</title>
+    <!-- css -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- Boxicons (icônes) -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar-container">
+                <div class="logo-container">
+                    <a href="../index.html">
+                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-background-pattern">
+            <div class="crud-sessions">
+                <div class="planification-container container box-shadow-3d">
+                    <div class="title">
+                        <h1><i class='bx bx-calendar-detail'></i> Planifier une séance de conduite</h1>
+                    </div>
+
+                    <form class="formulaire" autocomplete="off">
+                        <!-- Nom élève -->
+                        <div class="form-group">
+                            <label for="eleve">Nom de l'élève</label>
+                            <input list="eleves" id="eleve" name="eleve" placeholder="Tapez un nom ou prénom..."
+                                aria-label="Nom élève">
+                        </div>
+
+                        <datalist id="eleves">
+                            <option value="Amin Lassar">
+                            <option value="Samira Lassar">
+                            <option value="Samir Lassar">
+                            <option value="Asmae Lassar">
+                            <option value="Jean Dupont">
+                            <option value="Marie Lefèvre">
+                            <option value="Kwame Mensah">
+                            <option value="Sofia Rossi">
+                            <option value="Lucas Moreau">
+                            <option value="Aisha Diallo">
+                            <option value="Takeshi Nakamura">
+                            <option value="Emily Johnson">
+                            <option value="Carlos Hernández">
+                            <option value="Fatou Ndiaye">
+                            <option value="David Cohen">
+                            <option value="Elena Petrova">
+                            <option value="Jonas Müller">
+                            <option value="Priya Sharma">
+                            <option value="André Da Silva">
+                            <option value="Mei Lin">
+                            <option value="Thomas Brown">
+                            <option value="Chloe Martin">
+                            <option value="Omar Al-Farouqi">
+                            <option value="Giulia Bianchi">
+                        </datalist>
+
+                        <div class="time-group">
+                            <!-- Date -->
+                            <div class="form-group">
+                                <label for="date">Date de la séance</label>
+                                <input type="date" id="date" name="date" required aria-label="Date séance">
+                            </div>
+                            <!-- Heures -->
+                            <div class="form-group">
+                                <label for="start">Heure de début</label>
+                                <input type="time" id="start" name="start" required aria-label="Heure début">
+                            </div>
+                            <div class="form-group">
+                                <label for="end">Heure de fin</label>
+                                <input type="time" id="end" name="end" required aria-label="Heure fin">
+                            </div>
+                        </div>
+
+                        <!-- Bouton -->
+                        <div class="button-create">
+                            <button type="submit" class="gradient-button w-fc">Création de la séance</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-bc-p20-br-15s-sessions-container container box-shadow-3d">
+                    <div class="title">
+                        <h1><i class='bxr  bx-calendar-event'></i>Prochaines séances</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="../../assets/js/script.js"></script>
+</body>
+
+</html>
