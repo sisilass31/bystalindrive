@@ -110,7 +110,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 18px;
+  padding: 0 26px;
   color: var(--black);
   cursor: pointer;
   background: var(--gradientv2);
@@ -122,12 +122,14 @@ button {
 }
 
 .gradient-button:hover {
+  filter: brightness(1.2);
   transform: translateY(2px);
 }
 
 /* 3d black */
 
 .button-3d {
+  cursor: pointer;
   color: var(--white);
   box-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
   border-radius: 10px;
@@ -140,6 +142,7 @@ button {
 
 .button-3d:hover {
   filter: brightness(1.1);
+  transform: translateY(2px);
 }
 
 .button-3d:active {
@@ -173,6 +176,9 @@ button {
   color: var(--clear-white);
 }
 
+.column {
+  flex-direction: column;
+}
 
 /* utilities end */
 
@@ -211,6 +217,9 @@ button {
 }
 
 .title h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 28px;
 }
 
@@ -450,8 +459,7 @@ button {
   display: flex;
   flex-direction: column;
   width: 100%;
-  text-align: start;
-  box-sizing: border-box;
+  gap: 18px;
 }
 
 /* searchbar */
@@ -530,6 +538,45 @@ select {
   color: white;
 }
 
+/* cards admin */
+
+/* .cards-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}*/
+
+/* max-width: 420px;*/
+
+
+.card-admin:hover {
+  transform: scale(1.02);
+}
+
+.hours {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.actions-admin {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.actions-admin button {
+  width: 100%;
+  font-size: 16px;
+}
+
+.time-group.column {
+  gap: 0px !important;
+}
+
 /************* ADMIN END *************/
 
 
@@ -560,111 +607,35 @@ select {
 
 /************* RESPONSIVE *************/
 
-@media (max-width: 380px) {
+/* ≤ 1400px — grand écran */
+@media (max-width: 1400px) {}
 
-  .calendar .days {
-    gap: 8px;
+/* ≤ 1200px — laptop standard */
+@media (max-width: 1200px) {}
+
+/* Tablette : max 2 colonnes */
+@media (max-width: 1199px) and (min-width: 851px) {
+  .cards-container>.card-admin {
+    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
   }
 
-  .calendar {
-    gap: 12px;
-  }
-}
-
-/* ≥ 480px — petit mobile paysage */
-@media (max-width: 480px) {
-
-  /* general */
-  .content-background-pattern {
-    padding: 20px;
+  /* Cas impair ≥3 → la dernière prend toute la ligne */
+  .cards-container>.card-admin:last-child:nth-child(odd) {
+    flex-basis: 100%;
   }
 
-  /* navbar */
-  .navbar-container {
-    padding: 8px 25px;
+  /* EXACTEMENT 3 cards → 2 en haut (50/50) + 1 en bas (100%) */
+  .cards-container>.card-admin:first-child:nth-last-child(3),
+  .cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
+    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
   }
 
-  .login-container {
-    width: 100%;
-  }
-
-  .title p {
-    padding-top: 5px;
-  }
-
-  .gradient-button {
-    height: 40px;
-  }
-
-  /* login */
-  .container {
-    margin: 0;
-    padding: 20px;
-    gap: 20px;
-  }
-
-  .form-group input {
-    height: 38px;
+  .cards-container>.card-admin:nth-child(3):last-child {
+    flex-basis: 100%;
   }
 }
 
-/* ≥ 576px — petit mobile grand écran */
-@media (max-width: 576px) {
-  .error-404-container h1 {
-    font-size: 100px;
-    height: 100px;
-  }
-
-  .text-error-404 p {
-    font-size: 14px;
-  }
-}
-
-/* ≥ 768px — tablette portrait */
-@media (max-width: 768px) {
-  .time-group {
-    flex-direction: column;
-  }
-
-  .title h1 {
-    font-size: 18px;
-  }
-
-  .form-group-w-icon {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .w-fc {
-    width: 100%;
-
-  }
-}
-
-/* ≥ 992px — tablette paysage / petit laptop */
-@media (max-width: 992px) {
-
-  /* login */
-  .title h1 {
-    font-size: 22px;
-  }
-
-  .title {
-    text-align: start;
-  }
-
-  .line {
-    width: 15%;
-  }
-
-  .separation-line {
-    gap: 10px;
-  }
-}
-
-/* ≥ 992px — tablette paysage / petit laptop */
+/* ≤ 1050px — espace client */
 @media (max-width: 1050px) {
 
   /* espace client */
@@ -692,14 +663,188 @@ select {
   .text p {
     font-size: 14px;
   }
-
-  /* espace client */
 }
 
-/* ≥ 1200px — laptop standard */
-@media (max-width: 1200px) {}
+/* ≤ 992px — tablette paysage / petit laptop */
+@media (max-width: 992px) {
 
-/* ≥ 1400px — grand écran */
-@media (max-width: 1400px) {}
+  /* login */
+  .title h1 {
+    font-size: 22px;
+  }
+
+  .title {
+    text-align: start;
+  }
+
+  .line {
+    width: 15%;
+  }
+
+  .separation-line {
+    gap: 10px;
+  }
+}
+
+
+
+/* Mobile : 1 colonne */
+@media (max-width: 850px) {
+  .cards-container>.card-admin {
+    flex-basis: 100% !important;
+  }
+}
+
+/* ≤ 768px — tablette portrait */
+@media (max-width: 768px) {
+  .time-group {
+    flex-direction: column;
+  }
+
+  .title h1 {
+    font-size: 18px;
+  }
+
+  .form-group-w-icon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .w-fc {
+    width: 100%;
+  }
+}
+
+/* ≤ 576px — petit mobile grand écran */
+@media (max-width: 576px) {
+  .error-404-container h1 {
+    font-size: 100px;
+    height: 100px;
+  }
+
+  .text-error-404 p {
+    font-size: 14px;
+  }
+}
+
+/* ≤ 480px — petit mobile paysage */
+@media (max-width: 480px) {
+
+  /* general */
+  .content-background-pattern {
+    padding: 20px;
+  }
+
+  /* navbar */
+  .navbar-container {
+    padding: 8px 25px;
+  }
+
+  .login-container {
+    width: 100%;
+  }
+
+  .title h1 {
+    font-size: 18px;
+  }
+
+  .title p {
+    padding-top: 5px;
+  }
+
+  .gradient-button {
+    height: 40px;
+  }
+
+  /* login */
+  .container {
+    margin: 0;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .form-group input {
+    height: 38px;
+  }
+
+  /* admin */
+  .hours {
+    display: contents;
+  }
+
+  .time-group.column {
+    gap: 12px !important;
+  }
+
+  .title h1 i {
+    display: none;
+  }
+
+  .actions-admin {
+    flex-direction: column;
+  }
+}
+
+/* ≤ 380px — très petit mobile */
+@media (max-width: 380px) {
+
+  .calendar .days {
+    gap: 8px;
+  }
+
+  .calendar {
+    gap: 12px;
+  }
+}
 
 /************* RESPONSIVE END *************/
+
+
+/* =========================
+   Layout cartes responsive
+   ========================= */
+.cards-container {
+  --cards-gap: 20px;
+  /* tu peux changer l’espacement ici */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cards-gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Style de base des cards */
+.card-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: var(--black);
+  padding: 15px;
+  border-radius: 15px;
+  box-sizing: border-box;
+
+  /* Par défaut (desktop ≥1200px) : 2 colonnes */
+  flex: 0 0 calc((100% - var(--cards-gap)) / 2);
+}
+
+/* --- Cas particuliers desktop --- */
+
+/* 1 seule card */
+.cards-container>.card-admin:only-child {
+  flex-basis: 100%;
+}
+
+/* Nombre impair ≥5 → dernière card en full */
+.cards-container>.card-admin:last-child:nth-child(odd) {
+  flex-basis: 100%;
+}
+
+/* EXACTEMENT 3 cards → 3 colonnes (~30% chacune) */
+.cards-container>.card-admin:first-child:nth-last-child(3),
+.cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
+  flex-basis: calc((100% - (2 * var(--cards-gap))) / 3);
+}
+
+/* --- Responsive --- */
