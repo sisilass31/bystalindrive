@@ -540,15 +540,48 @@ select {
 
 /* cards admin */
 
-/* .cards-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}*/
 
-/* max-width: 420px;*/
+.cards-container {
+  --cards-gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cards-gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: var(--black);
+  padding: 15px;
+  border-radius: 15px;
+  box-sizing: border-box;
+
+  /* Par défaut (desktop ≥1200px) : 2 colonnes */
+  flex: 0 0 calc((100% - var(--cards-gap)) / 2);
+}
+
+/* 1 seule card */
+.cards-container>.card-admin:only-child {
+  flex-basis: 100%;
+}
+
+/* Impair ≥5 → la dernière prend 100% */
+.cards-container>.card-admin:last-child:nth-child(odd) {
+  flex-basis: 100%;
+}
+
+/* EXACTEMENT 3 cards → 3 colonnes (desktop) */
+.cards-container>.card-admin:first-child:nth-last-child(3),
+.cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
+  flex: 0 0 calc((100% - (2 * var(--cards-gap))) / 3);
+}
+
+/* ============================= */
+/* 📱 Tablette (851px – 1199px)  */
+/* ============================= */
 
 
 .card-admin:hover {
@@ -581,6 +614,7 @@ select {
 
 
 /************* 404 END *************/
+
 .error-404-container {
   display: flex;
   flex-direction: column;
@@ -619,12 +653,7 @@ select {
     flex: 0 0 calc((100% - var(--cards-gap)) / 2);
   }
 
-  /* Cas impair ≥3 → la dernière prend toute la ligne */
-  .cards-container>.card-admin:last-child:nth-child(odd) {
-    flex-basis: 100%;
-  }
-
-  /* EXACTEMENT 3 cards → 2 en haut (50/50) + 1 en bas (100%) */
+  /* EXACTEMENT 3 cards → 2 x 50% + 1 x 100% */
   .cards-container>.card-admin:first-child:nth-last-child(3),
   .cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
     flex: 0 0 calc((100% - var(--cards-gap)) / 2);
@@ -685,8 +714,6 @@ select {
     gap: 10px;
   }
 }
-
-
 
 /* Mobile : 1 colonne */
 @media (max-width: 850px) {
@@ -800,51 +827,3 @@ select {
 }
 
 /************* RESPONSIVE END *************/
-
-
-/* =========================
-   Layout cartes responsive
-   ========================= */
-.cards-container {
-  --cards-gap: 20px;
-  /* tu peux changer l’espacement ici */
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--cards-gap);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Style de base des cards */
-.card-admin {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: var(--black);
-  padding: 15px;
-  border-radius: 15px;
-  box-sizing: border-box;
-
-  /* Par défaut (desktop ≥1200px) : 2 colonnes */
-  flex: 0 0 calc((100% - var(--cards-gap)) / 2);
-}
-
-/* --- Cas particuliers desktop --- */
-
-/* 1 seule card */
-.cards-container>.card-admin:only-child {
-  flex-basis: 100%;
-}
-
-/* Nombre impair ≥5 → dernière card en full */
-.cards-container>.card-admin:last-child:nth-child(odd) {
-  flex-basis: 100%;
-}
-
-/* EXACTEMENT 3 cards → 3 colonnes (~30% chacune) */
-.cards-container>.card-admin:first-child:nth-last-child(3),
-.cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
-  flex-basis: calc((100% - (2 * var(--cards-gap))) / 3);
-}
-
-/* --- Responsive --- */
