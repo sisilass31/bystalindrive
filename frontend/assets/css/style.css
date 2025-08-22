@@ -63,7 +63,8 @@ h6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;min-height: calc(100dvh - 65px);
+  align-items: center;
+  min-height: calc(100dvh - 65px);
 }
 
 
@@ -194,7 +195,8 @@ button {
 
 /************* NAVBAR *************/
 
-html, body {
+html,
+body {
   overscroll-behavior: none;
 }
 
@@ -203,7 +205,8 @@ main {
 }
 
 header {
-  position: fixed;  top: 0;
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100%;
   background-color: var(--black);
@@ -535,6 +538,43 @@ header {
   padding-top: 8px;
 }
 
+/* si ya une sessions affichez sinon afficher le container no sessions */
+
+.sessions {
+  display: none !important;
+}
+
+/* .no-sessions {
+  display: none !important;
+} */
+
+.text-no-session {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 60%;
+}
+
+.img-no-sessions {
+  width: 40%;
+  min-width: 200px;
+}
+
+.img-no-sessions img {
+  width: 100%;
+}
+
+.no-sessions {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.text-no-session p {
+  color: var(--clear-white);
+}
+
+
+
 /************* ESPACE CLIENT END *************/
 /************* ADMIN *************/
 
@@ -558,7 +598,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  /* évite que ça s’étale trop en desktop */
+  height: 205px;
 }
 
 .form-group label {
@@ -661,11 +701,6 @@ select {
 .cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
   flex: 0 0 calc((100% - (2 * var(--cards-gap))) / 3);
 }
-
-/* ============================= */
-/* 📱 Tablette (851px – 1199px)  */
-/* ============================= */
-
 
 .card-admin:hover {
   transform: scale(1.02);
@@ -806,8 +841,15 @@ select {
 
 /************* RESPONSIVE *************/
 
-/* ≤ 1400px — grand écran */
-@media (max-width: 1400px) {}
+/* ≤ 1300px — grand écran */
+@media (max-width: 1300px) {
+
+  /* no sessions */
+  .text-no-session p {
+    font-size: 14px;
+  }
+
+}
 
 /* ≤ 1200px — laptop standard */
 @media (max-width: 1200px) {
@@ -822,27 +864,6 @@ select {
     flex-direction: column;
     gap: 15px;
   }
-}
-
-/* Tablette : max 2 colonnes */
-@media (max-width: 1199px) and (min-width: 851px) {
-  .cards-container>.card-admin {
-    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
-  }
-
-  /* EXACTEMENT 3 cards → 2 x 50% + 1 x 100% */
-  .cards-container>.card-admin:first-child:nth-last-child(3),
-  .cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
-    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
-  }
-
-  .cards-container>.card-admin:nth-child(3):last-child {
-    flex-basis: 100%;
-  }
-}
-
-/* ≤ 1050px — espace client */
-@media (max-width: 1050px) {
 
   /* espace client */
   .espace-client-container {
@@ -869,7 +890,28 @@ select {
   .text p {
     font-size: 14px;
   }
+
 }
+
+/* Tablette : max 2 colonnes */
+@media (max-width: 1199px) and (min-width: 851px) {
+  .cards-container>.card-admin {
+    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
+  }
+
+  /* EXACTEMENT 3 cards → 2 x 50% + 1 x 100% */
+  .cards-container>.card-admin:first-child:nth-last-child(3),
+  .cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
+    flex: 0 0 calc((100% - var(--cards-gap)) / 2);
+  }
+
+  .cards-container>.card-admin:nth-child(3):last-child {
+    flex-basis: 100%;
+  }
+}
+
+/* ≤ 1050px — espace client */
+@media (max-width: 1050px) {}
 
 /* ≤ 992px — tablette paysage / petit laptop */
 @media (max-width: 992px) {
@@ -973,6 +1015,22 @@ select {
   .link-footer p {
     display: none;
   }
+
+  /* no session */
+
+  .no-sessions {
+    flex-direction: column-reverse !important;
+    align-items: start;
+  }
+
+  .formulaire {
+    height: fit-content;
+  }
+
+  .text-no-session {
+    width: 100%;
+  }
+
 }
 
 
@@ -1012,7 +1070,6 @@ select {
   .container-footer {
     padding: 25px;
   }
-
 
   /* navbar */
 
@@ -1066,6 +1123,12 @@ select {
 
   .actions-admin {
     flex-direction: column;
+  }
+
+  /* no sessions */
+
+  .img-no-sessions {
+    width: 100%;
   }
 }
 
