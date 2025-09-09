@@ -117,6 +117,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // -------------- MODAL INFO (Succès / Erreur) --------------
+  const infoModal = document.createElement("div");
+  infoModal.id = "infoModal";
+  infoModal.className = "modal-overlay";
+  infoModal.innerHTML = `
+    <div class="modal-content">
+      <h3 id="infoTitle"></h3>
+      <p id="infoText"></p>
+      <div class="modal-actions">
+        <button id="infoOkBtn" class="button-3d">OK</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(infoModal);
+
+  function showInfoModal(title, message) {
+    return new Promise((resolve) => {
+      document.getElementById("infoTitle").textContent = title;
+      document.getElementById("infoText").textContent = message;
+      const okBtn = document.getElementById("infoOkBtn");
+
+      infoModal.style.display = "flex";
+
+      function cleanUp() {
+        okBtn.removeEventListener("click", onOk);
+        infoModal.style.display = "none";
+      }
+
+      function onOk() {
+        cleanUp();
+        resolve();
+      }
+
+      okBtn.addEventListener("click", onOk);
+    });
+  }
+
   // -------------- DATE MIN = AUJOURD'HUI --------------
   const dateInput = document.getElementById("date");
   const today = new Date().toISOString().split("T")[0];
@@ -131,13 +168,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const start = document.getElementById("start").value;
     const end = document.getElementById("end").value;
 
-    if (!eleveName || !date || !start || !end) return alert("Veuillez remplir tous les champs");
+    if (!eleveName || !date || !start || !end) {
+      return showInfoModal("Champs manquants", "Veuillez remplir tous les champs.");
+    }
 
     // Vérif date future
     const selectedDate = new Date(date);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    if (selectedDate < now) return alert("Vous ne pouvez pas créer une séance pour une date passée !");
+    if (selectedDate < now) {
+      return showInfoModal("Date invalide", "Vous ne pouvez pas créer une séance pour une date passée !");
+    }
 
     // Trouver élève
     const resUsers = await fetch("http://localhost:3000/api/users", {
@@ -145,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     const users = await resUsers.json();
     const user = users.find(u => `${u.firstname} ${u.lastname}` === eleveName);
-    if (!user) return alert("Utilisateur non trouvé");
+    if (!user) return showInfoModal("Erreur", "Utilisateur non trouvé");
 
     const postData = { id_user: user.id, id_admin: admin.id, date, start_time: start, end_time: end };
 
@@ -159,15 +200,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       const result = await res.json();
       if (!res.ok) {
         console.error("Erreur backend :", result);
-        return alert("Erreur lors de la création de la séance : " + (result.message || "Inconnue"));
+        return showInfoModal("Erreur", "Erreur lors de la création de la séance : " + (result.message || "Inconnue"));
       }
 
-      alert("Séance créée !");
+      await showInfoModal("Succès", "Séance créée !");
       form.reset();
       fetchAndRenderSessions();
     } catch (err) {
       console.error("Erreur réseau :", err);
-      alert("Impossible de contacter le serveur");
+      showInfoModal("Erreur réseau", "Impossible de contacter le serveur");
     }
   });
 
@@ -238,7 +279,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           fetchAndRenderSessions();
         } catch (err) {
           console.error(err);
-          alert("Erreur suppression séance");
+          showInfoModal("Erreur", "Erreur suppression séance");
         }
       });
 
@@ -271,7 +312,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           const selectedDate = new Date(updatedData.date);
           const now = new Date();
           now.setHours(0, 0, 0, 0);
-          if (selectedDate < now) return alert("Vous ne pouvez pas mettre une date passée !");
+          if (selectedDate < now) {
+            return showInfoModal("Date invalide", "Vous ne pouvez pas mettre une date passée !");
+          }
 
           try {
             const res = await fetch(`http://localhost:3000/api/posts/${session.id}`, {
@@ -286,13 +329,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const result = await res.json();
             if (!res.ok) {
               console.error("Erreur backend :", result);
-              return alert("Erreur modification : " + (result.message || "Inconnue"));
+              return showInfoModal("Erreur", "Erreur modification : " + (result.message || "Inconnue"));
             }
 
             fetchAndRenderSessions();
           } catch (err) {
             console.error(err);
-            alert("Erreur modification séance");
+            showInfoModal("Erreur", "Erreur modification séance");
           }
         }
       });
