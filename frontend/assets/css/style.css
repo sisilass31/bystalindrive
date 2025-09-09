@@ -15,7 +15,7 @@
   --white: #f5f5f5;
   --black: #111111;
   --grey: #252525;
-  --clear-black: rgba(24, 24, 24, 0.95);
+  --clear-black: rgba(19, 19, 19, 0.95);
   --clear-white: rgba(244, 244, 244, 0.5);
 
   /* gradient */
@@ -93,10 +93,22 @@ ul li {
   padding-top: 20px !important;
 }
 
+.my-10 {
+  margin: 10px 0;
+}
+
+.gap-30 {
+  gap: 30px !important;
+}
+
+.height-205 {
+  height: 205px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 12px;
   background-color: var(--clear-black);
   border-radius: 15px;
   padding: 30px;
@@ -120,16 +132,12 @@ button {
   cursor: pointer;
   background: var(--gradientv2);
   border-radius: 8px;
-  font-size: 16px;
   height: 38px;
   box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.3), 0 -1px 3px rgb(0, 0, 0, 0.2);
   font-weight: 400;
+  font-size: 16px;
 }
 
-.gradient-button:hover {
-  filter: brightness(1.2);
-  transform: translateY(2px);
-}
 
 /* 3d black */
 
@@ -137,25 +145,56 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 26px;
-  cursor: pointer;
-  color: var(--white);
-  box-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
   border-radius: 8px;
-  background-color: var(--black);
-  background-image: radial-gradient(76% 151% at 52% -52%, rgba(255, 255, 255, 0.23) 0%, transparent 100%);
+  box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
+  padding: 0 26px;
   height: 38px;
+  background-color: var(--black);
+  color: var(--white);
+  cursor: pointer;
   font-size: 16px;
-  font-weight: 400;
 }
 
-.button-3d:hover {
-  filter: brightness(1.1);
+/* delete button */
+
+.delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
+  padding: 0 26px;
+  height: 38px;
+  background-color: #bf502e59;
+  color: #ff946a;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* edit black */
+
+.edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
+  padding: 0 26px;
+  height: 38px;
+  background-color: var(--black);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* hover */
+
+.delete-button:hover,
+.gradient-button:hover,
+.button-3d:hover,
+.edit-button:hover {
   transform: translateY(2px);
-}
-
-.button-3d:active {
-  transform: scale(.98);
+  filter: brightness(1.2);
 }
 
 /* buttons end */
@@ -172,7 +211,7 @@ button {
 }
 
 .box-shadow-3d {
-  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 0 inset;
+  border: 1px solid rgb(255 255 255 / 18%);
 }
 
 .card-bc-p20-br-15 {
@@ -219,7 +258,12 @@ header {
   justify-content: space-between;
   padding: 8px 50px;
   align-items: center;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(255, 255, 255, 0.15) 0px 0px 0px 1px;
+}
+
+.navbar-container a,
+.navbar-container button {
+  gap: 6px;
 }
 
 .logo-container a {
@@ -229,6 +273,12 @@ header {
 
 .logo-container img {
   width: 100%;
+}
+
+#authBtnContainer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 /************* NAVBAR END *************/
@@ -298,7 +348,7 @@ header {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .title p {
@@ -391,7 +441,7 @@ header {
 
 .line {
   height: 1px;
-  background-color: var(--clear-white);
+  background-color: rgba(244, 244, 244, 0.15);
   width: 30%;
   border-radius: 10px;
 }
@@ -513,7 +563,6 @@ header {
 
 /* calendrier */
 
-
 .contact-espace-client {
   display: flex;
   justify-content: space-between;
@@ -521,6 +570,53 @@ header {
 
 .contact-espace-client div {
   width: 28%;
+}
+
+/* swipe cards client*/
+.sessions-slider {
+  display: flex;
+  overflow-x: auto;
+  /* autorise le scroll horizontal */
+  scroll-behavior: smooth;
+  gap: 1rem;
+  /* espace entre les cartes */
+  padding-bottom: 1rem;
+  /* pour le scroll */
+}
+
+/* Chrome, Edge, Safari */
+.sessions-slider::-webkit-scrollbar {
+  height: 6px;
+  /* hauteur de la scrollbar horizontale */
+}
+
+.sessions-slider::-webkit-scrollbar-track {
+  background: rgba(239, 127, 9, 0.06);
+  /* orange clair semi-transparent */
+  border-radius: 3px;
+  /* arrondi du track */
+}
+
+.sessions-slider::-webkit-scrollbar-thumb {
+  background: rgba(239, 127, 9, 0.6);
+  /* orange vif semi-transparent */
+  border-radius: 3px;
+  /* arrondi du thumb */
+}
+
+/* Firefox */
+.sessions-slider {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(239, 127, 9, 0.6) rgba(239, 127, 9, 0.06);
+  /* thumb et track */
+}
+
+/* Chaque card garde sa largeur */
+.sessions-slider .card-bc-p20-br-15 {
+  min-width: 250px;
+  /* largeur minimale */
+  flex-shrink: 0;
+  /* empêche de rétrécir */
 }
 
 .sessions-container {
@@ -539,14 +635,6 @@ header {
 }
 
 /* si ya une sessions affichez sinon afficher le container no sessions */
-
-.sessions {
-  display: none !important;
-}
-
-/* .no-sessions {
-  display: none !important;
-} */
 
 .text-no-session {
   display: flex;
@@ -598,7 +686,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  height: 205px;
+  width: 100%;
 }
 
 .form-group label {
@@ -630,14 +718,14 @@ header {
 }
 
 /* groupe heures */
-.time-group {
+.flex-group-card {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   /* mobile friendly */
 }
 
-.time-group div {
+.flex-group-card div {
   flex: 1;
   min-width: 120px;
   /* évite de trop compresser sur mobile */
@@ -662,48 +750,97 @@ select {
 }
 
 /* cards admin */
-
-
 .cards-container {
-  --cards-gap: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--cards-gap);
+  gap: 20px;
   width: 100%;
   box-sizing: border-box;
 }
 
+/* 1 seule card */
+.cards-container:has(.card-admin:only-child) .card-admin {
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+/* 2 cartes */
+.cards-container:has(.card-admin:nth-child(2)):not(:has(.card-admin:nth-child(3))) .card-admin {
+  flex-basis: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+}
+
+/* 3 cartes */
+.cards-container:has(.card-admin:nth-child(3)):not(:has(.card-admin:nth-child(4))) .card-admin {
+  flex-basis: calc((100% / 3) - 13.33px);
+  max-width: calc((100% / 3) - 13.33px);
+}
+
+/* 4 cartes */
+.cards-container:has(.card-admin:nth-child(4)):not(:has(.card-admin:nth-child(5))) .card-admin {
+  flex-basis: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+}
+
+/* 5 cartes */
+.cards-container:has(.card-admin:nth-child(5)):not(:has(.card-admin:nth-child(6))) .card-admin {
+  flex-basis: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+}
+
+/* 6 cartes */
+.cards-container:has(.card-admin:nth-child(6)):not(:has(.card-admin:nth-child(7))) .card-admin {
+  flex-basis: calc((100% / 3) - 13.33px);
+  max-width: calc((100% / 3) - 13.33px);
+}
+
+/* 7 cartes */
+.cards-container:has(.card-admin:nth-child(7)):not(:has(.card-admin:nth-child(8))) .card-admin {
+  flex-basis: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+}
+
+/* 8 cartes et plus */
+.cards-container:has(.card-admin:nth-child(8)) .card-admin {
+  flex-basis: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+}
+
+
 .card-admin {
   display: flex;
   flex-direction: column;
+  background-image: url(../images/ooorganize.svg),
+    linear-gradient(0deg,
+      var(--black) 0%,
+      #111111b4 100%);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid rgb(255 255 255 / 18%);
   gap: 15px;
-  background-color: var(--black);
   padding: 15px;
   border-radius: 15px;
-  box-sizing: border-box;
-
-  /* Par défaut (desktop ≥1200px) : 2 colonnes */
-  flex: 0 0 calc((100% - var(--cards-gap)) / 2);
-}
-
-/* 1 seule card */
-.cards-container>.card-admin:only-child {
-  flex-basis: 100%;
-}
-
-/* Impair ≥5 → la dernière prend 100% */
-.cards-container>.card-admin:last-child:nth-child(odd) {
-  flex-basis: 100%;
-}
-
-/* EXACTEMENT 3 cards → 3 colonnes (desktop) */
-.cards-container>.card-admin:first-child:nth-last-child(3),
-.cards-container>.card-admin:first-child:nth-last-child(3)~.card-admin {
-  flex: 0 0 calc((100% - (2 * var(--cards-gap))) / 3);
+  cursor: pointer;
 }
 
 .card-admin:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(255, 255, 255, 0.3) 0px 0px 0px 1px;
+}
+
+.card-admin h3 {
+  background: rgba(244, 244, 244, 0.07);
+  color: var(--white);
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(255, 255, 255, 0.15) 0px 0px 0px 1px;
+  display: flex;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  width: fit-content;
+  padding: 2px 22px;
 }
 
 .hours {
@@ -721,11 +858,56 @@ select {
 
 .actions-admin button {
   width: 100%;
-  font-size: 16px;
+  gap: 8px;
 }
 
-.time-group.column {
+.flex-group-card.column {
   gap: 0px !important;
+}
+
+/* modal modifier et supprimer */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #1a1a1a;
+  max-width: 339px;
+  text-align: start;
+  color: var(--white);
+  border: 1px solid rgb(255 255 255 / 18%);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+}
+
+#modalText {
+  font-size: 14px;
+}
+
+.modal-actions {
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  flex: 1;
 }
 
 /************* ADMIN END *************/
@@ -758,6 +940,8 @@ select {
 /************* 404 END *************/
 
 
+
+
 /************* FOOTER *************/
 
 .top-footer {
@@ -769,7 +953,7 @@ select {
 
 .container-footer {
   padding: 25px 50px;
-  box-shadow: 0 0 5px 0 rgba(255, 255, 255, 0.157);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(255, 255, 255, 0.15) 0px 0px 0px 1px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -966,7 +1150,7 @@ select {
 
 /* ≤ 768px — tablette portrait */
 @media (max-width: 768px) {
-  .time-group {
+  .flex-group-card {
     flex-direction: column;
   }
 
@@ -999,7 +1183,7 @@ select {
   }
 
   .title-home-text h1 {
-    font-size: 28px;
+    font-size: 20px;
     line-height: 36px;
   }
 
@@ -1031,9 +1215,14 @@ select {
     width: 100%;
   }
 
+  /* button */
+
+  .button-3d span,
+  .gradient-button span {
+    display: none;
+    /* cache le texte */
+  }
 }
-
-
 
 /* ≤ 576px — petit mobile grand écran */
 @media (max-width: 576px) {
@@ -1113,7 +1302,7 @@ select {
     display: contents;
   }
 
-  .time-group.column {
+  .flex-group-card.column {
     gap: 12px !important;
   }
 
@@ -1121,8 +1310,16 @@ select {
     display: none;
   }
 
-  .actions-admin {
+  /* .actions-admin {
     flex-direction: column;
+  } */
+  .delete-button p,
+  .edit-button p {
+    display: none;
+  }
+
+  .card-admin h3 {
+    font-size: 16px;
   }
 
   /* no sessions */
@@ -1149,3 +1346,23 @@ select {
 }
 
 /************* RESPONSIVE END *************/
+
+/* À partir de 851px jusqu’à 1250px : 3 cartes => 2 en haut (50%), 1 en bas (100%) */
+@media (max-width: 1250px) and (min-width: 851px) {
+  .cards-container:has(.card-admin:nth-child(3)):not(:has(.card-admin:nth-child(4))) .card-admin {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .cards-container:has(.card-admin:nth-child(3)):not(:has(.card-admin:nth-child(4))) .card-admin:nth-child(-n + 2) {
+    flex-basis: calc(50% - 15px);
+    max-width: calc(50% - 15px);
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .card-admin {
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+  }
+}

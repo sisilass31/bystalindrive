@@ -1,4 +1,5 @@
-// CALENDRIER
+
+// ---------------- CALENDRIER ----------------
 const daysContainer = document.getElementById("days");
 const monthYear = document.getElementById("monthYear");
 const prevBtn = document.getElementById("prev");
@@ -57,5 +58,3 @@ nextBtn.addEventListener("click", () => {
 });
 
 renderCalendar();
-
-// CALENDRIER END

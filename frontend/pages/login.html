@@ -27,8 +27,8 @@
     </header>
 
     <main>
-        <div class="content-background-pattern heigh-100vh">
-            <div class="container login-container box-shadow-3d">
+        <div class="content-background-pattern">
+            <div class="container login-container box-shadow-3d gap-30">
                 <div class="title">
                     <h1>Connexion au compte</h1>
                     <p class="clear-white">
@@ -36,7 +36,7 @@
                         <a href="#">nos auto-écoles</a> pour vous inscrire !
                     </p>
                 </div>
-                <form action="#" class="form-container">
+                <form id="loginForm" class="form-container">
                     <!-- email -->
                     <div class="form-group-w-icon">
                         <label for="email" class="icon-input">
@@ -98,7 +98,7 @@
                     <h4>Ecole de conduite Stalingrad</h4>
                     <ul>
                         <li class="infos-ecole-footer text-grey">3 rue d’Aubervilliers</li>
-                        <li class="infos-ecole-footertext-grey">75018 Paris</li>
+                        <li class="infos-ecole-footer text-grey">75018 Paris</li>
                         <li class="infos-ecole-footer">Tél: <span class="gradient-text underline-orange">01 40 36 38
                                 34</span></li>
                         <li class="infos-ecole-footer underline-orange"><a href="./contact.html"
@@ -119,8 +119,8 @@
                 <div class="ecole-footer">
                     <h4>Ecole de conduite Pyrénées</h4>
                     <ul>
-                        <li class="infos-ecole-footertext-grey">389 Rue des Pyrénées</li>
-                        <li class="infos-ecole-footertext-grey">75020 Paris</li>
+                        <li class="infos-ecole-footer text-grey">389 Rue des Pyrénées</li>
+                        <li class="infos-ecole-footer text-grey">75020 Paris</li>
                         <li class="infos-ecole-footer">Tél: <span class="gradient-text underline-orange">01 84 74 98
                                 24</span></li>
                         <li class="infos-ecole-footer underline-orange"><a href="./contact.html"
@@ -167,7 +167,8 @@
             </div>
         </div>
     </footer>
-    <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
 </body>
 
 </html>
