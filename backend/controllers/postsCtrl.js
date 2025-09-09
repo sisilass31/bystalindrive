@@ -1,25 +1,91 @@
 const { Post, User } = require('../models');
+// Sequelize fournit des "opérateurs" (Op) pour écrire des conditions complexes : AND, OR, <, >, etc.
+const { Op } = require("sequelize");
 
 // ------------------ CREATE ------------------
 exports.createPost = async (req, res) => {
-  console.log('createPost appelé avec body :', req.body);
+  console.log("createPost appelé avec body :", req.body);
+
   try {
     const { id_user, date, start_time, end_time } = req.body;
-    const user = await User.findByPk(id_user);
-    if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
 
+    // Vérif élève existe
+    const user = await User.findByPk(id_user);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable" });
+    }
+
+    // Vérif chevauchement ADMIN (même date + horaires qui se croisent)
+    const adminConflict = await Post.findOne({
+      where: {
+        id_admin: req.user.id,
+        date,
+        [Op.or]: [
+          {
+            start_time: { [Op.between]: [start_time, end_time] },
+          },
+          {
+            end_time: { [Op.between]: [start_time, end_time] },
+          },
+          {
+            [Op.and]: [
+              { start_time: { [Op.lte]: start_time } },
+              { end_time: { [Op.gte]: end_time } },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (adminConflict) {
+      return res
+        .status(400)
+        .json({ message: "❌ L’admin a déjà un rendez-vous à cet horaire." });
+    }
+
+    // Vérif chevauchement ELEVE (même logique)
+    const eleveConflict = await Post.findOne({
+      where: {
+        id_user,
+        date,
+        [Op.or]: [
+          {
+            start_time: { [Op.between]: [start_time, end_time] },
+          },
+          {
+            end_time: { [Op.between]: [start_time, end_time] },
+          },
+          {
+            [Op.and]: [
+              { start_time: { [Op.lte]: start_time } },
+              { end_time: { [Op.gte]: end_time } },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (eleveConflict) {
+      return res
+        .status(400)
+        .json({ message: "❌ Cet élève a déjà un rendez-vous à cet horaire." });
+    }
+
+    // Si pas de conflit → créer le rdv
     const post = await Post.create({
-      id_admin: req.user.id,
+      id_admin: req.user.id, // l’admin connecté
       id_user,
       date,
       start_time,
-      end_time
+      end_time,
     });
 
     return res.status(201).json(post);
   } catch (err) {
     console.error("❌ Erreur createPost:", err);
-    return res.status(500).json({ message: 'Erreur serveur', error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur", error: err.message });
   }
 };
 

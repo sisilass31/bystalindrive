@@ -28,8 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-
-  // -------------- Auto-complétion dynamique pour l'input élève --------------
+  // -------------- Auto-complétion input élève --------------
   const eleveInput = document.getElementById("eleve");
 
   async function fetchUsersForDatalist() {
@@ -38,8 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (!res.ok) return [];
-      const users = await res.json();
-      return users;
+      return await res.json();
     } catch (err) {
       console.error("Erreur récupération users :", err);
       return [];
@@ -72,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   });
 
-  // -------------- MODAL MODIFIER / SUPPRIMER --------------
+  // -------------- MODAL CONFIRMATION --------------
   const modal = document.createElement("div");
   modal.id = "confirmModal";
   modal.className = "modal-overlay";
@@ -119,8 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-
-  // -------------- DÉFINIR DATE MIN AUJOURD'HUI --------------
+  // -------------- DATE MIN = AUJOURD'HUI --------------
   const dateInput = document.getElementById("date");
   const today = new Date().toISOString().split("T")[0];
   dateInput.setAttribute("min", today);
@@ -136,12 +133,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!eleveName || !date || !start || !end) return alert("Veuillez remplir tous les champs");
 
-    // Vérification date future
+    // Vérif date future
     const selectedDate = new Date(date);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     if (selectedDate < now) return alert("Vous ne pouvez pas créer une séance pour une date passée !");
 
+    // Trouver élève
     const resUsers = await fetch("http://localhost:3000/api/users", {
       headers: { "Authorization": `Bearer ${token}` }
     });
@@ -157,13 +155,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify(postData)
       });
-      if (!res.ok) throw new Error("Erreur création séance");
+
+      const result = await res.json();
+      if (!res.ok) {
+        console.error("Erreur backend :", result);
+        return alert("Erreur lors de la création de la séance : " + (result.message || "Inconnue"));
+      }
+
       alert("Séance créée !");
       form.reset();
       fetchAndRenderSessions();
     } catch (err) {
-      console.error(err);
-      alert("Erreur lors de la création de la séance");
+      console.error("Erreur réseau :", err);
+      alert("Impossible de contacter le serveur");
     }
   });
 
@@ -245,11 +249,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const formInputs = card.querySelectorAll("input");
 
         if (editBtn.textContent.includes("Modifier")) {
-          // Activer la modification
+          // Activer la modif
           formInputs.forEach(input => input.disabled = false);
           editBtn.innerHTML = "<p>Enregistrer</p><i class='bxr bx-save'></i>";
         } else {
-          // Confirmer modal avant sauvegarde
+          // Confirmer modal
           const confirm = await showModal(
             "Modifier le rendez-vous ?",
             "Êtes-vous sûr ? Cette action entraînera la modification du rendez-vous.",
@@ -263,7 +267,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             end_time: formInputs[2].value
           };
 
-          // Vérifier que la date est future
+          // Vérifier date future
           const selectedDate = new Date(updatedData.date);
           const now = new Date();
           now.setHours(0, 0, 0, 0);
@@ -278,7 +282,13 @@ document.addEventListener("DOMContentLoaded", async () => {
               },
               body: JSON.stringify(updatedData)
             });
-            if (!res.ok) throw new Error("Erreur modification");
+
+            const result = await res.json();
+            if (!res.ok) {
+              console.error("Erreur backend :", result);
+              return alert("Erreur modification : " + (result.message || "Inconnue"));
+            }
+
             fetchAndRenderSessions();
           } catch (err) {
             console.error(err);
@@ -288,7 +298,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
-
 
   fetchAndRenderSessions();
 });
