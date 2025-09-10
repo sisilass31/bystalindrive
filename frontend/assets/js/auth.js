@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Rediriger SEULEMENT si on est sur login.html
             if (currentPage.endsWith("login.html")) {
                 if (role === "admin") {
-                    window.location.href = "/pages/admin/dashboard.html";
+                    window.location.href = "/pages/admin/posts-dashboard.html";
                 } else if (role === "user") {
                     window.location.href = "/pages/client/espace-client.html";
                 } else {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const role = payload.role.toLowerCase(); // Normalisation
 
                     if (role === "admin") {
-                        window.location.href = "/pages/admin/dashboard.html";
+                        window.location.href = "/pages/admin/posts-dashboard.html";
                     } else if (role === "user") {
                         window.location.href = result.redirect || "/pages/client/espace-client.html";
                     } else {
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (role === "admin") {
                     html = `
-                        <a href="/pages/admin/dashboard.html" class="button-3d height-32">
+                        <a href="/pages/admin/posts-dashboard.html" class="button-3d height-32">
                             <span>Dashboard</span>
                             <i class='bx bx-layout'></i>
                         </a>

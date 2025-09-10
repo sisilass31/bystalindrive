@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const role = payload.role.toLowerCase();
 
     if (role !== "user") {
-      window.location.href = "/pages/admin/dashboard.html";
+      window.location.href = "/pages/admin/posts-dashboard.html";
       return;
     }
 

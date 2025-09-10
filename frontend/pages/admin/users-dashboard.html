@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin — Utilisateurs</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- Boxicons (icônes) -->
+    <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar-container">
+                <div class="logo-container">
+                    <a href="../../index.html">
+                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                    </a>
+                </div>
+                <div id="authBtnContainer"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-background-pattern">
+            <div class="container w-100 user-dashboard">
+                <div class="header-users">
+                    <h1 class="gradient-text">Gestion des utilisateurs</h1>
+                    <div class="button-create">
+                        <button id="addUserBtn" class="gradient-button height-32">
+                            <p>Ajouter</p>
+                            <i class='bxr  bx-plus'></i>
+                        </button>
+                    </div>
+                </div>
+
+                <section class="crud-users">
+                    <div class="form-group">
+                        <input id="search" placeholder="Rechercher nom / email..." />
+                    </div>
+
+                    <div class="table-wrap">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th class="actions-col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="cards" id="cardsContainer"></div>
+
+                    <div id="emptyState" class="text-no-session hidden">
+                        Aucun utilisateur. Cliquez sur "+ Ajouter" pour en créer un.
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modalOverlay" class="modal-overlay" role="dialog" aria-hidden="true">
+        <div class="modal-user-dashboard container card-admin box-shadow-3d">
+            <h3 id="modalTitle">Modifier l'utilisateur</h3>
+            <div class="formulaire modal-form">
+                <div class="flex-group-card">
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input id="inputNom" placeholder="Nom" />
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input id="inputPrenom" placeholder="Prénom" />
+                    </div>
+                </div>
+                <div class="flex-group-card">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input id="inputEmail" placeholder="Email" />
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="inputRole">
+                            <option value="user">user</option>
+                            <option value="admin">admin</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancelBtn" class="edit-button">Annuler</button>
+                <button id="saveBtn" class="delete-button">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../../assets/js/api.js"></script>
+    <script type="module" src="../../assets/js/admin-dashboard.js"></script>
+    <script type="module" src="../../assets/js/users-dashboard.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+</body>
+
+</html>

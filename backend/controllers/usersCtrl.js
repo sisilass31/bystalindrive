@@ -2,51 +2,88 @@ const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
+const crypto = require("crypto");
+const sendMail = require("../utils/sendMail"); // fonction Nodemailer
 require("dotenv").config();
 
 const saltRounds = 10;
-const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{12,}$/;
+const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{12,}$/;
 
 // ------------------ REGISTER ------------------
 exports.register = async (req, res) => {
-  const { lastname, firstname, email, password } = req.body;
+  let { lastname, firstname, email, password, role } = req.body;
 
   try {
-    if (!lastname || !firstname || !email || !password) {
+    // Validation champs
+    if (!lastname || !firstname || !email) {
       return res.status(400).json({ message: "Veuillez remplir tous les champs." });
     }
-
-    if (!regexPassword.test(password)) {
-      return res.status(400).json({ message: "Mot de passe invalide." });
-    }
-
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ message: "Email invalide" });
+      return res.status(400).json({ message: "Email invalide." });
     }
 
     const userExists = await User.findOne({ where: { email } });
     if (userExists) return res.status(400).json({ message: "Cet email existe déjà." });
 
-    const hash = await bcrypt.hash(password, saltRounds);
-    const newUser = await User.create({ firstname, lastname, email, password: hash, role: 'user' });
+    // Générer mot de passe si non fourni
+    if (!password) {
+      const randomPart = crypto.randomBytes(6).toString("hex"); // 12 caractères hex
+      password = randomPart + "A1a"; // Assure majuscule + minuscule + chiffre
+    }
 
-    return res.status(201).json({ message: "Utilisateur créé.", user: { id: newUser.id, email: newUser.email } });
+    // Validation mot de passe
+    if (!regexPassword.test(password)) {
+      return res.status(400).json({ message: "Mot de passe invalide." });
+    }
+
+    const hash = await bcrypt.hash(password, saltRounds);
+
+    const newUser = await User.create({
+      firstname,
+      lastname,
+      email,
+      password: hash,
+      role: role || "user"
+    });
+
+    // --- Envoi de l'email avec identifiants ---
+    await sendMail(
+      email,
+      "Vos identifiants BystalinDrive",
+      `Bonjour ${firstname} ${lastname},\nVotre compte a été créé.\nEmail: ${email}\nMot de passe: ${password}\nVeuillez changer votre mot de passe lors de votre première connexion.`,
+      `
+        <p>Bonjour ${firstname} ${lastname},</p>
+        <p>Votre compte a été créé sur <strong>BystalinDrive</strong>.</p>
+        <p><strong>Email :</strong> ${email}<br>
+           <strong>Mot de passe :</strong> ${password}</p>
+        <p>Veuillez changer votre mot de passe lors de votre première connexion.</p>
+      `
+    );
+
+    // Renvoie toutes les données côté front
+    return res.status(201).json({
+      id: newUser.id,
+      firstname: newUser.firstname,
+      lastname: newUser.lastname,
+      email: newUser.email,
+      role: newUser.role
+    });
+
   } catch (error) {
     console.error("Erreur register :", error);
-    res.status(500).json({ message: "Erreur serveur lors de l'enregistrement." });
+    return res.status(500).json({ message: "Erreur serveur lors de l'enregistrement." });
   }
 };
 
 // ------------------ LOGIN ------------------
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
+    if (!user) return res.status(401).json({ message: "Utilisateur non trouvé." });
 
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(401).json({ message: "Mot de passe incorrect" });
+    if (!validPassword) return res.status(401).json({ message: "Mot de passe incorrect." });
 
     const token = jwt.sign(
       {
@@ -61,7 +98,7 @@ exports.login = async (req, res) => {
     );
 
     const redirect = user.role.toLowerCase() === "admin"
-      ? "/pages/admin/dashboard.html"
+      ? "/pages/admin/users-dashboard.html"
       : "/pages/client/espace-client.html";
 
     return res.status(200).json({ token, redirect });
@@ -77,13 +114,11 @@ exports.getMe = async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: ["id", "firstname", "lastname", "email", "role", "createdAt"]
     });
-
-    if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
-
+    if (!user) return res.status(404).json({ message: "Utilisateur introuvable." });
     return res.json(user);
   } catch (error) {
     console.error("Erreur getMe :", error);
-    return res.status(500).json({ message: "Erreur serveur" });
+    return res.status(500).json({ message: "Erreur serveur." });
   }
 };
 
@@ -91,7 +126,7 @@ exports.getMe = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      attributes: ['id', 'firstname', 'lastname', 'email', 'role']
+      attributes: ["id", "firstname", "lastname", "email", "role"]
     });
     res.json(users);
   } catch (error) {
@@ -105,7 +140,7 @@ exports.getOneUser = async (req, res) => {
   try {
     const id = req.params.id;
     if (req.user.id != id && req.user.role.toLowerCase() !== "admin") {
-      return res.status(403).json({ message: "Accès interdit" });
+      return res.status(403).json({ message: "Accès interdit." });
     }
 
     const user = await User.findByPk(id, {
@@ -124,14 +159,10 @@ exports.getOneUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const id = req.params.id;
-    const { lastname, firstname, email } = req.body;
+    const { lastname, firstname, email, role } = req.body;
 
     if (req.user.id != id && req.user.role.toLowerCase() !== "admin") {
-      return res.status(403).json({ message: "Accès interdit" });
-    }
-
-    if (!lastname && !firstname && !email) {
-      return res.status(400).json({ message: "Aucune donnée fournie pour la modification." });
+      return res.status(403).json({ message: "Accès interdit." });
     }
 
     const user = await User.findByPk(id);
@@ -140,10 +171,17 @@ exports.updateUser = async (req, res) => {
     await user.update({
       lastname: lastname || user.lastname,
       firstname: firstname || user.firstname,
-      email: email || user.email
+      email: email || user.email,
+      role: role || user.role
     });
 
-    res.status(200).json({ message: "Modification effectuée." });
+    res.status(200).json({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role
+    });
   } catch (error) {
     console.error("Erreur updateUser :", error);
     res.status(500).json({ message: "Erreur serveur lors de la modification." });
@@ -156,7 +194,7 @@ exports.deleteUser = async (req, res) => {
     const id = req.params.id;
 
     if (req.user.id != id && req.user.role.toLowerCase() !== "admin") {
-      return res.status(403).json({ message: "Accès interdit" });
+      return res.status(403).json({ message: "Accès interdit." });
     }
 
     const user = await User.findByPk(id);

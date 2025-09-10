@@ -17,10 +17,13 @@
   --grey: #252525;
   --clear-black: rgba(19, 19, 19, 0.95);
   --clear-white: rgba(244, 244, 244, 0.5);
+  --clear-whitev2: rgba(244, 244, 244, 0.2);
 
   /* gradient */
   --gradient: linear-gradient(90deg, #ef7f09 0%, #e14d10 100%);
   --gradientv2: linear-gradient(0deg, #e14d10 0%, #ef7f09 100%);
+
+  --clear-gradient: linear-gradient(90deg, rgba(239, 127, 9, 0.8) 0%, rgba(225, 77, 16, 0.8) 100%);
 }
 
 /************* GENERAL *************/
@@ -327,7 +330,7 @@ header {
 }
 
 .gap-8 {
-  gap: 8px;
+  gap: 8px !important;
 }
 
 /************* HOME END *************/
@@ -641,6 +644,8 @@ header {
   flex-direction: column;
   gap: 8px;
   width: 60%;
+  color: var(--clear-white);
+  font-style: italic;
 }
 
 .img-no-sessions {
@@ -734,6 +739,11 @@ header {
 .button-create {
   display: flex;
   justify-content: end;
+}
+
+.button-create button {
+  display: flex;
+  gap: 6px;
 }
 
 select {
@@ -865,7 +875,7 @@ select {
   gap: 0px !important;
 }
 
-/* modal modifier et supprimer */
+/* modal */
 
 .modal-overlay {
   position: fixed;
@@ -899,15 +909,192 @@ select {
   font-size: 14px;
 }
 
+
+
+
+.modal-actions button {
+  flex: 1;
+}
+
+/* ----------- USER DASHBOARD ----------- */
+
+/* En-tête de page Utilisateurs */
+.header-users {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Tableau utilisateurs */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 10px 10px 10px 6px;
+  border-bottom: 1px solid var(--clear-whitev2);
+}
+
+.users-table th {
+  background: transparent;
+  text-align: left;
+}
+
+.actions-col {
+  width: 160px;
+}
+
+/* Texte vide */
+.hidden {
+  display: none;
+}
+
+/* Modal */
+
+#modalOverlay {
+  padding: 50px;
+}
+
+/* .user-dashboard {
+  height: calc(85dvh - 65px);
+} */
+
+.table-wrap th {
+  text-align: start;
+}
+
+.cards {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.table-wrap,
+.cards {
+  padding-top: 22px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
+
+.card-actions button {
+  width: 130px;
+}
+
+/* --- Badges rôle --- */
+.badge {
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.role-user {
+  background: var(--grey);
+  color: var(--white);
+}
+
+.role-admin {
+  background: var(--clear-gradient);
+  color: var(--white);
+}
+
+/* --- Layout tableau --- */
+.users-table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* --- Layout carte utilisateur --- */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-card-user-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.user-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-card-email {
+  font-size: 13px;
+  color: var(--clear-white, #ccc);
+}
+
+.user-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.user-card-actions button {
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 135px;
+}
+
+.actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions-row button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 130px;
+}
+
+/* --- Modals (overlay + contenu) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  /* masqué par défaut */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
 .modal-actions {
-  padding-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-top: 10px;
+}
+
+.modal-actions {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.modal-actions button {
-  flex: 1;
+.modal-actions {
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 /************* ADMIN END *************/
@@ -938,9 +1125,6 @@ select {
 }
 
 /************* 404 END *************/
-
-
-
 
 /************* FOOTER *************/
 
@@ -1094,8 +1278,17 @@ select {
   }
 }
 
-/* ≤ 1050px — espace client */
-@media (max-width: 1050px) {}
+/* ≤ 1050px — user dashboard */
+@media (max-width: 1050px) {
+
+  .cards {
+    display: flex;
+  }
+
+  .table-wrap {
+    display: none;
+  }
+}
 
 /* ≤ 992px — tablette paysage / petit laptop */
 @media (max-width: 992px) {
@@ -1222,6 +1415,27 @@ select {
     display: none;
     /* cache le texte */
   }
+
+  /* user dashboard */
+
+  .header-users {
+    padding-bottom: 0px;
+    gap: 10px;
+  }
+
+  .button-create button {
+    width: 100%;
+    height: 35px !important;
+  }
+
+  .button-create p {
+    display: none;
+  }
+
+  .header-users h1 {
+    font-size: 18px;
+  }
+
 }
 
 /* ≤ 576px — petit mobile grand écran */
@@ -1242,6 +1456,14 @@ select {
   /* general */
   .content-background-pattern {
     padding: 20px;
+  }
+
+  #modalOverlay {
+    padding: 20px;
+  }
+
+  .user-card-actions button {
+    width: auto;
   }
 
   /* home */
