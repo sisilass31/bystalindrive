@@ -8,18 +8,34 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             return JSON.parse(atob(token.split('.')[1]));
         } catch (err) {
-            // console.error("Token invalide :", err);
             localStorage.removeItem("token");
             return null;
         }
     }
 
     let payload = getTokenPayload();
-    // console.log("Payload:", payload);
-    // console.log("authContainerSidebar:", document.getElementById("authBtnContainerSidebar"));
 
+    // --- MODAL D'INFO ---
+    function showModal(message, type = "info") {
+        // type: info, error, success
+        let modal = document.createElement("div");
+        modal.className = "modal-overlay";
+        modal.innerHTML = `
+            <div class="modal-content ${type}">
+                <p>${message}</p>
+                <button id="closeModalBtn">OK</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
 
-    // --- REDIRECTION SI DEJA CONNECTÉ ---
+        const closeBtn = modal.querySelector("#closeModalBtn");
+        closeBtn.addEventListener("click", () => modal.remove());
+        modal.addEventListener("click", e => {
+            if (e.target === modal) modal.remove();
+        });
+    }
+
+    // --- REDIRECTION SI CONNECTÉ ---
     if (payload) {
         const role = payload.role?.toLowerCase();
         const currentPage = window.location.pathname;
@@ -45,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const password = document.getElementById("password")?.value.trim();
 
             if (!email || !password) {
-                alert("Veuillez remplir tous les champs");
+                showModal("Veuillez remplir tous les champs", "error");
                 return;
             }
 
@@ -69,14 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         window.location.href = result.redirect || "/pages/client/espace-client.html";
                     } else {
                         localStorage.removeItem("token");
-                        alert("Rôle inconnu ❌");
+                        showModal("Rôle inconnu ❌", "error");
                     }
                 } else {
-                    alert("Erreur : " + (result.message || "Identifiants incorrects"));
+                    showModal("Erreur : " + (result.message || "Identifiants incorrects"), "error");
                 }
             } catch (err) {
-                // console.error("Erreur réseau :", err);
-                alert("Impossible de contacter le serveur ❌");
+                showModal("Impossible de contacter le serveur ❌", "error");
             }
         });
     }
@@ -154,12 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (burgerBtn && sidebar) {
         burgerBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // évite que le click se propage au document
+            e.stopPropagation();
             sidebar.classList.toggle("active");
-            console.log("Burger cliqué !", sidebar.classList);
         });
 
-        // Fermer en cliquant à l’extérieur
         document.addEventListener("click", (e) => {
             if (sidebar.classList.contains("active") &&
                 !sidebar.contains(e.target) &&
@@ -168,11 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // --- RESET SUR RESIZE ---
         function handleResize() {
-            if (window.innerWidth >= 768) {
-                sidebar.classList.remove("active");
-            }
+            if (window.innerWidth >= 768) sidebar.classList.remove("active");
         }
 
         window.addEventListener("resize", handleResize);

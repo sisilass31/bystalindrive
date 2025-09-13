@@ -188,6 +188,37 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// ------------------ UPDATE PASSWORD ------------------
+exports.updatePassword = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { oldPassword, newPassword } = req.body;
+
+    if (req.user.id != id) return res.status(403).json({ message: "Accès interdit." });
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: "Utilisateur introuvable." });
+
+    const validOld = await bcrypt.compare(oldPassword, user.password);
+    if (!validOld) return res.status(400).json({ message: "Ancien mot de passe incorrect." });
+
+    const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{12,}$/;
+    if (!regexPassword.test(newPassword)) return res.status(400).json({
+      message: "Nouveau mot de passe invalide (12+ caractères, maj, min, chiffre)."
+    });
+
+    const hash = await bcrypt.hash(newPassword, 10);
+    user.password = hash;
+    await user.save();
+
+    return res.status(200).json({ message: "Mot de passe modifié avec succès." });
+  } catch (error) {
+    console.error("Erreur updatePassword :", error);
+    return res.status(500).json({ message: "Erreur serveur lors du changement de mot de passe." });
+  }
+};
+
+
 // ------------------ DELETE USER ------------------
 exports.deleteUser = async (req, res) => {
   try {

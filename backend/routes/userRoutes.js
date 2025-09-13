@@ -20,8 +20,11 @@ router.get("/", authMiddleware(), adminMiddleware, usersCtrl.getAllUsers);
 // ------------------ GET ONE USER ------------------
 router.get("/:id", authMiddleware(), usersCtrl.getOneUser);
 
-// ------------------ UPDATE USER ------------------
+// ------------------ UPDATE USER BY ADMIN ------------------
 router.put("/:id", authMiddleware(), usersCtrl.updateUser);
+
+// ------------------ UPDATE PASSWORD USER ------------------
+router.put("/:id/password", authMiddleware(), usersCtrl.updatePassword);
 
 // ------------------ DELETE USER ------------------
 router.delete("/:id", authMiddleware(), usersCtrl.deleteUser);

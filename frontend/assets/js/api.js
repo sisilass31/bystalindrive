@@ -1,19 +1,35 @@
 // assets/js/api.js
 const API_URL = "http://localhost:3000";
 
+// --- Helper pour factoriser les requêtes ---
+async function handleResponse(res) {
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    throw new Error("Réponse serveur invalide (pas du JSON).");
+  }
+
+  if (!res.ok) {
+    throw new Error(data.message || "Erreur serveur.");
+  }
+
+  return data;
+}
+
 // ---------------- USERS ----------------
 export async function getUsers(token) {
   const res = await fetch(`${API_URL}/api/users`, {
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function getUser(id, token) {
   const res = await fetch(`${API_URL}/api/users/${id}`, {
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function createUser(data, token) {
@@ -25,13 +41,7 @@ export async function createUser(data, token) {
     },
     body: JSON.stringify(data)
   });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Erreur création utilisateur");
-  }
-
-  return await res.json(); // Maintenant renvoie directement l'utilisateur complet
+  return handleResponse(res);
 }
 
 export async function updateUser(id, data, token) {
@@ -43,7 +53,26 @@ export async function updateUser(id, data, token) {
     },
     body: JSON.stringify(data)
   });
-  return await res.json();
+  return handleResponse(res);
+}
+
+// 🔐 --- UPDATE PASSWORD (User only) ---
+export async function updatePassword(id, oldPassword, newPassword, token) {
+  const res = await fetch(`${API_URL}/api/users/${id}/password`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ oldPassword, newPassword })
+  });
+
+  let data;
+  try { data = await res.json(); }
+  catch { throw new Error("Réponse serveur invalide."); }
+
+  if (!res.ok) throw new Error(data.message || "Erreur serveur.");
+  return data;
 }
 
 export async function deleteUser(id, token) {
@@ -51,7 +80,7 @@ export async function deleteUser(id, token) {
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 // --- POSTS ---
@@ -59,7 +88,7 @@ export async function getPosts(token) {
   const res = await fetch(`${API_URL}/api/posts`, {
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function createPost(data, token) {
@@ -71,7 +100,7 @@ export async function createPost(data, token) {
     },
     body: JSON.stringify(data)
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function updatePost(id, data, token) {
@@ -83,7 +112,7 @@ export async function updatePost(id, data, token) {
     },
     body: JSON.stringify(data)
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function deletePost(id, token) {
@@ -91,7 +120,7 @@ export async function deletePost(id, token) {
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 // --- AUTH ---
@@ -101,7 +130,7 @@ export async function login(email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
-  return await res.json();
+  return handleResponse(res);
 }
 
 export async function register(firstname, lastname, email, password) {
@@ -110,5 +139,5 @@ export async function register(firstname, lastname, email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ firstname, lastname, email, password })
   });
-  return await res.json();
+  return handleResponse(res);
 }

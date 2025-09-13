@@ -788,6 +788,44 @@ header {
   color: var(--clear-white);
 }
 
+/* profile */
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.profile-info .form-group {
+  flex: 1;
+}
+
+.profile-container {
+  max-width: 600px;
+  min-width: 325px;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding: 0 50px 0 12px !important;
+}
+
+.password-wrapper #toggleNewPassword,
+.password-wrapper #toggleConfirmPassword,
+.password-wrapper #toggleModalOld{
+  cursor: pointer;
+  position: absolute;
+  right: 18px;
+  bottom: 15%;
+}
+
+.password-wrapper #toggleModalOld {
+  bottom: 26% !important;
+}
+
 /************* ESPACE CLIENT END *************/
 
 /************* ADMIN *************/
@@ -805,7 +843,6 @@ header {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 0;
 }
 
 .formulaire {
@@ -831,7 +868,7 @@ header {
   background: var(--black);
   outline: 1px solid var(--clear-white);
   color: var(--white);
-  font-size: 0.95rem;
+  font-size: 16px;
   -webkit-appearance: none;
   /* compatibilité iOS */
   -moz-appearance: none;
@@ -1030,9 +1067,6 @@ select {
   font-size: 14px;
 }
 
-
-
-
 .modal-actions button {
   flex: 1;
 }
@@ -1225,6 +1259,39 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+/* dashboard home */
+
+
+.dashboard-home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.stats-box,
+.charts-box,
+.next-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.next-session-card li {
+  padding: 5px 0;
+}
+
+.stats-card,
+.next-box .card-admin,
+.charts-box .card-admin {
+  flex: 1;
+}
+
+.stats-card p {
+  display: flex;
+  justify-content: end;
+}
+
 /************* ADMIN END *************/
 
 
@@ -1379,8 +1446,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 100%;
   }
 
-  .sub-title h3 {
-    font-size: 18px;
+  .sub-title h2 {
+    font-size: 22px;
   }
 
   .text p {
@@ -1416,6 +1483,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .table-wrap {
     display: none;
   }
+
+  .profile-info {
+    flex-direction: column;
+  }
+
+  .profile-info .form-group {
+    width: 100%;
+  }
+
 }
 
 /* ≤ 992px — tablette paysage / petit laptop */
@@ -1471,6 +1547,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* ≤ 768px — tablette portrait */
 @media (max-width: 768px) {
+  .sub-title h2 {
+    font-size: 18px;
+  }
+
   .flex-group-card {
     flex-direction: column;
   }
@@ -1582,7 +1662,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   }
 
-  .header-users h1, .dashboard-home-container h1 {
+  .header-users h1,
+  .dashboard-home-container h1 {
     font-size: 22px;
   }
 
@@ -1646,8 +1727,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     padding: 25px;
   }
 
-  .login-container {
-    width: 100%;
+  .login-container,
+  .profile-container {
+    width: 100% !important;
+    min-width: fit-content;
   }
 
   .title h1 {
@@ -1742,34 +1825,4 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     flex-basis: 100% !important;
     max-width: 100% !important;
   }
-}
-
-.dashboard-home-container {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 100%;
-}
-
-.stats-box,
-.charts-box,
-.next-box {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-}
-
-.next-session-card li {
-  padding: 5px 0;
-}
-
-.stats-card,
-.next-box .card-admin,
-.charts-box .card-admin {
-  flex: 1;
-}
-
-.stats-card p {
-  display: flex;
-  justify-content: end;
 }
