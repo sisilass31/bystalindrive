@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     user = await res.json();
-    console.log("Utilisateur connecté :", user);
+    // console.log("Utilisateur connecté :", user);
 
     // Afficher le prénom
     const welcome = document.getElementById("welcome");
@@ -112,6 +112,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const sessions = await fetchUserSessions();
-  console.log("Sessions récupérées :", JSON.stringify(sessions, null, 2)); // log clair pour debug
+  //console.log("Sessions récupérées :", JSON.stringify(sessions, null, 2)); // log clair pour debug
   renderSessions(sessions);
 });

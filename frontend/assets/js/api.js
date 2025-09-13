@@ -34,7 +34,6 @@ export async function createUser(data, token) {
   return await res.json(); // Maintenant renvoie directement l'utilisateur complet
 }
 
-
 export async function updateUser(id, data, token) {
   const res = await fetch(`${API_URL}/api/users/${id}`, {
     method: "PUT",

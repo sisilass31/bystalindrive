@@ -5,24 +5,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-école By Stalindrive</title>
-    <!-- CSS -->
+    <title>Admin - Séances | Auto-école By Stalindrive</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
+    <!-- style -->
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!-- Boxicons (icônes) -->
+    <!-- boxicons (icônes) -->
     <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
     <header>
-        <nav>
-            <div class="navbar-container">
-                <div class="logo-container">
-                    <a href="../../index.html">
-                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
-                    </a>
-                </div>
-                <div id="authBtnContainer"></div>
+        <nav class="navbar-container">
+            <!-- Logo -->
+            <div class="logo-container">
+                <a href="../../index.html">
+                    <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                </a>
+            </div>
+
+            <!-- Auth buttons / links -->
+            <div id="authBtnContainer" class="flex-sidebar"></div>
+
+            <!-- Burger button -->
+            <button class="burger gradient-text" id="burgerBtn">
+                <i class='bx bx-menu'></i>
+            </button>
+
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div id="authBtnContainerSidebar"></div>
             </div>
         </nav>
     </header>
@@ -151,9 +164,9 @@
     </footer>
 
     <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/auth.js"></script>
     <script type="module" src="../../assets/js/admin-dashboard.js"></script>
     <script type="module" src="../../assets/js/posts-dashboard.js"></script>
-    <script src="../../assets/js/auth.js"></script>
 </body>
 
 </html>

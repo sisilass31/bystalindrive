@@ -1,68 +1,79 @@
-<!-- Page d'accueil -->
-<!-- Gestion des événements (admin) -->
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-école By Stalindrive</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon profil | Auto-école By Stalindrive</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- favicon -->
-    <link rel="icon" type="image/png" href="./assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <!-- style -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- boxicons (icônes) -->
-    <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-    <header>
-        <nav class="navbar-container">
-            <!-- Logo -->
-            <div class="logo-container">
-                <a href="./index.html">
-                    <img src="./assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
-                </a>
-            </div>
+  <header>
+    <nav class="navbar-container">
+      <!-- Logo -->
+      <div class="logo-container">
+        <a href="../../index.html">
+          <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+        </a>
+      </div>
 
-            <!-- Auth buttons / links -->
-            <div id="authBtnContainer" class="flex-sidebar"></div>
+      <!-- Auth buttons / links -->
+      <div id="authBtnContainer" class="flex-sidebar"></div>
 
-            <!-- Burger button -->
-            <button class="burger gradient-text" id="burgerBtn">
-                <i class='bx bx-menu'></i>
-            </button>
+      <!-- Burger button -->
+      <button class="burger gradient-text" id="burgerBtn">
+        <i class='bx bx-menu'></i>
+      </button>
 
-            <!-- Sidebar -->
-            <div class="sidebar" id="sidebar">
-                <div id="authBtnContainerSidebar"></div>
-            </div>
-        </nav>
-    </header>
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div id="authBtnContainerSidebar"></div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="content-background-pattern heigh-100vh">
+      <div class="container">
+        <h1>Mon Profil</h1>
 
-    <main>
-        <div class="title-home">
-            <div class="title-home-text">
-                <h1>Votre permis, notre mission
-                    <span class="gradient-text">Bienvenue chez bystalindrive</span>
-                </h1>
-                <p>Auto-école By Stalindrive, le spécialiste du permis accéléré à Paris!</p>
-                <div class="buttons-actions">
-                    <a href="#" class="button-3d">Financez votre permis grâce au CPF</a>
-                    <a href="#" class="gradient-button w-fc gap-8">Voir nos offres <i
-                            class='bxr  bx-arrow-right-stroke'></i> </a>
-                </div>
-            </div>
+        <!-- Infos non modifiables -->
+        <div class="profile-info">
+          <p><strong>Prénom :</strong> <span id="firstname"></span></p>
+          <p><strong>Nom :</strong> <span id="lastname"></span></p>
         </div>
-    </main>
 
-    <footer>
+        <!-- Formulaire modifiable -->
+        <form id="profileForm">
+          <label for="email">Email :</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="password">Nouveau mot de passe :</label>
+          <input type="password" id="password" name="password" placeholder="Laisser vide si inchangé">
+
+          <label for="confirmPassword">Confirmer mot de passe :</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer mot de passe">
+
+          <button type="submit">Mettre à jour</button>
+        </form>
+
+        <div id="message"></div>
+      </div>
+    </div>
+  </main>
+   <footer>
         <div class="container-footer">
             <div class="top-footer">
                 <div class="logo-container">
                     <a href="./index.html">
-                        <img src="./assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
                     </a>
                 </div>
                 <p class="text-grey">Auto-école By Stalindrive, le spécialiste du permis accéléré à Paris!</p>
@@ -142,8 +153,10 @@
             </div>
         </div>
     </footer>
-    <script src="./assets/js/api.js"></script>
-    <script src="./assets/js/auth.js"></script>
+
+  <script type="module" src="../../assets/js/profile.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
 </body>
 
 </html>

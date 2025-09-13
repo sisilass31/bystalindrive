@@ -4,30 +4,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin — Utilisateurs</title>
+    <title>Admin | Auto-école By Stalindrive</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
+    <!-- style -->
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!-- Boxicons (icônes) -->
+    <!-- boxicons (icônes) -->
     <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <header>
-        <nav>
-            <div class="navbar-container">
-                <div class="logo-container">
-                    <a href="../../index.html">
-                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
-                    </a>
-                </div>
-               <!-- need to do: navlinks des pages dashboard (Utilisateurs/ Posts) -->
-                <div id="authBtnContainer"></div>
+        <nav class="navbar-container">
+            <!-- Logo -->
+            <div class="logo-container">
+                <a href="../../index.html">
+                    <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                </a>
+            </div>
+
+            <!-- Auth buttons / links -->
+            <div id="authBtnContainer" class="flex-sidebar"></div>
+
+            <!-- Burger button -->
+            <button class="burger gradient-text" id="burgerBtn">
+                <i class='bx bx-menu'></i>
+            </button>
+
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div id="authBtnContainerSidebar"></div>
             </div>
         </nav>
     </header>
     <main>
         <!-- need to do: petit design d'une page d'accueil dashboard (no rush) -->
+        <div class="content-background-pattern heigh-100vh">
+            <div class="dashboard-home-container">
+                <h1 class="gradient-text">Bienvenue sur votre Dashboard</h1>
+                <!-- Cards statistiques -->
+                <div class="stats-box">
+                    <div class="stats-card card-admin">
+                        <h3>Utilisateurs</h3>
+                        <p id="usersCount">0</p>
+                    </div>
+                    <div class="stats-card card-admin">
+                        <h3>Posts</h3>
+                        <p id="postsCount">0</p>
+                    </div>
+                    <div class="stats-card card-admin">
+                        <h3>Nouvel inscrit</h3>
+                        <p id="lastUser">-</p>
+                    </div>
+                </div>
+                <!-- Derniers utilisateurs / posts -->
+                <div class="next-box">
+                    <div class="next-session-card card-admin">
+                        <h3>Derniers utilisateurs</h3>
+                        <ul id="recentUsers"></ul>
+                    </div>
+                    <div class="next-session-card card-admin">
+                        <h3>Prochaines séances</h3>
+                        <ul id="nextSessions"></ul>
+                    </div>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="charts-box">
+                    <div class="chart-card card-admin">
+                        <h3>Inscriptions par jours</h3>
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                    <div class="chart-card card-admin">
+                        <h3>Posts par jours</h3>
+                        <canvas id="postsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <!-- <div class="quick-actions">
+                    <h3>Actions rapides</h3>
+                    <a href="users-dashboard.html" class="button-3d">Gérer utilisateurs</a>
+                    <a href="posts-dashboard.html" class="button-3d">Gérer séances</a>
+                </div> -->
+
+            </div>
+        </div>
     </main>
+    <footer>
+        <div class="container-footer">
+            <div class="top-footer">
+                <div class="logo-container">
+                    <a href="./index.html">
+                        <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                    </a>
+                </div>
+                <p class="text-grey">Auto-école By Stalindrive, le spécialiste du permis accéléré à Paris!</p>
+            </div>
+            <div class="line w-100"></div>
+            <div class="ecoles-container-footer">
+                <div class="ecole-footer">
+                    <h4>Ecole de conduite Stalingrad</h4>
+                    <ul>
+                        <li class="infos-ecole-footer text-grey">3 rue d’Aubervilliers</li>
+                        <li class="infos-ecole-footertext-grey">75018 Paris</li>
+                        <li class="infos-ecole-footer">Tél: <span class="gradient-text underline-orange">01 40 36 38
+                                34</span></li>
+                        <li class="infos-ecole-footer underline-orange"><a href="./contact.html"
+                                class="gradient-text">Envoyer un email</a></li>
+                    </ul>
+                </div>
+                <div class="ecole-footer">
+                    <h4>Ecole de conduite Place des Fêtes</h4>
+                    <ul>
+                        <li class="infos-ecole-footer text-grey">15-17 rue Henri Ribière</li>
+                        <li class="infos-ecole-footer text-grey">75019 Paris</li>
+                        <li class="infos-ecole-footer">Tél: <span class="gradient-text underline-orange">01 84 74 57
+                                24</span></li>
+                        <li class="infos-ecole-footer underline-orange"><a href="./contact.html"
+                                class="gradient-text">Envoyer un email</a></li>
+                    </ul>
+                </div>
+                <div class="ecole-footer">
+                    <h4>Ecole de conduite Pyrénées</h4>
+                    <ul>
+                        <li class="infos-ecole-footertext-grey">389 Rue des Pyrénées</li>
+                        <li class="infos-ecole-footertext-grey">75020 Paris</li>
+                        <li class="infos-ecole-footer">Tél: <span class="gradient-text underline-orange">01 84 74 98
+                                24</span></li>
+                        <li class="infos-ecole-footer underline-orange"><a href="./contact.html"
+                                class="gradient-text">Envoyer un email</a></li>
+                    </ul>
+                </div>
+                <div class="ecole-footer">
+                    <h4>Une question ? Contactez-nous !</h4>
+                    <p class="regular">Notre équipe se tient à votre disposition pour répondre à toutes vos demandes de
+                        renseignements.</p>
+                    <a href="./contact.html" class="gradient-button w-fit">Contactez-nous</a>
+                </div>
+            </div>
+            <div class="line w-100"></div>
+            <div class="social-copyright">
+                <div class="logo-social-media-box">
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/stalindrive/?hl=fr" target="_blank" class="button-3d w-30 fs-20">
+                        <i class='bx bxl-instagram'></i>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="https://www.tiktok.com/@bystalindrive" target="_blank" class="button-3d w-30 fs-20">
+                        <i class='bx bxl-tiktok'></i>
+                    </a>
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/stalindrive75/?locale=fr_FR" target="_blank"
+                        class="button-3d w-30 fs-20">
+                        <i class='bx bxl-facebook'></i>
+                    </a>
+                </div>
+                <div class="copyright">
+                    <p>© 2025 Auto-école By Stalindrive.</p>
+                    <div class="link-footer">
+                        <a
+                            href="#https://www.vroomvroom.fr/auto-ecoles/paris/paris/ecole-de-conduite-stalingrad">Vroomvroom.fr</a>
+                        <p>|</p>
+                        <a href="#">Mentions légales</a>
+                        <p>|</p>
+                        <a href="#">Médiateur</a>
+                        <p>|</p>
+                        <a href="#">Données personnelles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script type="module" src="../../assets/js/api.js"></script>
     <script type="module" src="../../assets/js/admin-dashboard.js"></script>
     <script src="../../assets/js/auth.js"></script>

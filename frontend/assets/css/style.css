@@ -17,7 +17,7 @@
   --grey: #252525;
   --clear-black: rgba(19, 19, 19, 0.95);
   --clear-white: rgba(244, 244, 244, 0.5);
-  --clear-whitev2: rgba(244, 244, 244, 0.2);
+  --clear-whitev2: rgba(244, 244, 244, 0.1);
 
   /* gradient */
   --gradient: linear-gradient(90deg, #ef7f09 0%, #e14d10 100%);
@@ -30,6 +30,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: #ef800946 #16110e;
 }
 
 body {
@@ -130,7 +131,8 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 26px;
+  gap: 8px;
+  padding: 0 22px;
   color: var(--black);
   cursor: pointer;
   background: var(--gradientv2);
@@ -141,16 +143,16 @@ button {
   font-size: 16px;
 }
 
-
 /* 3d black */
 
 .button-3d {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   border-radius: 8px;
   box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
-  padding: 0 26px;
+  padding: 0 22px;
   height: 38px;
   background-color: var(--black);
   color: var(--white);
@@ -166,12 +168,13 @@ button {
   justify-content: center;
   border-radius: 8px;
   box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
-  padding: 0 26px;
+  padding: 0 22px;
   height: 38px;
   background-color: #bf502e59;
   color: #ff946a;
   cursor: pointer;
   font-size: 16px;
+  gap: 8px;
 }
 
 /* edit black */
@@ -182,12 +185,13 @@ button {
   justify-content: center;
   border-radius: 8px;
   box-shadow: inset 0 0px 0px 0px rgba(255, 255, 255, 0.14), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.11), inset 0px 1px 4px 0px rgba(255, 255, 255, 0.4), inset 0px 2px 0px 0px rgba(0, 0, 0, 0.25);
-  padding: 0 26px;
+  padding: 0 22px;
   height: 38px;
   background-color: var(--black);
   color: var(--white);
   cursor: pointer;
   font-size: 16px;
+  gap: 8px;
 }
 
 /* hover */
@@ -211,6 +215,7 @@ button {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  width: fit-content;
 }
 
 .box-shadow-3d {
@@ -235,8 +240,6 @@ button {
 
 /************* GENERAL END *************/
 
-/************* NAVBAR *************/
-
 html,
 body {
   overscroll-behavior: none;
@@ -245,6 +248,8 @@ body {
 main {
   padding-top: 65px;
 }
+
+/************* NAVBAR *************/
 
 header {
   position: fixed;
@@ -255,18 +260,14 @@ header {
   z-index: 1000;
 }
 
+/* Navbar desktop */
 .navbar-container {
-  height: 65px;
   display: flex;
   justify-content: space-between;
-  padding: 8px 50px;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(255, 255, 255, 0.15) 0px 0px 0px 1px;
-}
-
-.navbar-container a,
-.navbar-container button {
-  gap: 6px;
+  padding: 8px 50px;
+  height: 65px;
+  border-bottom: 1px solid rgb(255 255 255 / 18%);
 }
 
 .logo-container a {
@@ -278,14 +279,135 @@ header {
   width: 100%;
 }
 
+
 #authBtnContainer {
   display: flex;
+  flex-direction: row;
   gap: 16px;
   align-items: center;
 }
 
-/************* NAVBAR END *************/
+/* Links */
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #fff;
+}
 
+.navlinks span:hover {
+  background-image: linear-gradient(90deg, #ef7f09, #e75617);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Burger button */
+.burger {
+  display: none;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: calc(100dvh - 65px);
+  background: linear-gradient(0deg, rgb(27, 14, 1) 0%, rgb(17, 17, 17) 100%);
+  color: #fff;
+  display: none;
+  /* Cachée par défaut */
+  flex-direction: column;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.sidebar.active {
+  display: flex;
+  /* Devient visible */
+
+}
+
+.sidebar.active #authBtnContainerSidebar {
+  justify-content: space-between;
+  height: 100%;
+  /* fallback */
+  height: 100dvh;
+  height: -webkit-fill-available;
+  /* Safari / Chrome iOS */
+}
+
+.flex-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar .navlinks,
+.sidebar .gradient-button {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.sidebar.active {
+  border-left: 1px solid rgb(255 255 255 / 18%);
+}
+
+.sidebar-link i {
+  width: 40px;
+  height: 40px;
+  background: #ef7f091c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .5rem;
+  transition: background .3s, color .3s, border-color .3s;
+  flex-shrink: 0;
+  border: 1px solid var(--clear-whitev2);
+  color: #ffd9b0;
+}
+
+.sidebar-link {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  text-transform: uppercase;
+  height: 40px;
+  width: 100%;
+  background: #ef7f090a;
+  border-radius: .5rem;
+  border-right: 2px solid #ef7f091c;
+  gap: 15px;
+  color: #ffd9b0;
+  transition: background .3s, color .3s, border-color .3s;
+}
+
+/* Hover du lien */
+.sidebar-link:hover {
+  color: var(--white);
+  ;
+  border-color: #ef8009bc !important;
+  background: #ef800921;
+}
+
+/* Hover de l'icône quand le lien est survolé */
+.sidebar-link:hover i {
+  background: #ef8009bc;
+  color: var(--white);
+  border-color: #ef8009;
+}
+
+/************* NAVBAR END *************/
 
 /************* HOME *************/
 
@@ -601,7 +723,7 @@ header {
 }
 
 .sessions-slider::-webkit-scrollbar-thumb {
-  background: rgba(239, 127, 9, 0.6);
+  background: #ef80095d;
   /* orange vif semi-transparent */
   border-radius: 3px;
   /* arrondi du thumb */
@@ -610,7 +732,7 @@ header {
 /* Firefox */
 .sessions-slider {
   scrollbar-width: thin;
-  scrollbar-color: rgba(239, 127, 9, 0.6) rgba(239, 127, 9, 0.06);
+  scrollbar-color: #ef80095d rgba(239, 127, 9, 0.06);
   /* thumb et track */
 }
 
@@ -666,9 +788,8 @@ header {
   color: var(--clear-white);
 }
 
-
-
 /************* ESPACE CLIENT END *************/
+
 /************* ADMIN *************/
 
 .crud-sessions {
@@ -1097,6 +1218,13 @@ select {
   gap: 12px;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  /* inverse le noir en blanc */
+  cursor: pointer;
+}
+
 /************* ADMIN END *************/
 
 
@@ -1362,6 +1490,37 @@ select {
     width: 100%;
   }
 
+  /* navbar */
+
+  #authBtnContainer {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  #authBtnContainerSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* general */
+  .content-background-pattern {
+    padding: 20px;
+  }
+
+  /* navbar */
+
+  .navbar-container {
+    padding: 8px 20px;
+  }
+
+  .logo-container a {
+    width: 135px;
+  }
+
   /* home */
   .buttons-actions {
     flex-direction: column;
@@ -1410,8 +1569,7 @@ select {
 
   /* button */
 
-  .button-3d span,
-  .gradient-button span {
+  .button-3d span {
     display: none;
     /* cache le texte */
   }
@@ -1419,21 +1577,18 @@ select {
   /* user dashboard */
 
   .header-users {
+    gap: 8px;
     padding-bottom: 0px;
-    gap: 10px;
+
   }
 
-  .button-create button {
-    width: 100%;
-    height: 35px !important;
+  .header-users h1, .dashboard-home-container h1 {
+    font-size: 22px;
   }
 
-  .button-create p {
-    display: none;
-  }
 
-  .header-users h1 {
-    font-size: 18px;
+  .flex-group-card.column {
+    gap: 12px !important;
   }
 
 }
@@ -1448,15 +1603,24 @@ select {
   .text-error-404 p {
     font-size: 14px;
   }
+
+  /*  user dashboard */
+  .button-create {
+    width: 100%;
+  }
+
+  .button-create button {
+    width: 100%;
+  }
+
+  .header-users {
+    flex-direction: column;
+    align-items: start;
+  }
 }
 
 /* ≤ 480px — petit mobile paysage */
 @media (max-width: 480px) {
-
-  /* general */
-  .content-background-pattern {
-    padding: 20px;
-  }
 
   #modalOverlay {
     padding: 20px;
@@ -1480,16 +1644,6 @@ select {
 
   .container-footer {
     padding: 25px;
-  }
-
-  /* navbar */
-
-  .navbar-container {
-    padding: 8px 25px;
-  }
-
-  .logo-container a {
-    width: 135px;
   }
 
   .login-container {
@@ -1524,9 +1678,6 @@ select {
     display: contents;
   }
 
-  .flex-group-card.column {
-    gap: 12px !important;
-  }
 
   .title h1 i {
     display: none;
@@ -1565,6 +1716,10 @@ select {
   .buttons-actions a {
     font-size: 14px !important;
   }
+
+  .sidebar {
+    width: 100%;
+  }
 }
 
 /************* RESPONSIVE END *************/
@@ -1587,4 +1742,34 @@ select {
     flex-basis: 100% !important;
     max-width: 100% !important;
   }
+}
+
+.dashboard-home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.stats-box,
+.charts-box,
+.next-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.next-session-card li {
+  padding: 5px 0;
+}
+
+.stats-card,
+.next-box .card-admin,
+.charts-box .card-admin {
+  flex: 1;
+}
+
+.stats-card p {
+  display: flex;
+  justify-content: end;
 }
