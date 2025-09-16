@@ -10,7 +10,11 @@ const config = require(path.join(__dirname, '/../config/config.json'))[env];
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
+
+// ✅ Si on est en test, on utilise SQLite en mémoire
+if (env === 'test') {
+  sequelize = new Sequelize('sqlite::memory:', { logging: false });
+} else if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
@@ -27,10 +31,10 @@ fs
   ))
   .forEach(file => {
     const modelFactory = require(path.join(__dirname, file));
-    
+
     if (typeof modelFactory !== 'function') {
       console.warn(`⚠️ Le fichier ${file} n'exporte pas une fonction et sera ignoré.`);
-      return; // on continue avec les autres fichiers
+      return;
     }
 
     const model = modelFactory(sequelize, Sequelize.DataTypes);

@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     end_time: {
       type: DataTypes.TIME,
       allowNull: false
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     sequelize,

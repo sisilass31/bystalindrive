@@ -40,7 +40,7 @@ exports.createPost = async (req, res) => {
     if (adminConflict) {
       return res
         .status(400)
-        .json({ message: "❌ L’admin a déjà un rendez-vous à cet horaire." });
+        .json({ message: "L’admin a déjà un rendez-vous à cet horaire." });
     }
 
     // Vérif chevauchement ELEVE (même logique)
@@ -128,9 +128,10 @@ exports.updatePost = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.findAll({
+      where: { is_deleted: false }, // <-- ignore les posts archivés
       include: [
-        { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'] },
-        { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'] }
+        { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false },
+        { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false }
       ],
       order: [['date', 'ASC'], ['start_time', 'ASC']]
     });

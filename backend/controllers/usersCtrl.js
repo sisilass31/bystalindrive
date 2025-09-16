@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Post } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
@@ -126,8 +126,13 @@ exports.getMe = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      attributes: ["id", "firstname", "lastname", "email", "role"]
+      // filtre sur les utilisateurs non archivés
+      where: { is_deleted: false },
+      // colonnes à retourner
+      attributes: ["id", "firstname", "lastname", "email", "role"],
+      order: [["created_at", "ASC"]]
     });
+
     res.json(users);
   } catch (error) {
     console.error("Erreur getAllUsers :", error);
@@ -224,15 +229,26 @@ exports.deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
 
+    // Vérifie si l'utilisateur est admin ou supprime son propre compte
     if (req.user.id != id && req.user.role.toLowerCase() !== "admin") {
       return res.status(403).json({ message: "Accès interdit." });
     }
 
+    // Récupère l'utilisateur
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: "Utilisateur introuvable." });
 
-    await User.destroy({ where: { id } });
-    res.status(200).json({ message: "Utilisateur supprimé." });
+    // Archive l'utilisateur
+    await user.update({ is_deleted: true });
+
+    // Archive tous ses posts où il est user
+    await Post.update(
+      { is_deleted: true },
+      { where: { id_user: user.id } }
+    );
+
+    res.status(200).json({ message: "Utilisateur et ses posts archivés." });
+
   } catch (error) {
     console.error("Erreur deleteUser :", error);
     res.status(500).json({ message: "Erreur serveur lors de la suppression." });

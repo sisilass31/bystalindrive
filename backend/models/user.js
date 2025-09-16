@@ -31,11 +31,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    
+
     role: {
       type: DataTypes.ENUM('admin', 'user'),
       allowNull: false,
       defaultValue: 'user'
+    },
+    is_deleted: {               
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   }, {
     sequelize,
