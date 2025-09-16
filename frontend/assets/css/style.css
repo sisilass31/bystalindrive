@@ -815,7 +815,7 @@ header {
 
 .password-wrapper #toggleNewPassword,
 .password-wrapper #toggleConfirmPassword,
-.password-wrapper #toggleModalOld{
+.password-wrapper #toggleModalOld {
   cursor: pointer;
   position: absolute;
   right: 18px;
@@ -1790,6 +1790,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   .calendar .days {
     gap: 8px;
+    font-size: 10px;
+  }
+
+  .weekdays {
+    font-size: 10px;
+  }
+
+  .calendar .header-calender h2 {
+    font-size: 16px;
   }
 
   .calendar {

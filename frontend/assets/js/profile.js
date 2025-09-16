@@ -96,9 +96,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isPassword = modalInput.type === "password";
         modalInput.type = isPassword ? "text" : "password";
 
-        // Changer icône correctement
+        // Si on montre le mot de passe (type=text) -> oeil ouvert
         toggleModalOld.classList.remove("bx-eye", "bx-eye-slash");
-        toggleModalOld.classList.add(isPassword ? "bx-eye-slash" : "bx-eye");
+        toggleModalOld.classList.add(isPassword ? "bx-eye" : "bx-eye-slash");
       });
     }
   });
@@ -111,7 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const isPassword = newInput.type === "password";
       newInput.type = isPassword ? "text" : "password";
       toggleNew.classList.remove("bx-eye", "bx-eye-slash");
-      toggleNew.classList.add(isPassword ? "bx-eye-slash" : "bx-eye");
+      // Si on montre le mot de passe (type=text) -> oeil ouvert
+      toggleNew.classList.add(isPassword ? "bx-eye" : "bx-eye-slash");
     });
   }
 
@@ -123,7 +124,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const isPassword = confirmInput.type === "password";
       confirmInput.type = isPassword ? "text" : "password";
       toggleConfirm.classList.remove("bx-eye", "bx-eye-slash");
-      toggleConfirm.classList.add(isPassword ? "bx-eye-slash" : "bx-eye");
+      toggleConfirm.classList.add(isPassword ? "bx-eye" : "bx-eye-slash");
     });
   }
+
 });

@@ -7,32 +7,35 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!token) return null;
         try {
             return JSON.parse(atob(token.split('.')[1]));
-        } catch (err) {
-            localStorage.removeItem("token");
+        } catch {
+            clearToken();
             return null;
         }
+    }
+
+    // --- SUPPRIMER TOKEN ET REINITIALISER PAYLOAD ---
+    function clearToken() {
+        localStorage.removeItem("token");
+        payload = null;
     }
 
     let payload = getTokenPayload();
 
     // --- MODAL D'INFO ---
     function showModal(message, type = "info") {
-        // type: info, error, success
-        let modal = document.createElement("div");
+        const modal = document.createElement("div");
         modal.className = "modal-overlay";
         modal.innerHTML = `
             <div class="modal-content ${type}">
                 <p>${message}</p>
-                <button id="closeModalBtn">OK</button>
+                <button id="closeModalBtn" class="button-3d">OK</button>
             </div>
         `;
         document.body.appendChild(modal);
+        modal.style.display = "flex";
 
-        const closeBtn = modal.querySelector("#closeModalBtn");
-        closeBtn.addEventListener("click", () => modal.remove());
-        modal.addEventListener("click", e => {
-            if (e.target === modal) modal.remove();
-        });
+        modal.querySelector("#closeModalBtn").addEventListener("click", () => modal.remove());
+        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
     }
 
     // --- REDIRECTION SI CONNECTÉ ---
@@ -41,13 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const currentPage = window.location.pathname;
 
         if (currentPage.endsWith("login.html")) {
-            if (role === "admin") {
-                window.location.href = "/pages/admin/dashboard.html";
-            } else if (role === "user") {
-                window.location.href = "/pages/client/espace-client.html";
-            } else {
-                localStorage.removeItem("token");
-            }
+            if (role === "admin") window.location.href = "/pages/admin/dashboard.html";
+            else if (role === "user") window.location.href = "/pages/client/espace-client.html";
+            else clearToken();
         }
     }
 
@@ -65,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            clearToken(); // Supprime l'ancien token
+
             try {
                 const response = await fetch(`${API_URL}/login`, {
                     method: "POST",
@@ -77,21 +78,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (response.ok && result.token) {
                     localStorage.setItem("token", result.token);
                     payload = getTokenPayload();
-                    const role = payload?.role?.toLowerCase();
 
-                    if (role === "admin") {
-                        window.location.href = "/pages/admin/dashboard.html";
-                    } else if (role === "user") {
-                        window.location.href = result.redirect || "/pages/client/espace-client.html";
-                    } else {
-                        localStorage.removeItem("token");
-                        showModal("Rôle inconnu ❌", "error");
-                    }
+                    const role = payload?.role?.toLowerCase();
+                    const redirect = result.redirect || (role === "admin"
+                        ? "/pages/admin/dashboard.html"
+                        : "/pages/client/espace-client.html");
+
+                    window.location.href = redirect;
                 } else {
-                    showModal("Erreur : " + (result.message || "Identifiants incorrects"), "error");
+                    // Gestion des erreurs avec modal
+                    const messageMap = {
+                        "Utilisateur non trouvé.": "Adresse email introuvable",
+                        "Mot de passe incorrect.": "Mot de passe incorrect"
+                    };
+                    const errorMessage = messageMap[result.message] || "Identifiants incorrects";
+                    showModal(errorMessage, "error");
                 }
-            } catch (err) {
-                showModal("Impossible de contacter le serveur ❌", "error");
+            } catch {
+                showModal("Impossible de contacter le serveur", "error");
             }
         });
     }
@@ -100,11 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const authContainer = document.getElementById("authBtnContainer");
     const authContainerSidebar = document.getElementById("authBtnContainerSidebar");
 
-    if (authContainer || authContainerSidebar) {
-        const role = payload?.role?.toLowerCase();
-
-        let navbarHtml = "";
-        let sidebarHtml = "";
+    function renderNav(role) {
+        let navbarHtml = "", sidebarHtml = "";
 
         if (role === "admin") {
             navbarHtml = `
@@ -113,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="/pages/admin/posts-dashboard.html" class="navlinks"><span>Séances</span></a>
                 <a href="#" id="logoutBtn" class="button-3d height-32"><span>Déconnexion</span><i class='bx bx-log-out'></i></a>
             `;
-
             sidebarHtml = `
                 <div class="flex-sidebar">
                     <a href="/pages/admin/dashboard.html" class="sidebar-link"><i class='bx bx-home'></i>Dashboard</a>
@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="/pages/client/profile.html" class="navlinks"><span>Mon Profil</span></a>
                 <a href="#" id="logoutBtn" class="button-3d height-32"><span>Déconnexion</span><i class='bx bx-log-out'></i></a>
             `;
-
             sidebarHtml = `
                 <div class="flex-sidebar">
                     <a href="/pages/client/espace-client.html" class="sidebar-link"><i class='bx bx-user-circle'></i>Espace Client</a>
@@ -137,54 +136,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="#" id="logoutBtnSidebar" class="sidebar-link logout"><i class='bx bx-log-out'></i>Déconnexion</a>
             `;
         } else {
-            navbarHtml = `
-                <a href="/pages/login.html" class="gradient-button height-32"><span>Connexion</span><i class='bx bx-log-in'></i></a>
-            `;
-            sidebarHtml = `
-                <a href="/pages/login.html" class="sidebar-link"><i class='bx bx-log-in'></i> Connexion</a>
-            `;
+            navbarHtml = `<a href="/pages/login.html" class="gradient-button height-32"><span>Connexion</span><i class='bx bx-log-in'></i></a>`;
+            sidebarHtml = `<a href="/pages/login.html" class="sidebar-link"><i class='bx bx-log-in'></i> Connexion</a>`;
         }
 
         if (authContainer) authContainer.innerHTML = navbarHtml;
         if (authContainerSidebar) authContainerSidebar.innerHTML = sidebarHtml;
-
-        // Logout (navbar + sidebar)
-        const logoutBtn = document.getElementById("logoutBtn");
-        const logoutBtnSidebar = document.getElementById("logoutBtnSidebar");
-
-        [logoutBtn, logoutBtnSidebar].forEach(btn => {
-            if (btn) {
-                btn.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem("token");
-                    window.location.href = "/pages/login.html";
-                });
-            }
-        });
     }
+
+    renderNav(payload?.role?.toLowerCase());
+
+    // --- LOGOUT ---
+    document.addEventListener("click", (e) => {
+        if (e.target.closest("#logoutBtn") || e.target.closest("#logoutBtnSidebar")) {
+            e.preventDefault();
+            clearToken();
+            window.location.href = "/pages/login.html";
+        }
+    });
 
     // --- SIDEBAR TOGGLE ---
     const burgerBtn = document.getElementById("burgerBtn");
     const sidebar = document.getElementById("sidebar");
 
     if (burgerBtn && sidebar) {
-        burgerBtn.addEventListener("click", (e) => {
+        burgerBtn.addEventListener("click", e => {
             e.stopPropagation();
             sidebar.classList.toggle("active");
         });
 
-        document.addEventListener("click", (e) => {
+        document.addEventListener("click", e => {
             if (sidebar.classList.contains("active") &&
                 !sidebar.contains(e.target) &&
-                e.target !== burgerBtn) {
-                sidebar.classList.remove("active");
-            }
+                e.target !== burgerBtn) sidebar.classList.remove("active");
         });
 
-        function handleResize() {
-            if (window.innerWidth >= 768) sidebar.classList.remove("active");
-        }
-
+        function handleResize() { if (window.innerWidth >= 768) sidebar.classList.remove("active"); }
         window.addEventListener("resize", handleResize);
         window.addEventListener("DOMContentLoaded", handleResize);
     }
