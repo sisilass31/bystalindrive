@@ -7,10 +7,10 @@ exports.createPost = async (req, res) => {
   console.log("createPost appelé avec body :", req.body);
 
   try {
-    const { id_user, date, start_time, end_time } = req.body;
+    const { id_client, appointment_date, start_time, end_time } = req.body;
 
     // Vérif élève existe
-    const user = await User.findByPk(id_user);
+    const user = await User.findByPk(id_client);
     if (!user) {
       return res.status(404).json({ message: "Utilisateur introuvable" });
     }
@@ -19,7 +19,7 @@ exports.createPost = async (req, res) => {
     const adminConflict = await Post.findOne({
       where: {
         id_admin: req.user.id,
-        date,
+        appointment_date,
         [Op.or]: [
           {
             start_time: { [Op.between]: [start_time, end_time] },
@@ -46,8 +46,8 @@ exports.createPost = async (req, res) => {
     // Vérif chevauchement ELEVE (même logique)
     const eleveConflict = await Post.findOne({
       where: {
-        id_user,
-        date,
+        id_client,
+        appointment_date,
         [Op.or]: [
           {
             start_time: { [Op.between]: [start_time, end_time] },
@@ -74,8 +74,8 @@ exports.createPost = async (req, res) => {
     // Si pas de conflit → créer le rdv
     const post = await Post.create({
       id_admin: req.user.id, // l’admin connecté
-      id_user,
-      date,
+      id_client,
+      appointment_date,
       start_time,
       end_time,
     });
@@ -93,7 +93,7 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { id_user, date, start_time, end_time } = req.body;
+    const { id_client, appointment_date, start_time, end_time } = req.body;
 
     const post = await Post.findByPk(id);
     if (!post) return res.status(404).json({ message: 'RDV introuvable' });
@@ -104,14 +104,14 @@ exports.updatePost = async (req, res) => {
     }
 
     // Si on change le user du RDV → vérifier que l’utilisateur existe
-    if (id_user) {
-      const user = await User.findByPk(id_user);
+    if (id_client) {
+      const user = await User.findByPk(id_client);
       if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
-      post.id_user = id_user;
+      post.id_client = id_client;
     }
 
     // Mise à jour des champs si présents
-    if (date) post.date = date;
+    if (appointment_date) post.appointment_date = appointment_date;
     if (start_time) post.start_time = start_time;
     if (end_time) post.end_time = end_time;
 
@@ -131,9 +131,9 @@ exports.getAllPosts = async (req, res) => {
       where: { is_deleted: false }, // <-- ignore les posts archivés
       include: [
         { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false },
-        { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false }
+        { model: User, as: 'Client', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false }
       ],
-      order: [['date', 'ASC'], ['start_time', 'ASC']]
+      order: [['appointment_date', 'ASC'], ['start_time', 'ASC']]
     });
 
     return res.status(200).json(posts);
@@ -147,12 +147,12 @@ exports.getAllPosts = async (req, res) => {
 exports.getMyPosts = async (req, res) => {
   try {
     const posts = await Post.findAll({
-      where: { id_user: req.user.id },
+      where: { id_client: req.user.id },
       include: [
         { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'] },
-        { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'] }
+        { model: User, as: 'Client', attributes: ['id', 'firstname', 'lastname'] }
       ],
-      order: [['date', 'ASC'], ['start_time', 'ASC']]
+      order: [['appointment_date', 'ASC'], ['start_time', 'ASC']]
     });
 
     return res.status(200).json(posts);
@@ -169,13 +169,13 @@ exports.getOnePost = async (req, res) => {
     const post = await Post.findByPk(id, {
       include: [
         { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'] },
-        { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'] }
+        { model: User, as: 'Client', attributes: ['id', 'firstname', 'lastname'] }
       ]
     });
 
     if (!post) return res.status(404).json({ message: 'RDV introuvable' });
 
-    if (req.user.role !== 'admin' && req.user.id !== post.id_user) {
+    if (req.user.role !== 'admin' && req.user.id !== post.id_client) {
       return res.status(403).json({ message: 'Accès interdit' });
     }
 

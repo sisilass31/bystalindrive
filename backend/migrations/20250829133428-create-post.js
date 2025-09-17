@@ -19,7 +19,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      id_user: {  // <-- ajout de la colonne id_user
+      id_client: {  // <-- ajout de la colonne id_client
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

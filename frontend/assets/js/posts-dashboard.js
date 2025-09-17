@@ -120,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const eleveName = eleveInput.value;
-    const date = dateInput.value;
+    const appointment_date = dateInput.value;
     const start = document.getElementById("start").value;
     const end = document.getElementById("end").value;
 
-    if (!eleveName || !date || !start || !end) return showInfoModal("Champs manquants", "Veuillez remplir tous les champs.");
+    if (!eleveName || !appointment_date || !start || !end) return showInfoModal("Champs manquants", "Veuillez remplir tous les champs.");
 
     const selectedDate = new Date(date);
     const now = new Date(); now.setHours(0,0,0,0);
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user = users.find(u => `${u.firstname} ${u.lastname}` === eleveName);
     if (!user) return showInfoModal("Erreur", "Utilisateur non trouvé");
 
-    const postData = { id_user: user.id, id_admin: admin.id, date, start_time: start, end_time: end };
+    const postData = { id_client: user.id, id_admin: admin.id, appointment_date, start_time: start, end_time: end };
     try {
       const res = await fetch("http://localhost:3000/api/posts", {
         method: "POST",
@@ -165,10 +165,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const card = document.createElement("div");
       card.className = "card-admin box-shadow-3d";
       card.innerHTML = `
-        <h3>${session.User.firstname} ${session.User.lastname}</h3>
+        <h3>${session.Client.firstname} ${session.Client.lastname}</h3>
         <form>
           <div class="flex-group-card column">
-            <div class="form-group"><label>Date</label><input type="date" value="${session.date}" disabled></div>
+            <div class="form-group"><label>Date</label><input type="date" value="${session.appointment_date}" disabled></div>
             <div class="hours">
               <div class="form-group"><label>Heure début</label><input type="time" value="${session.start_time.slice(0,5)}" disabled></div>
               <div class="form-group"><label>Heure fin</label><input type="time" value="${session.end_time.slice(0,5)}" disabled></div>
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputs = card.querySelectorAll("input");
 
     if (btn.classList.contains("delete-button")) {
-      const confirm = await showModal("Supprimer ?", `Voulez-vous vraiment supprimer la séance de ${session.User.firstname} ${session.User.lastname} ?`, "Supprimer");
+      const confirm = await showModal("Supprimer ?", `Voulez-vous vraiment supprimer la séance de ${session.Client.firstname} ${session.Client.lastname} ?`, "Supprimer");
       if (!confirm) return;
       try { await fetch(`http://localhost:3000/api/posts/${sessionId}`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}` } }); await showInfoModal("Succès","Séance supprimée"); fetchAndRenderSessions(); }
       catch(err){ console.error(err); showInfoModal("Erreur","Impossible de supprimer"); }
@@ -205,8 +205,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const confirm = await showModal("Modifier ?", "Confirmer modification ?", "Enregistrer");
         if (!confirm) return;
 
-        const updatedData = { date: inputs[0].value, start_time: inputs[1].value, end_time: inputs[2].value };
-        const selectedDate = new Date(updatedData.date);
+        const updatedData = { appointment_date: inputs[0].value, start_time: inputs[1].value, end_time: inputs[2].value };
+        const selectedDate = new Date(updatedData.appointment_date);
         const now = new Date(); now.setHours(0,0,0,0);
         if (selectedDate < now) return showInfoModal("Date invalide", "Impossible de mettre une date passée !");
 

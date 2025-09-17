@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (currentPage.endsWith("login.html")) {
             if (role === "admin") window.location.href = "/pages/admin/dashboard.html";
-            else if (role === "user") window.location.href = "/pages/client/espace-client.html";
+            else if (role === "client") window.location.href = "/pages/client/espace-client.html";
             else clearToken();
         }
     }
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <a href="#" id="logoutBtnSidebar" class="sidebar-link logout"><i class='bx bx-log-out'></i>Déconnexion</a>
             `;
-        } else if (role === "user") {
+        } else if (role === "client") {
             navbarHtml = `
                 <a href="/pages/client/espace-client.html" class="navlinks"><span>Espace Client</span></a>
                 <a href="/pages/client/profile.html" class="navlinks"><span>Mon Profil</span></a>

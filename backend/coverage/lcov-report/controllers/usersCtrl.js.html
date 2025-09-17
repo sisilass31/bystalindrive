@@ -819,7 +819,7 @@ exports.deleteUser = <span class="fstat-no" title="function not covered" >as</sp
     // Archive tous ses posts où il est user
 <span class="cstat-no" title="statement not covered" >    await Post.update(</span>
       { is_deleted: true },
-      { where: { id_user: user.id } }
+      { where: { id_client: user.id } }
     );
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    res.status(200).json({ message: "Utilisateur et ses posts archivés." });</span>

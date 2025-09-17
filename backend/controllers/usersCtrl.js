@@ -43,7 +43,7 @@ exports.register = async (req, res) => {
       lastname,
       email,
       password: hash,
-      role: role || "user"
+      role: role || "client"
     });
 
     // --- Envoi de l'email avec identifiants ---
@@ -244,7 +244,7 @@ exports.deleteUser = async (req, res) => {
     // Archive tous ses posts où il est user
     await Post.update(
       { is_deleted: true },
-      { where: { id_user: user.id } }
+      { where: { id_client: user.id } }
     );
 
     res.status(200).json({ message: "Utilisateur et ses posts archivés." });

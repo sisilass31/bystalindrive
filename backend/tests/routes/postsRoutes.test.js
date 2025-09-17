@@ -53,15 +53,15 @@ describe("Posts Routes", () => {
       .post("/api/posts")
       .set("Authorization", `Bearer ${tokenAdmin}`)
       .send({
-        id_user: user.id,
-        date: "2025-09-15",       // format DATEONLY
+        id_client: user.id,
+        appointment_date: "2025-09-15",       // format DATEONLY
         start_time: "10:00:00",   // format TIME
         end_time: "11:00:00"      // format TIME
       });
 
     expect(res.statusCode).toBe(201);
     expect(res.body.id_admin).toBe(admin.id); // récupéré depuis le token
-    expect(res.body.id_user).toBe(user.id);
+    expect(res.body.id_client).toBe(user.id);
 
     // Nettoyage
     await Post.destroy({ where: {} });

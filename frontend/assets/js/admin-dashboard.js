@@ -69,13 +69,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const now = new Date();
     const upcomingPosts = posts
-      .filter(p => new Date(p.date + "T" + p.start_time) >= now)
-      .sort((a, b) => new Date(a.date + "T" + a.start_time) - new Date(b.date + "T" + b.start_time));
+      .filter(p => new Date(p.appointment_date + "T" + p.start_time) >= now)
+      .sort((a, b) => new Date(a.appointment_date + "T" + a.start_time) - new Date(b.appointment_date + "T" + b.start_time));
 
     upcomingPosts.slice(0, 3).forEach(p => {
       const li = document.createElement("li");
       const userName = p.User ? `${p.User.firstname} ${p.User.lastname}` : "Inconnu";
-      const formattedDate = new Date(p.date).toLocaleDateString();
+      const formattedDate = new Date(p.appointment_date).toLocaleDateString();
       li.textContent = `${userName} le ${formattedDate} de ${formatTime(p.start_time)} à ${formatTime(p.end_time)}`;
       nextSessionsList.appendChild(li);
     });

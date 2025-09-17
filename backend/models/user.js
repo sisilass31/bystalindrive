@@ -33,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     role: {
-      type: DataTypes.ENUM('admin', 'user'),
+      type: DataTypes.ENUM('admin', 'client'),
       allowNull: false,
-      defaultValue: 'user'
+      defaultValue: 'client'
     },
     is_deleted: {               
       type: DataTypes.BOOLEAN,

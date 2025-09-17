@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       // Un Post appartient à un admin
       Post.belongsTo(models.User, { as: 'Admin', foreignKey: 'id_admin' });
       // Un Post appartient à un utilisateur
-      Post.belongsTo(models.User, { as: 'User', foreignKey: 'id_user' });
+      Post.belongsTo(models.User, { as: 'Client', foreignKey: 'id_client' });
     }
   }
 
@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    id_user: {     // clé étrangère vers utilisateur
+    id_client: {     // clé étrangère vers utilisateur
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    date: {
+    appointment_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const userId = payload.id;
     const role = payload.role.toLowerCase();
 
-    if (role !== "user") {
+    if (role !== "client") {
       window.location.href = "/pages/admin/posts-dashboard.html";
       return;
     }
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
           <div class="form-group">
             <label>Date de la séance</label>
-            <input type="text" value="${new Date(session.date).toLocaleDateString()}" readonly>
+            <input type="text" value="${new Date(session.appointment_date).toLocaleDateString()}" readonly>
           </div>
         </div>
         <div class="flex-group-card">

@@ -28,9 +28,9 @@ module.exports = {
         allowNull: false
       },
       role: {
-        type: Sequelize.ENUM('admin', 'user'),
+        type: Sequelize.ENUM('admin', 'client'),
         allowNull: false,
-        defaultValue: 'user'
+        defaultValue: 'client'
       },
       created_at: { // correspond à underscored: true dans le modèle
         allowNull: false,

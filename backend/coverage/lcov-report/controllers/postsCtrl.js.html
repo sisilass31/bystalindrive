@@ -476,10 +476,10 @@ exports.createPost = async (req, res) =&gt; {
   console.log("createPost appelé avec body :", req.body);
 &nbsp;
   try {
-    const { id_user, date, start_time, end_time } = req.body;
+    const { id_client, appointment_date, start_time, end_time } = req.body;
 &nbsp;
     // Vérif élève existe
-    const user = await User.findByPk(id_user);
+    const user = await User.findByPk(id_client);
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!user) {
 <span class="cstat-no" title="statement not covered" >      return res.status(404).json({ message: "Utilisateur introuvable" });</span>
     }
@@ -488,7 +488,7 @@ exports.createPost = async (req, res) =&gt; {
     const adminConflict = await Post.findOne({
       where: {
         id_admin: req.user.id,
-        date,
+        appointment_date,
         [Op.or]: [
           {
             start_time: { [Op.between]: [start_time, end_time] },
@@ -515,8 +515,8 @@ exports.createPost = async (req, res) =&gt; {
     // Vérif chevauchement ELEVE (même logique)
     const eleveConflict = await Post.findOne({
       where: {
-        id_user,
-        date,
+        id_client,
+        appointment_date,
         [Op.or]: [
           {
             start_time: { [Op.between]: [start_time, end_time] },
@@ -543,8 +543,8 @@ exports.createPost = async (req, res) =&gt; {
     // Si pas de conflit → créer le rdv
     const post = await Post.create({
       id_admin: req.user.id, // l’admin connecté
-      id_user,
-      date,
+      id_client,
+      appointment_date,
       start_time,
       end_time,
     });
@@ -562,7 +562,7 @@ exports.createPost = async (req, res) =&gt; {
 exports.updatePost = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >  try {</span>
     const { id } = <span class="cstat-no" title="statement not covered" >req.params;</span>
-    const { id_user, date, start_time, end_time } = <span class="cstat-no" title="statement not covered" >req.body;</span>
+    const { id_client, appointment_date, start_time, end_time } = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
     const post = <span class="cstat-no" title="statement not covered" >await Post.findByPk(id);</span>
 <span class="cstat-no" title="statement not covered" >    if (!post) <span class="cstat-no" title="statement not covered" >return res.status(404).json({ message: 'RDV introuvable' });</span></span>
@@ -573,14 +573,14 @@ exports.updatePost = <span class="fstat-no" title="function not covered" >as</sp
     }
 &nbsp;
     // Si on change le user du RDV → vérifier que l’utilisateur existe
-<span class="cstat-no" title="statement not covered" >    if (id_user) {</span>
-      const user = <span class="cstat-no" title="statement not covered" >await User.findByPk(id_user);</span>
+<span class="cstat-no" title="statement not covered" >    if (id_client) {</span>
+      const user = <span class="cstat-no" title="statement not covered" >await User.findByPk(id_client);</span>
 <span class="cstat-no" title="statement not covered" >      if (!user) <span class="cstat-no" title="statement not covered" >return res.status(404).json({ message: 'Utilisateur introuvable' });</span></span>
-<span class="cstat-no" title="statement not covered" >      post.id_user = id_user;</span>
+<span class="cstat-no" title="statement not covered" >      post.id_client = id_client;</span>
     }
 &nbsp;
     // Mise à jour des champs si présents
-<span class="cstat-no" title="statement not covered" >    if (date) <span class="cstat-no" title="statement not covered" >post.date = date;</span></span>
+<span class="cstat-no" title="statement not covered" >    if (appointment_date) <span class="cstat-no" title="statement not covered" >post.appointment_date = appointment_date;</span></span>
 <span class="cstat-no" title="statement not covered" >    if (start_time) <span class="cstat-no" title="statement not covered" >post.start_time = start_time;</span></span>
 <span class="cstat-no" title="statement not covered" >    if (end_time) <span class="cstat-no" title="statement not covered" >post.end_time = end_time;</span></span>
 &nbsp;
@@ -602,7 +602,7 @@ exports.getAllPosts = <span class="fstat-no" title="function not covered" >as</s
         { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false },
         { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'], where: { is_deleted: false }, required: false }
       ],
-      order: [['date', 'ASC'], ['start_time', 'ASC']]
+      order: [['appointment_date', 'ASC'], ['start_time', 'ASC']]
     });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return res.status(200).json(posts);</span>
@@ -616,12 +616,12 @@ exports.getAllPosts = <span class="fstat-no" title="function not covered" >as</s
 exports.getMyPosts = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >  try {</span>
     const posts = <span class="cstat-no" title="statement not covered" >await Post.findAll({</span>
-      where: { id_user: req.user.id },
+      where: { id_client: req.user.id },
       include: [
         { model: User, as: 'Admin', attributes: ['id', 'firstname', 'lastname'] },
         { model: User, as: 'User', attributes: ['id', 'firstname', 'lastname'] }
       ],
-      order: [['date', 'ASC'], ['start_time', 'ASC']]
+      order: [['appointment_date', 'ASC'], ['start_time', 'ASC']]
     });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return res.status(200).json(posts);</span>
@@ -644,7 +644,7 @@ exports.getOnePost = <span class="fstat-no" title="function not covered" >as</sp
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!post) <span class="cstat-no" title="statement not covered" >return res.status(404).json({ message: 'RDV introuvable' });</span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (req.user.role !== 'admin' &amp;&amp; req.user.id !== post.id_user) {</span>
+<span class="cstat-no" title="statement not covered" >    if (req.user.role !== 'admin' &amp;&amp; req.user.id !== post.id_client) {</span>
 <span class="cstat-no" title="statement not covered" >      return res.status(403).json({ message: 'Accès interdit' });</span>
     }
 &nbsp;

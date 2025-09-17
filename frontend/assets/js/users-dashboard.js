@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="text-card-user-dashboard">
           <div class="user-card-header">
             <strong>${escapeHtml(u.firstname)} ${escapeHtml(u.lastname)}</strong>
-            <span class="badge ${u.role==="admin"?"role-admin":"role-user"}">${u.role}</span>
+            <span class="badge ${u.role==="admin"?"role-admin":"role-client"}">${u.role}</span>
           </div>
           <div class="user-card-email">${escapeHtml(u.email)}</div>
         </div>
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputNom.value=""; 
     inputPrenom.value=""; 
     inputEmail.value=""; 
-    inputRole.value="user"; 
+    inputRole.value="client"; 
     modalOverlay.style.display="flex"; 
     inputNom.focus(); 
   });
