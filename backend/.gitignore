@@ -25,6 +25,9 @@ build/
 .vscode/
 .idea/
 
+# Ignorer les backups MySQL
+backups/
+
 # Others
 
 seeders
