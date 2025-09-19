@@ -8,8 +8,8 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
-    "start": "nodemon server.js"
-    
+    "start": "nodemon server.js",
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

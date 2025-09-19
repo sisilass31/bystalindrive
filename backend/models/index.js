@@ -11,9 +11,15 @@ const db = {};
 
 let sequelize;
 
-// ✅ Si on est en test, on utilise SQLite en mémoire
+// Si on est en test, on utilise SQLite en mémoire
 if (env === 'test') {
-  sequelize = new Sequelize('sqlite::memory:', { logging: false });
+  sequelize = new Sequelize({
+    // le dialect
+    dialect: 'sqlite',
+    // SQLite en mémoire      
+    storage: ':memory:',
+    logging: false
+  });
 } else if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
