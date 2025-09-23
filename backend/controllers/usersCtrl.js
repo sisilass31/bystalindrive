@@ -18,11 +18,14 @@ exports.register = async (req, res) => {
     if (!lastname || !firstname || !email) {
       return res.status(400).json({ message: "Veuillez remplir tous les champs." });
     }
+    // Validation email
     if (!validator.isEmail(email)) {
       return res.status(400).json({ message: "Email invalide." });
     }
 
+    // On cherche dans la BDD si l'utilisateur existe (via le mail)
     const userExists = await User.findOne({ where: { email } });
+    // si oui → envoie le message
     if (userExists) return res.status(400).json({ message: "Cet email existe déjà." });
 
     // Générer mot de passe si non fourni
@@ -36,6 +39,7 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "Mot de passe invalide." });
     }
 
+    // On hash le mdp
     const hash = await bcrypt.hash(password, saltRounds);
 
     const newUser = await User.create({
@@ -77,14 +81,20 @@ exports.register = async (req, res) => {
 
 // ------------------ LOGIN ------------------
 exports.login = async (req, res) => {
+  // On récupère les données
   const { email, password } = req.body;
   try {
+    // On recherche dans la BDD le mail
     const user = await User.findOne({ where: { email } });
+    // si on trouve pas alors on return le message
     if (!user) return res.status(401).json({ message: "Utilisateur non trouvé." });
 
+    // On vérifie le mot de passe en comparant grâce à bcrypt
     const validPassword = await bcrypt.compare(password, user.password);
+    // Si ce n'est pas similaire alors on return le message
     if (!validPassword) return res.status(401).json({ message: "Mot de passe incorrect." });
 
+    // Si le mail et le mdp sont bons alors on créer un json web token
     const token = jwt.sign(
       {
         id: user.id,
@@ -97,8 +107,9 @@ exports.login = async (req, res) => {
       { expiresIn: "24h" }
     );
 
+    // Si c'est un admin on le redirige dans dashboard et si c'est un client - espace client
     const redirect = user.role.toLowerCase() === "admin"
-      ? "/pages/admin/users-dashboard.html"
+      ? "/pages/admin/dashboard.html"
       : "/pages/client/espace-client.html";
 
     return res.status(200).json({ token, redirect });

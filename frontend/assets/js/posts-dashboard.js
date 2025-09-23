@@ -1,27 +1,35 @@
+// Attendre que le DOM soit chargé avant d’exécuter le script
 document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("token");
-  if (!token) return window.location.href = "/pages/login.html";
 
+  // --- Vérification de l’authentification ---
+  const token = localStorage.getItem("token"); // récupérer le JWT stocké
+  if (!token) return window.location.href = "/pages/login.html"; // pas de token → redirection login
+
+  // Décodage du token pour récupérer le payload (infos utilisateur)
   const payload = JSON.parse(atob(token.split('.')[1]));
-  if (payload.role !== 'admin') return window.location.href = "/pages/error-404.html";
+  // Vérification que l’utilisateur est admin
+  if (payload.role !== 'admin') return window.location.href = "/pages/error-404.html"; // rôle non autorisé
 
   console.log("Admin connecté :", payload);
 
+  // --- Récupération des infos de l’admin depuis l’API ---
   let admin;
   try {
     const res = await fetch(`http://localhost:3000/api/users/${payload.id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` } // envoyer le JWT pour authentification
     });
     if (!res.ok) throw new Error("Impossible de récupérer les infos admin");
-    admin = await res.json();
+    admin = await res.json(); // stocker les infos admin
   } catch (err) {
     console.error(err);
-    localStorage.removeItem("token");
-    window.location.href = "/pages/login.html";
+    localStorage.removeItem("token"); // supprimer token si erreur
+    window.location.href = "/pages/login.html"; // redirection login
     return;
   }
 
-  // --- MODALS ---
+  // --- Création des modals dynamiques ---
+
+  // Modal de confirmation (supprimer / modifier)
   const modal = document.createElement("div");
   modal.id = "confirmModal";
   modal.className = "modal-overlay";
@@ -36,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     </div>`;
   document.body.appendChild(modal);
 
+  // Fonction pour afficher la modal de confirmation
   function showModal(title, message, confirmText = "Confirmer") {
     return new Promise(resolve => {
       document.getElementById("modalTitle").textContent = title;
@@ -45,19 +54,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       confirmBtn.textContent = confirmText;
       modal.style.display = "flex";
 
-      function cleanUp() {
+      function cleanUp() { // nettoyer les listeners après action
         confirmBtn.removeEventListener("click", onConfirm);
         cancelBtn.removeEventListener("click", onCancel);
         modal.style.display = "none";
       }
-      function onConfirm() { cleanUp(); resolve(true); }
-      function onCancel() { cleanUp(); resolve(false); }
+      function onConfirm() { cleanUp(); resolve(true); } // action confirmée
+      function onCancel() { cleanUp(); resolve(false); } // action annulée
 
       confirmBtn.addEventListener("click", onConfirm);
       cancelBtn.addEventListener("click", onCancel);
     });
   }
 
+  // Modal d’information (succès / erreur)
   const infoModal = document.createElement("div");
   infoModal.id = "infoModal";
   infoModal.className = "modal-overlay";
@@ -85,11 +95,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // --- DATE MIN TODAY ---
+  // --- Date min aujourd’hui pour planification ---
   const dateInput = document.getElementById("date");
   dateInput.setAttribute("min", new Date().toISOString().split("T")[0]);
 
+  // --- Auto-complétion des élèves ---
   const eleveInput = document.getElementById("eleve");
+
+  // Récupérer les utilisateurs depuis l’API pour remplir datalist
   async function fetchUsersForDatalist() {
     try {
       const res = await fetch("http://localhost:3000/api/users", { headers: { Authorization: `Bearer ${token}` }});
@@ -97,6 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch { return []; }
   }
 
+  // Remplir la datalist avec les utilisateurs
   async function populateDatalist() {
     const users = await fetchUsersForDatalist();
     const datalist = document.getElementById("eleves");
@@ -105,6 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   await populateDatalist();
 
+  // Filtrage dynamique sur input élève
   eleveInput.addEventListener("input", async () => {
     const query = eleveInput.value.toLowerCase();
     const users = await fetchUsersForDatalist();
@@ -114,6 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .forEach(u => datalist.appendChild(Object.assign(document.createElement("option"), { value: `${u.firstname} ${u.lastname}` })));
   });
 
+  // --- Gestion formulaire planification ---
   const form = document.querySelector(".planification-container form");
   const container = document.querySelector(".cards-container");
 
@@ -124,16 +140,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const start = document.getElementById("start").value;
     const end = document.getElementById("end").value;
 
+    // Vérification champs remplis
     if (!eleveName || !appointment_date || !start || !end) return showInfoModal("Champs manquants", "Veuillez remplir tous les champs.");
 
-    const selectedDate = new Date(date);
+    // Vérification date future
+    const selectedDate = new Date(appointment_date);
     const now = new Date(); now.setHours(0,0,0,0);
     if (selectedDate < now) return showInfoModal("Date invalide", "Vous ne pouvez pas créer une séance pour une date passée !");
 
+    // Vérifier que l’élève existe
     const users = await fetchUsersForDatalist();
     const user = users.find(u => `${u.firstname} ${u.lastname}` === eleveName);
     if (!user) return showInfoModal("Erreur", "Utilisateur non trouvé");
 
+    // Préparer les données pour l’API
     const postData = { id_client: user.id, id_admin: admin.id, appointment_date, start_time: start, end_time: end };
     try {
       const res = await fetch("http://localhost:3000/api/posts", {
@@ -144,11 +164,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Erreur création");
       await showInfoModal("Succès", "Séance créée !");
       form.reset();
-      fetchAndRenderSessions();
-    } catch (err) { console.error(err); showInfoModal("Erreur", "Impossible de créer la séance"); }
+      fetchAndRenderSessions(); // rafraîchir l’affichage des séances
+    } catch (err) {
+      console.error(err);
+      showInfoModal("Erreur", "Impossible de créer la séance");
+    }
   });
 
-  // --- FETCH & RENDER SESSIONS ---
+  // --- Fetch et affichage des séances ---
   let sessions = [];
   async function fetchAndRenderSessions() {
     try {
@@ -156,9 +179,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Erreur fetch sessions");
       sessions = await res.json();
       renderSessions();
-    } catch (err) { console.error(err); showInfoModal("Erreur", "Impossible de récupérer les séances"); }
+    } catch (err) {
+      console.error(err);
+      showInfoModal("Erreur", "Impossible de récupérer les séances");
+    }
   }
 
+  // Affichage des séances sous forme de cards
   function renderSessions() {
     container.innerHTML = "";
     sessions.forEach(session => {
@@ -183,7 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // --- Event Delegation pour Modifier / Supprimer ---
+  // --- Event delegation pour gérer Modifier / Supprimer ---
   container.addEventListener("click", async (e) => {
     const btn = e.target.closest("button[data-id]");
     if (!btn) return;
@@ -193,13 +220,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const card = btn.closest(".card-admin");
     const inputs = card.querySelectorAll("input");
 
+    // --- Supprimer séance ---
     if (btn.classList.contains("delete-button")) {
       const confirm = await showModal("Supprimer ?", `Voulez-vous vraiment supprimer la séance de ${session.Client.firstname} ${session.Client.lastname} ?`, "Supprimer");
       if (!confirm) return;
-      try { await fetch(`http://localhost:3000/api/posts/${sessionId}`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}` } }); await showInfoModal("Succès","Séance supprimée"); fetchAndRenderSessions(); }
-      catch(err){ console.error(err); showInfoModal("Erreur","Impossible de supprimer"); }
+      try {
+        await fetch(`http://localhost:3000/api/posts/${sessionId}`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}` } });
+        await showInfoModal("Succès","Séance supprimée");
+        fetchAndRenderSessions(); // rafraîchir
+      } catch(err) {
+        console.error(err);
+        showInfoModal("Erreur","Impossible de supprimer");
+      }
     }
 
+    // --- Modifier séance ---
     if (btn.classList.contains("edit-button")) {
       if (btn.dataset.editing === "true") {
         const confirm = await showModal("Modifier ?", "Confirmer modification ?", "Enregistrer");
@@ -212,9 +247,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
           await fetch(`http://localhost:3000/api/posts/${sessionId}`, { method:"PUT", headers:{ Authorization:`Bearer ${token}`, "Content-Type":"application/json" }, body: JSON.stringify(updatedData) });
-          await showInfoModal("Succès", "Séance modifiée"); fetchAndRenderSessions();
-        } catch(err){ console.error(err); showInfoModal("Erreur","Impossible de modifier"); }
+          await showInfoModal("Succès", "Séance modifiée");
+          fetchAndRenderSessions();
+        } catch(err) {
+          console.error(err);
+          showInfoModal("Erreur","Impossible de modifier");
+        }
       } else {
+        // Activer les inputs pour édition
         inputs.forEach(i=>i.disabled=false);
         btn.dataset.editing = "true";
         btn.innerHTML="<p>Enregistrer</p><i class='bxr bx-save'></i>";
@@ -222,5 +262,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // --- Chargement initial des séances ---
   await fetchAndRenderSessions();
 });
