@@ -26,6 +26,12 @@ router.put("/:id", authMiddleware(), usersCtrl.updateUser);
 // ------------------ UPDATE PASSWORD USER ------------------
 router.put("/:id/password", authMiddleware(), usersCtrl.updatePassword);
 
+// ------------------ FORGOT PASSWORD ------------------
+router.post("/forgot-password", usersCtrl.forgotPassword);
+
+// ------------------ RESET PASSWORD ------------------
+router.post("/reset-password", usersCtrl.resetPassword);
+
 // ------------------ DELETE USER ------------------
 router.delete("/:id", authMiddleware(), usersCtrl.deleteUser);
 

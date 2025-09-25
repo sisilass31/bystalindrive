@@ -1,6 +1,7 @@
 const { User, Post } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const validator = require("validator");
 const crypto = require("crypto");
 const sendMail = require("../utils/sendMail"); // fonction Nodemailer
@@ -263,5 +264,112 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     console.error("Erreur deleteUser :", error);
     res.status(500).json({ message: "Erreur serveur lors de la suppression." });
+  }
+};
+
+// ------------------ FORGOT PASSWORD ------------------
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Cherche l'utilisateur
+    const user = await User.findOne({ where: { email } });
+
+    // Ne pas révéler si l'utilisateur existe ou pas
+    if (!user) {
+      return res.json({ message: "Si ce compte existe, un email de réinitialisation a été envoyé." });
+    }
+
+    // Générer un token temporaire (valide 15min)
+    const resetToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    // URL frontend de réinitialisation
+    const resetUrl = `http://localhost:3000/pages/reset-password.html?token=${resetToken}`;
+
+
+    // Config nodemailer
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: false, // TLS/STARTTLS
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      }
+    });
+
+    // Envoie du mail
+    await transporter.sendMail({
+      to: user.email,
+      subject: "Réinitialisation de votre mot de passe - Auto-école By Stalindrive",
+      html: `
+    <div style="width: 100%; background-color: #eaeaeaff; padding: 20px; font-family: Arial, sans-serif; box-sizing: border-box;"">
+      <div style="
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        text-align: start;
+        box-sizing: border-box;">
+        
+        <!-- Logo -->
+        <div style="text-align: start; margin-bottom: 20px;">
+          <img src="https://raw.githubusercontent.com/sisilass31/cda-project/main/frontend/assets/images/bystalindrive.png" alt="Logo By Stalindrive" style="width: 180px; height: auto;">
+        </div>
+
+        <p style="font-size: 16px; color: #111111;">Vous avez demandé à réinitialiser votre mot de passe pour votre compte Auto-école By Stalindrive.</p>
+        <p style="font-size: 16px; color: #111111;">Ce lien est <strong>valide 15 minutes</strong> :</p>
+        <a href="${resetUrl}" style="
+          display: inline-block;
+          text-align: center;
+          line-height: 38px; /* même que la hauteur du bouton pour centrer verticalement */
+          padding: 0 22px;
+          background: linear-gradient(90deg, #ef7f09, #e75617);
+          color: #111111;
+          text-decoration: none;
+          border-radius: 8px;
+          height: 38px;
+          white-space: nowrap;
+        ">Réinitialiser mon mot de passe</a>
+        <p style="font-size: 14px; color: #252525;">Si vous n’avez pas demandé cette action, vous pouvez ignorer ce mail.</p>
+        <p style="font-size: 14px; color: #575757ff;">Merci, Équipe Auto-école By Stalindrive</p>
+      </div>
+    </div>
+  `
+    });
+
+
+    res.json({ message: "Si ce compte existe, un email de réinitialisation a été envoyé." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur serveur, réessayez plus tard.", error: err.message });
+  }
+};
+
+// ------------------ RESET PASSWORD ------------------
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    // Vérifier le token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findByPk(decoded.id);
+    if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+    // Hash du nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: "Mot de passe mis à jour avec succès" });
+  } catch (err) {
+    res.status(400).json({ message: "Token invalide ou expiré" });
   }
 };

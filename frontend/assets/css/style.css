@@ -602,6 +602,38 @@ header {
 
 /* social media end */
 
+
+.forgot-password {
+  font-weight: 400;
+}
+
+.max-w {
+  max-width: 510px;
+  width: 100%;
+}
+
+.receive-mail-container img {
+  max-width: 220px;
+  width: 100%;
+}
+
+.receive-mail-container {
+  display: flex;
+  flex-direction: column;
+ gap: 16px;
+  background-color: var(--clear-black);
+}
+
+.img-receive {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.receive-mail-container p {
+  font-size: 14px;
+}
+
 /************* LOGIN END *************/
 
 /************* ESPACE CLIENT *************/
@@ -815,12 +847,16 @@ header {
 
 .password-wrapper #toggleNewPassword,
 .password-wrapper #toggleConfirmPassword,
-.password-wrapper #toggleModalOld {
+.password-wrapper #toggleModalOld,
+.password-wrapper #toggleResetPassword,
+.password-wrapper #toggleResetConfirm {
   cursor: pointer;
   position: absolute;
   right: 18px;
   bottom: 15%;
 }
+
+
 
 .password-wrapper #toggleModalOld {
   bottom: 26% !important;
@@ -1294,6 +1330,56 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /************* ADMIN END *************/
 
+/************* RESET PASSWORD *************/
+
+/************* RESET PASSWORD *************/
+
+/* Bloc validation mot de passe */
+#resetMessage,
+#message,
+#resetMatchMessage {
+  font-size: 14px;
+}
+
+/* Liste des critères */
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.criteria-list li,
+#resetMatchMessage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(244, 244, 244, 0.8);
+  /* couleur texte neutre */
+}
+
+/* Taille des icônes */
+.criteria-list i,
+#resetMatchMessage i {
+  font-size: 18px;
+}
+
+/* Critère validé : gradient sur l'icône seulement */
+.criteria-list li.valid i,
+.match-mdp {
+  background-image: linear-gradient(90deg, #ef7f09, #e75617);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Critère non-validé : gris neutre sur l'icône */
+.criteria-list li.invalid i {
+  color: #ccc;
+}
+
+/************* RESET PASSWORD END *************/
 
 /************* 404 END *************/
 

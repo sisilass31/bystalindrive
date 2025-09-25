@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
 
-    // Email unique et obligatoire avec validation de format
+    // Email unique et obligatoirex avec validation de format
     email: {
       type: DataTypes.STRING,
       allowNull: false,

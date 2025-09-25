@@ -6,8 +6,6 @@ const { Op } = require("sequelize");
 
 // ------------------ CREATE ------------------
 exports.createPost = async (req, res) => {
-  // Debug
-  console.log("createPost appelé avec body :", req.body);
 
   try {
     // Récupère les infos du RDV envoyées depuis le front
