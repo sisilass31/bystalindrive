@@ -1,46 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:3000/api/users";
+    const API_URL = "http://localhost:3000/api/users"; // API backend
 
-    // --- Sécurité : si déjà connecté, redirection selon rôle ---
+    // Vérifier si un utilisateur est déjà connecté (admin ou user)
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) {
-        try {
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            const role = payload.role?.toLowerCase();
-
-            if (role === "admin") {
-                window.location.href = "/pages/admin/dashboard.html";
-                return;
-            } else if (role === "user" || role === "client") {
-                window.location.href = "/pages/client/espace-client.html";
-                return;
-            } else {
-                localStorage.removeItem("token");
-                sessionStorage.removeItem("token");
-            }
-        } catch {
-            localStorage.removeItem("token");
-            sessionStorage.removeItem("token");
+        // Si déjà connecté, redirection selon rôle
+        const userRole = localStorage.getItem("role") || sessionStorage.getItem("role");
+        if (userRole === "admin") {
+            window.location.href = "/pages/admin/dashboard.html";
+        } else {
+            window.location.href = "/pages/client/espace-client.html";
         }
+        return; // Bloquer l'accès au set-password
     }
 
-    // --- Fonction modal ---
+    // Fonction pour afficher des modals messages
     function showModal(message, type = "info") {
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
         modal.innerHTML = `
-      <div class="modal-content ${type}">
-        <p>${message}</p>
-        <button id="closeModalBtn" class="button-3d">OK</button>
-      </div>
-    `;
+            <div class="modal-content ${type}">
+                <p>${message}</p>
+                <button id="closeModalBtn" class="button-3d">OK</button>
+            </div>
+        `;
         document.body.appendChild(modal);
         modal.style.display = "flex";
         modal.querySelector("#closeModalBtn").addEventListener("click", () => modal.remove());
         modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
     }
 
-    // --- Vérification conformité mot de passe ---
+    // Fonction d'évaluation de la conformité du mot de passe
     function evaluatePassword(pwd = "") {
         return {
             length: /.{12,}/.test(pwd),
@@ -51,12 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    // Initialise la vérification des critères et correspondance
     function initPasswordCriteria(passwordInputId, confirmInputId, criteriaId, matchId) {
         const passEl = document.getElementById(passwordInputId);
         const confirmEl = document.getElementById(confirmInputId);
         const messageEl = document.getElementById(criteriaId);
         const matchEl = document.getElementById(matchId);
-
         if (!passEl || !messageEl || !matchEl) return;
 
         const criteriaList = document.createElement("ul");
@@ -84,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pwd = passEl.value || "";
             const result = evaluatePassword(pwd);
 
+            // Mise à jour visuelle des critères
             criteriaDefs.forEach(def => {
                 const li = criteriaList.querySelector(`li[data-key="${def.key}"]`);
                 const icon = li.querySelector("i");
@@ -104,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
+            // Vérification correspondance avec confirmation
             if (confirmEl.value.length > 0) {
                 if (pwd === confirmEl.value) {
                     matchEl.innerHTML = `<i class='bxr bx-check-circle' style="background: linear-gradient(90deg, #ef7f09, #e75617); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent;"></i> Les mots de passe correspondent`;
@@ -120,17 +112,18 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCriteria();
     }
 
-    initPasswordCriteria("resetPassword", "resetConfirmPassword", "resetMessage", "resetMatchMessage");
+    // Initialise la conformité pour set-password
+    initPasswordCriteria("setPassword", "setConfirmPassword", "setPasswordMessage", "setMatchMessage");
 
-    // --- Form reset password ---
-    const resetForm = document.getElementById("resetForm");
-    if (resetForm) {
-        resetForm.addEventListener("submit", async e => {
+    // Gestion du submit du formulaire
+    const form = document.getElementById("setPasswordForm");
+    if (form) {
+        form.addEventListener("submit", async e => {
             e.preventDefault();
             const params = new URLSearchParams(window.location.search);
             const token = params.get("token");
-            const password = document.getElementById("resetPassword")?.value;
-            const confirm = document.getElementById("resetConfirmPassword")?.value;
+            const password = document.getElementById("setPassword")?.value;
+            const confirm = document.getElementById("setConfirmPassword")?.value;
 
             if (!password || !confirm) return showModal("Veuillez remplir tous les champs", "error");
             if (password !== confirm) return showModal("Les mots de passe ne correspondent pas", "error");
@@ -139,29 +132,31 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!Object.values(result).every(Boolean)) return showModal("Le mot de passe n'est pas conforme", "error");
 
             try {
-                const res = await fetch(`${API_URL}/reset-password`, {
+                const res = await fetch(`${API_URL}/set-password`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token, newPassword: password })
+                    body: JSON.stringify({ token, password })
                 });
                 const data = await res.json();
+
                 if (res.ok) {
-                    showModal("Mot de passe réinitialisé avec succès", "success");
-                    window.location.href = "/pages/login.html";
+                    // Redirection vers login après activation
+                    showModal("Votre mot de passe a été défini avec succès. Vous pouvez maintenant vous connecter.", "success");
+                    setTimeout(() => window.location.href = "/pages/login.html", 1500);
                 } else {
-                    showModal(data.message || "Erreur lors de la réinitialisation", "error");
+                    showModal(data.message || "Erreur lors de l’activation du compte", "error");
                 }
             } catch {
-                showModal("Erreur serveur lors de la réinitialisation", "error");
+                showModal("Erreur serveur lors de l’activation du compte", "error");
             }
         });
     }
 
-    // --- Toggle visibility ---
-    const toggle = document.getElementById("toggleResetPassword");
-    const toggleConfirm = document.getElementById("toggleResetConfirm");
-    const passEl = document.getElementById("resetPassword");
-    const confirmEl = document.getElementById("resetConfirmPassword");
+    // Gestion toggle visibilité mot de passe
+    const toggle = document.getElementById("toggleSetPassword");
+    const toggleConfirm = document.getElementById("toggleSetConfirm");
+    const passEl = document.getElementById("setPassword");
+    const confirmEl = document.getElementById("setConfirmPassword");
 
     if (toggle && passEl) {
         toggle.addEventListener("click", () => {
@@ -171,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggle.classList.toggle("bx-eye-slash", !isPassword);
         });
     }
+
     if (toggleConfirm && confirmEl) {
         toggleConfirm.addEventListener("click", () => {
             const isPassword = confirmEl.type === "password";

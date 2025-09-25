@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     // Mot de passe hashé
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
 
     // Rôle limité à admin ou client, par défaut client

@@ -32,6 +32,9 @@ router.post("/forgot-password", usersCtrl.forgotPassword);
 // ------------------ RESET PASSWORD ------------------
 router.post("/reset-password", usersCtrl.resetPassword);
 
+// ------------------ SET PASSWORD ------------------
+router.post("/set-password", usersCtrl.setPassword);
+
 // ------------------ DELETE USER ------------------
 router.delete("/:id", authMiddleware(), usersCtrl.deleteUser);
 

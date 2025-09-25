@@ -620,7 +620,7 @@ header {
 .receive-mail-container {
   display: flex;
   flex-direction: column;
- gap: 16px;
+  gap: 16px;
   background-color: var(--clear-black);
 }
 
@@ -833,7 +833,6 @@ header {
 }
 
 .profile-container {
-  max-width: 600px;
   min-width: 325px;
 }
 
@@ -849,7 +848,9 @@ header {
 .password-wrapper #toggleConfirmPassword,
 .password-wrapper #toggleModalOld,
 .password-wrapper #toggleResetPassword,
-.password-wrapper #toggleResetConfirm {
+.password-wrapper #toggleResetConfirm,
+#toggleSetConfirm,
+#toggleSetPassword {
   cursor: pointer;
   position: absolute;
   right: 18px;

@@ -1,20 +1,49 @@
 document.addEventListener("DOMContentLoaded", () => {
   const API_URL = "http://localhost:3000/api/users";
 
+  // --- Sécurité : si déjà connecté, redirection selon rôle ---
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])); // décodage payload JWT
+      const role = payload.role?.toLowerCase();
+
+      if (role === "admin") {
+        window.location.href = "/pages/admin/dashboard.html";
+        return;
+      } else if (role === "user" || role === "client") {
+        window.location.href = "/pages/client/espace-client.html";
+        return;
+      } else {
+        // rôle inconnu => nettoyage
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+      }
+    } catch {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+    }
+  }
+
   const form = document.getElementById("forgotForm");
   const emailInput = document.getElementById("email");
   const container = document.getElementById("forgotContainer");
+  const messageEl = document.getElementById("forgotMessage");
 
-  if (!form || !emailInput || !container) return;
+  if (!form || !emailInput || !container || !messageEl) return;
+
+  // --- Fonction pour afficher les messages ---
+  function showMessage(msg, color = "#e14d10") {
+    messageEl.textContent = msg;
+    messageEl.style.color = color;
+  }
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
     const email = emailInput.value.trim();
 
     if (!email) {
-      const messageEl = document.getElementById("forgotMessage");
-      messageEl.textContent = "Veuillez saisir votre email.";
-      messageEl.style.color = "#e14d10"; // rouge
+      showMessage("Veuillez saisir votre email.");
       return;
     }
 
@@ -38,15 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
       } else {
-        const messageEl = document.getElementById("forgotMessage");
-        messageEl.textContent = `❌ ${data.message || "Erreur serveur"}`;
-        messageEl.style.color = "#e14d10"; // rouge
+        showMessage(`❌ ${data.message || "Erreur serveur"}`);
       }
-
     } catch (err) {
-      const messageEl = document.getElementById("forgotMessage");
-      messageEl.textContent = "❌ Erreur serveur, réessayez plus tard.";
-      messageEl.style.color = "#e14d10"; // rouge
+      showMessage("❌ Erreur serveur, réessayez plus tard.");
       console.error(err);
     }
   });
