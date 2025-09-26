@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // --- Derniers utilisateurs ---
     const recentUsersList = document.getElementById("recentUsers");
-    users.slice(-3).reverse().forEach(u => {
+    users.slice(-5).reverse().forEach(u => {
       const li = document.createElement("li");
       li.textContent = `${u.firstname} ${u.lastname}`;
       recentUsersList.appendChild(li);
@@ -72,66 +72,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       .filter(p => new Date(p.appointment_date + "T" + p.start_time) >= now)
       .sort((a, b) => new Date(a.appointment_date + "T" + a.start_time) - new Date(b.appointment_date + "T" + b.start_time));
 
-    upcomingPosts.slice(0, 3).forEach(p => {
+    upcomingPosts.slice(0, 5).forEach(p => {
       const li = document.createElement("li");
-      const userName = p.User ? `${p.User.firstname} ${p.User.lastname}` : "Inconnu";
+
+      // Choisir le nom du client si dispo, sinon admin, sinon "Inconnu"
+      const userName = p.Client
+        ? `${p.Client.firstname} ${p.Client.lastname}`
+        : p.Admin
+          ? `${p.Admin.firstname} ${p.Admin.lastname}`
+          : "Inconnu";
+
       const formattedDate = new Date(p.appointment_date).toLocaleDateString();
       li.textContent = `${userName} le ${formattedDate} de ${formatTime(p.start_time)} à ${formatTime(p.end_time)}`;
       nextSessionsList.appendChild(li);
-    });
-
-    // --- Graphiques : 7 derniers jours ---
-    const today = new Date();
-    const last7Days = [...Array(7)].map((_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      return d;
-    }).reverse();
-
-    const labels = last7Days.map(d => d.toLocaleDateString());
-
-    // Fonction utilitaire pour comparer deux dates (sans heure)
-    const isSameDay = (d1, d2) =>
-      d1.getFullYear() === d2.getFullYear() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getDate() === d2.getDate();
-
-    // Inscriptions par jour
-    const usersCounts = last7Days.map(day =>
-      users.filter(u => isSameDay(new Date(u.createdAt), day)).length
-    );
-
-    new Chart(document.getElementById("usersChart"), {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Nouveaux inscrits',
-          data: usersCounts,
-          backgroundColor: '#ef7f09'
-        }]
-      },
-      options: { responsive: true }
-    });
-
-    // Posts par jour
-    const postsCounts = last7Days.map(day =>
-      posts.filter(p => isSameDay(new Date(p.createdAt), day)).length
-    );
-
-    new Chart(document.getElementById("postsChart"), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Posts créés',
-          data: postsCounts,
-          borderColor: '#e14d10',
-          backgroundColor: 'rgba(225,77,16,0.2)',
-          fill: true
-        }]
-      },
-      options: { responsive: true }
     });
 
   } catch (err) {

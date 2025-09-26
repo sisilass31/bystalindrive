@@ -105,6 +105,10 @@ ul li {
   gap: 30px !important;
 }
 
+.gap-18 {
+  gap: 18px !important;
+}
+
 .height-205 {
   height: 205px;
 }
@@ -230,6 +234,10 @@ button {
 
 .clear-white {
   color: var(--clear-white);
+}
+
+.flex {
+  display: flex;
 }
 
 .column {
@@ -1308,7 +1316,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .stats-box,
 .charts-box,
-.next-box {
+.next-box,
+.quick-actions-link {
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
@@ -1320,14 +1329,21 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .stats-card,
 .next-box .card-admin,
-.charts-box .card-admin {
+.charts-box .card-admin,
+.quick-actions a {
   flex: 1;
+}
+
+.stats-card {
+  height: 200px;
+  justify-content: space-between;
 }
 
 .stats-card p {
   display: flex;
   justify-content: end;
 }
+
 
 /************* ADMIN END *************/
 
@@ -1630,6 +1646,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .ecole-footer {
     width: calc(100% - 28px);
   }
+
+  .card-admin {
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .stats-card {
+    height: 120px;
+  }
 }
 
 /* ≤ 768px — tablette portrait */
@@ -1848,6 +1873,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     display: contents;
   }
 
+  .quick-actions-link {
+    flex-direction: column;
+  }
+
+  .quick-actions a {
+    flex: auto;
+  }
 
   .title h1 i {
     display: none;
@@ -1913,12 +1945,5 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .cards-container:has(.card-admin:nth-child(3)):not(:has(.card-admin:nth-child(4))) .card-admin:nth-child(-n + 2) {
     flex-basis: calc(50% - 15px);
     max-width: calc(50% - 15px);
-  }
-}
-
-@media screen and (max-width: 850px) {
-  .card-admin {
-    flex-basis: 100% !important;
-    max-width: 100% !important;
   }
 }
