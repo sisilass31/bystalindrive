@@ -15,19 +15,19 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     // Prénom de l’utilisateur
     firstname: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50), // 50 caractères max
       allowNull: false
     },
 
     // Nom de famille de l’utilisateur
     lastname: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50), // 50 caractères max
       allowNull: false
     },
 
-    // Email unique et obligatoirex avec validation de format
+    // Email unique et obligatoire avec validation de format
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100), // 100 caractères max
       allowNull: false,
       unique: true,
       validate: { isEmail: true }
@@ -35,9 +35,10 @@ module.exports = (sequelize, DataTypes) => {
 
     // Mot de passe hashé
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255), // 255 pour stocker le hash complet
       allowNull: true
     },
+
 
     // Rôle limité à admin ou client, par défaut client
     role: {
