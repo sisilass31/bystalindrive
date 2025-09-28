@@ -72,7 +72,7 @@ describe("users controller - unit", () => {
       // Vérifie que la réponse JSON contient le token et la redirection
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
         token: "fake-jwt-token",
-        redirect: "/pages/admin/users-dashboard.html"
+        redirect: "/pages/admin/dashboard.html" // <-- correction ici
       }));
     });
   });
