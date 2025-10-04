@@ -122,15 +122,40 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,6 +171,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,26 +187,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
 &nbsp;
@@ -187,59 +221,76 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
+&nbsp;
+// Nom du fichier courant (index.js)
 const basename = path.basename(__filename);
+&nbsp;
+// Détection de l’environnement (défaut = development)
 const env = process.env.NODE_ENV || <span class="branch-1 cbranch-no" title="branch not covered" >'development';</span>
+&nbsp;
+// Récupération de la config (config.json) selon l’environnement
 const config = require(path.join(__dirname, '/../config/config.json'))[env];
+&nbsp;
+// Objet qui contiendra tous les modèles
 const db = {};
 &nbsp;
 let sequelize;
 &nbsp;
-// Si on est en test, on utilise SQLite en mémoire
+// Si on est en environnement de test, on utilise SQLite en mémoire
 if (env === 'test') {
   sequelize = new Sequelize({
-    // le dialect
-    dialect: 'sqlite',
-    // SQLite en mémoire      
-    storage: ':memory:',
-    logging: false
+    dialect: 'sqlite',   // Type de base : SQLite
+    storage: ':memory:', // Stockage uniquement en mémoire
+    logging: false       // Pas de logs SQL
   });
+&nbsp;
+// Si on a une variable d’environnement pour la DB (ex: en prod)
 } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="else path not taken" >E</span>if (config.use_env_variable) {</span>
 <span class="cstat-no" title="statement not covered" >  sequelize = new Sequelize(process.env[config.use_env_variable], config);</span>
+&nbsp;
+// Sinon, on se connecte avec les infos du fichier config.json
 } else {
 <span class="cstat-no" title="statement not covered" >  sequelize = new Sequelize(config.database, config.username, config.password, config);</span>
 }
 &nbsp;
-// Chargement des modèles
+// Chargement automatique de tous les modèles du dossier "models"
 fs
-  .readdirSync(__dirname)
+  .readdirSync(__dirname) // on lit les fichiers du dossier courant
   .filter(file =&gt; (
-    file.indexOf('.') !== 0 &amp;&amp;
-    file !== basename &amp;&amp;
-    file.slice(-3) === '.js' &amp;&amp;
-    file.indexOf('.test.js') === -1
+    file.indexOf('.') !== 0 &amp;&amp;      // on ignore les fichiers cachés
+    file !== basename &amp;&amp;            // on ignore index.js (ce fichier)
+    file.slice(-3) === '.js' &amp;&amp;     // on ne prend que les .js
+    file.indexOf('.test.js') === -1 // on ignore les fichiers de tests
   ))
   .forEach(file =&gt; {
+    // On importe la fonction qui définit le modèle
     const modelFactory = require(path.join(__dirname, file));
 &nbsp;
+    // Vérifie que le fichier exporte bien une fonction (sécurité)
     <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof modelFactory !== 'function') {
 <span class="cstat-no" title="statement not covered" >      console.warn(`⚠️ Le fichier ${file} n'exporte pas une fonction et sera ignoré.`);</span>
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
+    // On exécute la fonction pour créer le modèle avec sequelize et DataTypes
     const model = modelFactory(sequelize, Sequelize.DataTypes);
+&nbsp;
+    // On stocke le modèle dans l’objet db
     db[model.name] = model;
   });
 &nbsp;
-// Associations
+// On applique les associations si elles existent (User.hasMany(Post), etc.)
 Object.keys(db).forEach(modelName =&gt; {
   <span class="missing-if-branch" title="else path not taken" >E</span>if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 &nbsp;
+// On ajoute sequelize et Sequelize dans l’objet db pour les exporter aussi
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 &nbsp;
+// On exporte db qui contient tous les modèles + sequelize
 module.exports = db;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -247,7 +298,7 @@ module.exports = db;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-19T01:04:52.154Z
+                at 2025-10-03T23:16:51.606Z
             </div>
         <script src="../prettify.js"></script>
         <script>

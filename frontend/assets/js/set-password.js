@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (res.ok) {
                     // Redirection vers login après activation
                     showModal("Votre mot de passe a été défini avec succès. Vous pouvez maintenant vous connecter.", "success");
-                    setTimeout(() => window.location.href = "/pages/login.html", 1500);
+                    window.location.href = "/pages/login.html"
                 } else {
                     showModal(data.message || "Erreur lors de l’activation du compte", "error");
                 }

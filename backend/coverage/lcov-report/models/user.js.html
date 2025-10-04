@@ -116,18 +116,58 @@
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,51 +213,71 @@
 const { Model } = require('sequelize');
 &nbsp;
 module.exports = (sequelize, DataTypes) =&gt; {
+  // On définit le modèle User qui hérite de Sequelize.Model
   class User extends Model {
+    // Ici on déclare les associations avec d'autres modèles
     static associate(models) {
-      // Relation : un user/admin peut créer plusieurs rendez-vous
+      // Un user (admin) peut créer plusieurs posts/rendez-vous
       User.hasMany(models.Post, { as: 'RdvCrees', foreignKey: 'id_admin' });
     }
   }
 &nbsp;
+  // On initialise le modèle avec ses colonnes/attributs
   User.init({
+    // Prénom de l’utilisateur
     firstname: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50), // 50 caractères max
       allowNull: false
     },
 &nbsp;
+    // Nom de famille de l’utilisateur
     lastname: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50), // 50 caractères max
       allowNull: false
     },
 &nbsp;
+    // Email unique et obligatoire avec validation de format
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100), // 100 caractères max
       allowNull: false,
-      unique: true, // UNIQUE sur email
+      unique: true,
       validate: { isEmail: true }
     },
 &nbsp;
+    // Mot de passe hashé
     password: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING(255), // 255 pour stocker le hash complet
+      allowNull: true
     },
 &nbsp;
+&nbsp;
+    // Rôle limité à admin ou client, par défaut client
     role: {
       type: DataTypes.ENUM('admin', 'client'),
       allowNull: false,
       defaultValue: 'client'
     },
-    is_deleted: {               
+&nbsp;
+    // Champ pour un "soft delete" (désactivation sans suppression physique)
+    is_deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false
     }
   }, {
+    // Instance sequelize utilisée
     sequelize,
+&nbsp;
+    // Nom du modèle dans Sequelize
     modelName: 'User',
+&nbsp;
+    // Nom explicite de la table en base
     tableName: 'Users',
+&nbsp;
+    // Ajoute created_at et updated_at automatiquement
     timestamps: true,
+&nbsp;
+    // Transforme les noms en snake_case (ex: created_at au lieu de createdAt)
     underscored: true
   });
 &nbsp;
@@ -229,7 +289,7 @@ module.exports = (sequelize, DataTypes) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-19T01:04:52.154Z
+                at 2025-10-03T23:16:51.606Z
             </div>
         <script src="../prettify.js"></script>
         <script>
