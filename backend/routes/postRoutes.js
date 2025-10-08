@@ -1,25 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const postsCtrl = require('../controllers/postsCtrl');
+const csrfProtection = require('csurf')({ cookie: true });
 const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware');
 
+// Route pour récupérer le token CSRF
+router.get("/csrf-token", csrfProtection, (req, res) => {
+    res.json({ csrfToken: req.csrfToken() });
+});
 
-// Créer un RDV → admin uniquement
-router.post('/', adminMiddleware, postsCtrl.createPost);
+// ------------------ CREATE POST (admin uniquement) ------------------
+router.post('/', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.createPost);
 
-// Mettre à jour un RDV → admin uniquement
-router.put('/:id', adminMiddleware, postsCtrl.updatePost);
+// ------------------ UPDATE POST (admin uniquement) ------------------
+router.put('/:id', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.updatePost);
 
-// Voir tous les RDV → admin dashboard
-router.get('/', adminMiddleware, postsCtrl.getAllPosts);
+// ------------------ GET ALL POSTS (admin dashboard) ------------------
+router.get('/', authMiddleware(), adminMiddleware, postsCtrl.getAllPosts);
 
-// Voir ses propres RDV → user connecté
+// ------------------ GET MY POSTS (user connecté) ------------------
 router.get('/me', authMiddleware(), postsCtrl.getMyPosts);
 
-// Voir un RDV précis → admin ou user concerné
+// ------------------ GET ONE POST (admin ou user concerné) ------------------
 router.get('/:id', authMiddleware(), postsCtrl.getOnePost);
 
-// Supprimer un RDV → admin uniquement
-router.delete('/:id', adminMiddleware, postsCtrl.deletePost);
+// ------------------ DELETE POST (admin uniquement) ------------------
+router.delete('/:id', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.deletePost);
 
 module.exports = router;

@@ -89,11 +89,32 @@ export async function deleteUser(id, token) {
 }
 
 // ---------------- POSTS ----------------
+
+// Récupérer tous les posts (admin)
 export async function getPosts(token) {
-  const res = await fetch(`${API_URL}/api/posts`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetch(`${API_URL}/api/posts`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
   return handleResponse(res);
 }
 
+// Récupérer ses propres posts (user connecté)
+export async function getMyPosts(token) {
+  const res = await fetch(`${API_URL}/api/posts/me`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res);
+}
+
+// Récupérer un post précis
+export async function getPost(id, token) {
+  const res = await fetch(`${API_URL}/api/posts/${id}`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res);
+}
+
+// Créer un post (admin)
 export async function createPost(data, token) {
   const csrfToken = await getCsrfToken();
   const res = await fetch(`${API_URL}/api/posts`, {
@@ -109,6 +130,7 @@ export async function createPost(data, token) {
   return handleResponse(res);
 }
 
+// Mettre à jour un post (admin)
 export async function updatePost(id, data, token) {
   const csrfToken = await getCsrfToken();
   const res = await fetch(`${API_URL}/api/posts/${id}`, {
@@ -124,6 +146,7 @@ export async function updatePost(id, data, token) {
   return handleResponse(res);
 }
 
+// Supprimer un post (admin)
 export async function deletePost(id, token) {
   const csrfToken = await getCsrfToken();
   const res = await fetch(`${API_URL}/api/posts/${id}`, {
@@ -136,6 +159,7 @@ export async function deletePost(id, token) {
   });
   return handleResponse(res);
 }
+
 
 // ---------------- AUTH ----------------
 export async function login(email, password) {
