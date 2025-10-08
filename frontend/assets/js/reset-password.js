@@ -1,42 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
     const API_URL = "http://localhost:3000/api/users";
 
-    // --- Sécurité : si déjà connecté, redirection selon rôle ---
+    // --- Sécurité : redirection si déjà connecté ---
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) {
         try {
             const payload = JSON.parse(atob(token.split(".")[1]));
             const role = payload.role?.toLowerCase();
-
-            if (role === "admin") {
-                window.location.href = "/pages/admin/dashboard.html";
-                return;
-            } else if (role === "user" || role === "client") {
-                window.location.href = "/pages/client/espace-client.html";
-                return;
-            } else {
-                localStorage.removeItem("token");
-                sessionStorage.removeItem("token");
-            }
+            if (role === "admin") return window.location.href = "/pages/admin/dashboard.html";
+            if (role === "user" || role === "client") return window.location.href = "/pages/client/espace-client.html";
+            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
         } catch {
             localStorage.removeItem("token");
             sessionStorage.removeItem("token");
         }
     }
 
-    // --- Fonction modal ---
+    // --- Création modale dynamique ---
     function showModal(message, type = "info") {
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
-        modal.innerHTML = `
-      <div class="modal-content ${type}">
-        <p>${message}</p>
-        <button id="closeModalBtn" class="button-3d">OK</button>
-      </div>
-    `;
+
+        const content = document.createElement("div");
+        content.className = `modal-content ${type}`;
+
+        const msg = document.createElement("p");
+        msg.textContent = message;
+
+        const btn = document.createElement("button");
+        btn.id = "closeModalBtn";
+        btn.className = "button-3d";
+        btn.setAttribute("aria-label", "Fermer le modal");
+        btn.textContent = "OK";
+
+        content.append(msg, btn);
+        modal.appendChild(content);
         document.body.appendChild(modal);
+
         modal.style.display = "flex";
-        modal.querySelector("#closeModalBtn").addEventListener("click", () => modal.remove());
+        btn.addEventListener("click", () => modal.remove());
         modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
     }
 
@@ -56,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmEl = document.getElementById(confirmInputId);
         const messageEl = document.getElementById(criteriaId);
         const matchEl = document.getElementById(matchId);
-
         if (!passEl || !messageEl || !matchEl) return;
 
         const criteriaList = document.createElement("ul");
@@ -74,7 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const li = document.createElement("li");
             li.dataset.key = def.key;
             li.className = "invalid";
-            li.innerHTML = `<i class='bxr bx-x-circle'></i> ${def.text}`;
+
+            const icon = document.createElement("i");
+            icon.className = "bxr bx-x-circle";
+
+            li.append(icon, document.createTextNode(` ${def.text}`));
             criteriaList.appendChild(li);
         });
 
@@ -83,35 +89,28 @@ document.addEventListener("DOMContentLoaded", () => {
         function updateCriteria() {
             const pwd = passEl.value || "";
             const result = evaluatePassword(pwd);
-
             criteriaDefs.forEach(def => {
                 const li = criteriaList.querySelector(`li[data-key="${def.key}"]`);
                 const icon = li.querySelector("i");
                 if (result[def.key]) {
                     li.classList.replace("invalid", "valid");
                     icon.className = "bxr bx-check-circle";
-                    icon.style.backgroundImage = "linear-gradient(90deg, #ef7f09, #e75617)";
-                    icon.style.webkitBackgroundClip = "text";
-                    icon.style.webkitTextFillColor = "transparent";
-                    icon.style.color = "transparent";
                 } else {
                     li.classList.replace("valid", "invalid");
                     icon.className = "bxr bx-x-circle";
-                    icon.style.backgroundImage = "";
-                    icon.style.webkitBackgroundClip = "";
-                    icon.style.webkitTextFillColor = "";
-                    icon.style.color = "#ccc";
                 }
             });
 
+            matchEl.textContent = "";
             if (confirmEl.value.length > 0) {
+                const icon = document.createElement("i");
                 if (pwd === confirmEl.value) {
-                    matchEl.innerHTML = `<i class='bxr bx-check-circle' style="background: linear-gradient(90deg, #ef7f09, #e75617); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent;"></i> Les mots de passe correspondent`;
+                    icon.className = "bxr bx-check-circle";
+                    matchEl.append(icon, document.createTextNode(" Les mots de passe correspondent"));
                 } else {
-                    matchEl.innerHTML = `<i class='bxr bx-x-circle' style="color: #999;"></i> Les mots de passe ne correspondent pas`;
+                    icon.className = "bxr bx-x-circle";
+                    matchEl.append(icon, document.createTextNode(" Les mots de passe ne correspondent pas"));
                 }
-            } else {
-                matchEl.textContent = "";
             }
         }
 
@@ -157,20 +156,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Toggle visibility ---
-    const toggle = document.getElementById("toggleResetPassword");
+    // --- Toggle visibilité mot de passe ---
+    const togglePass = document.getElementById("toggleResetPassword");
     const toggleConfirm = document.getElementById("toggleResetConfirm");
     const passEl = document.getElementById("resetPassword");
     const confirmEl = document.getElementById("resetConfirmPassword");
 
-    if (toggle && passEl) {
-        toggle.addEventListener("click", () => {
+    if (togglePass && passEl) {
+        togglePass.addEventListener("click", () => {
             const isPassword = passEl.type === "password";
             passEl.type = isPassword ? "text" : "password";
-            toggle.classList.toggle("bx-eye", isPassword);
-            toggle.classList.toggle("bx-eye-slash", !isPassword);
+            togglePass.classList.toggle("bx-eye", isPassword);
+            togglePass.classList.toggle("bx-eye-slash", !isPassword);
         });
     }
+
     if (toggleConfirm && confirmEl) {
         toggleConfirm.addEventListener("click", () => {
             const isPassword = confirmEl.type === "password";

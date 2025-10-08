@@ -57,20 +57,48 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (res.ok) {
-        // Remplacer le formulaire par l'écran de confirmation
-        container.innerHTML = `
-          <div class="receive-mail-container">
-            <h2>Vérifiez votre boîte mail</h2>
-            <div class="img-receive"><img src="../assets/images/receive.png" alt="Succès"></div>
-            <p>Consultez votre boîte de réception <strong>${email}</strong> pour obtenir des instructions sur la façon de réinitialiser votre mot de passe.</p>
-            <a href="login.html" class="gradient-button">Retour à l’écran de connexion</a>
-          </div>
-        `;
+        // Vider le container
+        container.textContent = "";
+
+        // Créer le conteneur principal
+        const receiveContainer = document.createElement("div");
+        receiveContainer.className = "receive-mail-container";
+
+        // Titre
+        const h2 = document.createElement("h2");
+        h2.textContent = "Vérifiez votre boîte mail";
+
+        // Image
+        const imgDiv = document.createElement("div");
+        imgDiv.className = "img-receive";
+        const img = document.createElement("img");
+        img.src = "../assets/images/receive.png";
+        img.alt = "Succès";
+        imgDiv.appendChild(img);
+
+        // Paragraphe avec email sécurisé
+        const p = document.createElement("p");
+        p.textContent = "Consultez votre boîte de réception ";
+        const strong = document.createElement("strong");
+        strong.textContent = email;
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(" pour obtenir des instructions sur la façon de réinitialiser votre mot de passe."));
+
+        // Lien retour
+        const a = document.createElement("a");
+        a.href = "login.html";
+        a.className = "gradient-button";
+        a.textContent = "Retour à l’écran de connexion";
+
+        // Assembler tout
+        receiveContainer.append(h2, imgDiv, p, a);
+        container.appendChild(receiveContainer);
+
       } else {
-        showMessage(`❌ ${data.message || "Erreur serveur"}`);
+        showMessage(`${data.message || "Erreur serveur"}`);
       }
     } catch (err) {
-      showMessage("❌ Erreur serveur, réessayez plus tard.");
+      showMessage("Erreur serveur, réessayez plus tard.");
       console.error(err);
     }
   });

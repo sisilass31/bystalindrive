@@ -1,7 +1,7 @@
 // Import des modèles
 const { Post, User } = require('../models');
 const { Op } = require("sequelize");
-const Yup = require("yup"); // ✅ Validation schéma
+const Yup = require("yup");
 
 // ------------------ SCHÉMAS YUP ------------------
 const postSchema = Yup.object({

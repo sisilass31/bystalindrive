@@ -11,6 +11,7 @@ function renderCalendar() {
   const year = date.getFullYear();
   const month = date.getMonth();
 
+  // Affiche le mois et l’année en texte
   monthYear.textContent = date.toLocaleDateString("fr-FR", {
     month: "long",
     year: "numeric"
@@ -19,22 +20,24 @@ function renderCalendar() {
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
 
-  daysContainer.innerHTML = "";
+  // Nettoyer le conteneur avant de recréer les jours
+  daysContainer.textContent = "";
 
   // Décalage pour aligner les jours (Lundi en premier)
-  const startIndex = (firstDay + 6) % 7; 
+  const startIndex = (firstDay + 6) % 7;
   for (let i = 0; i < startIndex; i++) {
-    daysContainer.innerHTML += `<div></div>`;
+    const emptyDiv = document.createElement("div");
+    daysContainer.appendChild(emptyDiv);
   }
 
   // Jours du mois
-  const today = new Date(); // date d'aujourd'hui
+  const today = new Date(); // date du jour
   for (let i = 1; i <= lastDate; i++) {
     const day = document.createElement("div");
     day.classList.add("day");
     day.textContent = i;
 
-    // Applique "active" uniquement au jour actuel
+    // Applique la classe "active" si c’est le jour actuel
     if (
       year === today.getFullYear() &&
       month === today.getMonth() &&

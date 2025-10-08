@@ -70,7 +70,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("sessionsContainer");
     const noSession = document.getElementById("noSession");
 
-    container.innerHTML = ""; // vider le container
+    // Vider le container
+    container.textContent = "";
 
     if (!sessions.length) {
       container.style.display = "none"; // cacher le container
@@ -78,35 +79,70 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // il y a des sessions
+    // Il y a des sessions
     container.style.display = "flex";
-    noSession.style.display = "none"; // cacher le message "aucune séance"
+    noSession.style.display = "none";
 
     sessions.forEach(session => {
       const card = document.createElement("div");
       card.className = "card-bc-p20-br-15 formulaire box-shadow-3d sessions";
-      card.innerHTML = `
-        <div class="flex-group-card">
-          <div class="form-group">
-            <label>Instructeur</label>
-            <input type="text" value="${session.Admin.firstname} ${session.Admin.lastname}" readonly>
-          </div>
-          <div class="form-group">
-            <label>Date de la séance</label>
-            <input type="text" value="${new Date(session.appointment_date).toLocaleDateString()}" readonly>
-          </div>
-        </div>
-        <div class="flex-group-card">
-          <div class="form-group">
-            <label>Heure de début</label>
-            <input type="text" value="${session.start_time.slice(0, 5)}" readonly>
-          </div>
-          <div class="form-group">
-            <label>Heure de fin</label>
-            <input type="text" value="${session.end_time.slice(0, 5)}" readonly>
-          </div>
-        </div>
-      `;
+
+      // --- Flex group 1 (Instructeur / Date) ---
+      const flex1 = document.createElement("div");
+      flex1.className = "flex-group-card";
+
+      const instrGroup = document.createElement("div");
+      instrGroup.className = "form-group";
+      const instrLabel = document.createElement("label");
+      instrLabel.textContent = "Instructeur";
+      const instrInput = document.createElement("input");
+      instrInput.type = "text";
+      instrInput.value = `${session.Admin.firstname} ${session.Admin.lastname}`;
+      instrInput.readOnly = true;
+      instrGroup.append(instrLabel, instrInput);
+
+      const dateGroup = document.createElement("div");
+      dateGroup.className = "form-group";
+      const dateLabel = document.createElement("label");
+      dateLabel.textContent = "Date de la séance";
+      const dateInput = document.createElement("input");
+      dateInput.type = "text";
+      dateInput.value = new Date(session.appointment_date).toLocaleDateString();
+      dateInput.readOnly = true;
+      dateGroup.append(dateLabel, dateInput);
+
+      flex1.append(instrGroup, dateGroup);
+
+      // --- Flex group 2 (Heures début / fin) ---
+      const flex2 = document.createElement("div");
+      flex2.className = "flex-group-card";
+
+      const startGroup = document.createElement("div");
+      startGroup.className = "form-group";
+      const startLabel = document.createElement("label");
+      startLabel.textContent = "Heure de début";
+      const startInput = document.createElement("input");
+      startInput.type = "text";
+      startInput.value = session.start_time.slice(0, 5);
+      startInput.readOnly = true;
+      startGroup.append(startLabel, startInput);
+
+      const endGroup = document.createElement("div");
+      endGroup.className = "form-group";
+      const endLabel = document.createElement("label");
+      endLabel.textContent = "Heure de fin";
+      const endInput = document.createElement("input");
+      endInput.type = "text";
+      endInput.value = session.end_time.slice(0, 5);
+      endInput.readOnly = true;
+      endGroup.append(endLabel, endInput);
+
+      flex2.append(startGroup, endGroup);
+
+      // Ajouter les flex groups à la card
+      card.append(flex1, flex2);
+
+      // Ajouter la card au container
       container.appendChild(card);
     });
   }

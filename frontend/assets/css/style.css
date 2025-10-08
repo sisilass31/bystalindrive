@@ -71,7 +71,6 @@ h6 {
   min-height: calc(100dvh - 65px);
 }
 
-
 a {
   text-decoration: none;
   color: inherit;
@@ -423,7 +422,7 @@ header {
   background-image: linear-gradient(to bottom,
       rgba(0, 0, 0, 0.3),
       rgba(0, 0, 0, 0.8)),
-    url(../images/auto-ecole-stalindrive.jpg);
+    url(../images/auto-ecole-stalindrive.webp);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -471,9 +470,8 @@ header {
 
 
 .login-container {
-  width: 50%;
-  max-width: 600px;
-  min-width: 325px;
+  max-width: 510px;
+  width: 100%;
   margin: auto;
 }
 
@@ -527,6 +525,10 @@ header {
 
 .form-group-w-icon input:focus {
   outline: 1px solid var(--orange);
+}
+
+.email input {
+  padding: 0 12px 0 50px !important;
 }
 
 /* icon mail / password */
@@ -1842,7 +1844,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .login-container,
   .profile-container {
     width: 100% !important;
-    min-width: fit-content;
   }
 
   .title h1 {
@@ -1930,6 +1931,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   .sidebar {
     width: 100%;
+  }
+
+  .sidebar.active {
+    border-left: none;
   }
 }
 

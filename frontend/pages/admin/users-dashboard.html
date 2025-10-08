@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.boxicons.com https://unpkg.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://cdn.boxicons.com https://unpkg.com https://fonts.gstatic.com; img-src 'self' data:; script-src 'self';">
+
+    <meta name="description"
+        content="Gestion des utilisateurs BystalinDrive : créez, modifiez ou supprimez des comptes élèves et administrateurs en toute simplicité.">
     <title>Admin - Utilisateurs | Auto-école By Stalindrive</title>
     <!-- favicon -->
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
@@ -20,7 +24,7 @@
             <!-- Logo -->
             <div class="logo-container">
                 <a href="../../index.html">
-                    <img src="../../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                    <img src="../../assets/images/bystalindrive.avif" alt="Logo Auto-école By Stalindrive">
                 </a>
             </div>
 
@@ -28,7 +32,7 @@
             <div id="authBtnContainer" class="flex-sidebar"></div>
 
             <!-- Burger button -->
-            <button class="burger gradient-text" id="burgerBtn">
+            <button class="burger gradient-text" id="burgerBtn" aria-label="Ouvrir le menu">
                 <i class='bx bx-menu'></i>
             </button>
 
@@ -45,7 +49,7 @@
                 <div class="header-users">
                     <h1 class="gradient-text">Gestion des utilisateurs</h1>
                     <div class="button-create">
-                        <button id="addUserBtn" class="gradient-button height-32">
+                        <button id="addUserBtn" class="gradient-button height-32" aria-label="Ajouter un utilisateur">
                             <span>Ajouter un utilisateur</span>
                             <i class='bxr  bx-plus'></i>
                         </button>
@@ -112,14 +116,14 @@
                 </div>
             </div>
             <div class="modal-actions">
-                <button id="cancelBtn" class="edit-button">Annuler</button>
-                <button id="saveBtn" class="delete-button">Enregistrer</button>
+                <button id="cancelBtn" class="edit-button" aria-label="Ferme le modal">Annuler</button>
+                <button id="saveBtn" class="delete-button" aria-label="Enregistre">Enregistrer</button>
             </div>
         </div>
     </div>
 
-    <script type="module" src="../../assets/js/api.js"></script>
-    <script src="../../assets/js/auth.js"></script>
+    
+    <script type="module" src="../../assets/js/auth.js"></script>
     <script type="module" src="../../assets/js/admin-dashboard.js"></script>
     <script type="module" src="../../assets/js/users-dashboard.js"></script>
 </body>

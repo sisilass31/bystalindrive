@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://cdn.boxicons.com https://unpkg.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://cdn.boxicons.com https://unpkg.com https://fonts.gstatic.com; img-src 'self' data:; script-src 'self';">
+
+    <meta name="description"
+        content="Connectez-vous à BystalinDrive pour accéder à votre espace personnel et gérer vos rendez-vous et cours de conduite.">
     <title>Connexion | Auto-école By Stalindrive</title>
     <!-- favicon -->
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
@@ -12,7 +16,6 @@
     <!-- boxicons (icônes) -->
     <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
 </head>
 
 <body>
@@ -21,7 +24,7 @@
             <!-- Logo -->
             <div class="logo-container">
                 <a href="../../index.html">
-                    <img src="../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                    <img src="../assets/images/bystalindrive.avif" alt="Logo Auto-école By Stalindrive">
                 </a>
             </div>
 
@@ -29,7 +32,7 @@
             <div id="authBtnContainer" class="flex-sidebar"></div>
 
             <!-- Burger button -->
-            <button class="burger gradient-text" id="burgerBtn">
+            <button class="burger gradient-text" id="burgerBtn" aria-label="Ouvrir le menu">
                 <i class='bx bx-menu'></i>
             </button>
 
@@ -52,7 +55,7 @@
                 </div>
                 <form id="loginForm" class="form-container">
                     <!-- email -->
-                    <div class="form-group-w-icon">
+                    <div class="form-group-w-icon email">
                         <label for="email" class="icon-input">
                             <i class='bxr bx-envelope'></i>
                         </label>
@@ -67,7 +70,7 @@
                         <i class='bxr bx-eye-slash' id="togglePassword"></i>
                     </div>
 
-                    <button type="submit" class="gradient-button">Se connecter</button>
+                    <button type="submit" class="gradient-button" aria-label="Connecte">Se connecter</button>
 
                     <!-- lien mot de passe oublié -->
                     <p class="forgot-password gradient-text">
@@ -107,7 +110,7 @@
             <div class="top-footer">
                 <div class="logo-container">
                     <a href="./index.html">
-                        <img src="../assets/images/bystalindrive.png" alt="Logo Auto-école By Stalindrive">
+                        <img src="../assets/images/bystalindrive.avif" alt="Logo Auto-école By Stalindrive">
                     </a>
                 </div>
                 <p class="text-grey">Auto-école By Stalindrive, le spécialiste du permis accéléré à Paris!</p>
@@ -187,7 +190,6 @@
             </div>
         </div>
     </footer>
-    <script type="module" src="../assets/js/api.js"></script>
     <script type="module" src="../assets/js/auth.js"></script>
 </body>
 

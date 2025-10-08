@@ -1,12 +1,27 @@
 import { getUser, updatePassword } from "./api.js";
 
+// --- Fonction pour récupérer un cookie par nom ---
+export async function getCsrfToken() {
+  const res = await fetch(`${API_URL}/users/csrf-token`, {
+    credentials: "include"
+  });
+  const data = await res.json();
+  return data.csrfToken;
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
-  if (!token) return (window.location.href = "/pages/login.html");
+  if (!token) return window.location.href = "/pages/login.html";
 
+  // --- Décodage JWT ---
   let payload;
-  try { payload = JSON.parse(atob(token.split(".")[1])); }
-  catch (err) { localStorage.removeItem("token"); return (window.location.href = "/pages/login.html"); }
+  try {
+    payload = JSON.parse(atob(token.split(".")[1]));
+  } catch (err) {
+    localStorage.removeItem("token");
+    return window.location.href = "/pages/login.html";
+  }
 
   const userId = payload.id;
 
@@ -38,7 +53,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     messageModal.style.display = "none";
     messageModal.setAttribute("aria-hidden", "true");
   });
-  messageModal.addEventListener("click", e => { if (e.target === messageModal) messageModalOk.click(); });
+
+  messageModal.addEventListener("click", e => {
+    if (e.target === messageModal) messageModalOk.click();
+  });
 
   // === Vérification mot de passe ===
   const evaluatePassword = (pwd = "") => ({
@@ -71,7 +89,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const li = document.createElement("li");
       li.dataset.key = def.key;
       li.className = "invalid";
-      li.innerHTML = `<i class='bxr bx-x-circle'></i> ${def.text}`;
+
+      const icon = document.createElement("i");
+      icon.className = "bxr bx-x-circle";
+
+      const textNode = document.createTextNode(` ${def.text}`);
+      li.append(icon, textNode);
+
       criteriaList.appendChild(li);
     });
 
@@ -83,15 +107,29 @@ document.addEventListener("DOMContentLoaded", async () => {
       criteriaDefs.forEach(def => {
         const li = criteriaList.querySelector(`li[data-key="${def.key}"]`);
         const icon = li.querySelector("i");
-        if (result[def.key]) { li.classList.replace("invalid","valid"); icon.className="bxr bx-check-circle"; }
-        else { li.classList.replace("valid","invalid"); icon.className="bxr bx-x-circle"; }
+        if (result[def.key]) {
+          li.classList.replace("invalid", "valid");
+          icon.className = "bxr bx-check-circle";
+        } else {
+          li.classList.replace("valid", "invalid");
+          icon.className = "bxr bx-x-circle";
+        }
       });
 
-      if(confirmEl.value.length>0){
-        matchEl.innerHTML = pwd===confirmEl.value
-          ? `<i class='bxr bx-check-circle'></i> Les mots de passe correspondent`
-          : `<i class='bxr bx-x-circle'></i> Les mots de passe ne correspondent pas`;
-      } else { matchEl.textContent=""; }
+      // Vérification correspondance confirmation
+      if (confirmEl.value.length > 0) {
+        matchEl.textContent = "";
+        const icon = document.createElement("i");
+        if (pwd === confirmEl.value) {
+          icon.className = "bxr bx-check-circle";
+          matchEl.append(icon, document.createTextNode(" Les mots de passe correspondent"));
+        } else {
+          icon.className = "bxr bx-x-circle";
+          matchEl.append(icon, document.createTextNode(" Les mots de passe ne correspondent pas"));
+        }
+      } else {
+        matchEl.textContent = "";
+      }
     };
 
     passEl.addEventListener("input", updateCriteria);
@@ -99,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateCriteria();
   };
 
-  initPasswordCriteria("password","confirmPassword","profileMessage","profileMatchMessage");
+  initPasswordCriteria("password", "confirmPassword", "profileMessage", "profileMatchMessage");
 
   // === Modal ancien mot de passe ===
   const modal = document.getElementById("oldPasswordModal");
@@ -107,74 +145,83 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modalCancel = document.getElementById("modalCancelBtn");
   const modalOk = document.getElementById("modalOkBtn");
 
-  const closeModal = () => { modal.style.display="none"; modal.setAttribute("aria-hidden","true"); };
+  const closeModal = () => {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  };
 
   modalCancel.addEventListener("click", closeModal);
-  modal.addEventListener("click", e=>{ if(e.target===modal) closeModal(); });
-  modalInput.addEventListener("keypress", e=>{ if(e.key==="Enter") modalOk.click(); });
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+  modalInput.addEventListener("keypress", e => { if (e.key === "Enter") modalOk.click(); });
 
   const toggleModalOld = document.getElementById("toggleModalOld");
-  if(toggleModalOld && modalInput){
-    toggleModalOld.addEventListener("click",()=>{
-      const isPassword = modalInput.type==="password";
-      modalInput.type = isPassword?"text":"password";
-      toggleModalOld.classList.toggle("bx-eye",isPassword);
-      toggleModalOld.classList.toggle("bx-eye-slash",!isPassword);
+  if (toggleModalOld && modalInput) {
+    toggleModalOld.addEventListener("click", () => {
+      const isPassword = modalInput.type === "password";
+      modalInput.type = isPassword ? "text" : "password";
+      toggleModalOld.classList.toggle("bx-eye", isPassword);
+      toggleModalOld.classList.toggle("bx-eye-slash", !isPassword);
     });
   }
 
   // === Submit form ===
-  form.addEventListener("submit", async e=>{
+  form.addEventListener("submit", async e => {
     e.preventDefault();
     const newPassword = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-    if(!newPassword){ showMessageModal("Aucun changement détecté."); return; }
-    if(newPassword!==confirmPassword){ showMessageModal("Les mots de passe ne correspondent pas."); return; }
-    if(!Object.values(evaluatePassword(newPassword)).every(Boolean)){ showMessageModal("Mot de passe non conforme."); return; }
+    if (!newPassword) { showMessageModal("Aucun changement détecté."); return; }
+    if (newPassword !== confirmPassword) { showMessageModal("Les mots de passe ne correspondent pas."); return; }
+    if (!Object.values(evaluatePassword(newPassword)).every(Boolean)) { showMessageModal("Mot de passe non conforme."); return; }
 
     // Ouvrir modal ancien mot de passe
-    modal.style.display="flex";
-    modal.setAttribute("aria-hidden","false");
-    modalInput.value="";
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+    modalInput.value = "";
     modalInput.focus();
 
-    modalOk.onclick = async ()=>{
+    // --- Listener unique ---
+    const onModalOkClick = async () => {
       const oldPassword = modalInput.value.trim();
-      if(!oldPassword){ showMessageModal("Veuillez saisir votre ancien mot de passe."); return; }
+      if (!oldPassword) { showMessageModal("Veuillez saisir votre ancien mot de passe."); return; }
       closeModal();
+
       try {
         await updatePassword(userId, oldPassword, newPassword, token);
         form.reset();
         showMessageModal("Mot de passe mis à jour avec succès !");
-      } catch(err){
+      } catch (err) {
         console.error(err);
         showMessageModal(err.message || "Ancien mot de passe incorrect.");
+      } finally {
+        modalOk.removeEventListener("click", onModalOkClick);
       }
     };
+
+    modalOk.addEventListener("click", onModalOkClick);
   });
 
   // === Toggle nouveau mot de passe ===
   const toggleNew = document.getElementById("toggleNewPassword");
   const newInput = document.getElementById("password");
-  if(toggleNew && newInput){
-    toggleNew.addEventListener("click",()=>{
-      const isPassword = newInput.type==="password";
-      newInput.type = isPassword?"text":"password";
-      toggleNew.classList.toggle("bx-eye",isPassword);
-      toggleNew.classList.toggle("bx-eye-slash",!isPassword);
+  if (toggleNew && newInput) {
+    toggleNew.addEventListener("click", () => {
+      const isPassword = newInput.type === "password";
+      newInput.type = isPassword ? "text" : "password";
+      toggleNew.classList.toggle("bx-eye", isPassword);
+      toggleNew.classList.toggle("bx-eye-slash", !isPassword);
     });
   }
 
   // === Toggle confirmation mot de passe ===
   const toggleConfirm = document.getElementById("toggleConfirmPassword");
   const confirmInput = document.getElementById("confirmPassword");
-  if(toggleConfirm && confirmInput){
-    toggleConfirm.addEventListener("click",()=>{
-      const isPassword = confirmInput.type==="password";
-      confirmInput.type = isPassword?"text":"password";
-      toggleConfirm.classList.toggle("bx-eye",isPassword);
-      toggleConfirm.classList.toggle("bx-eye-slash",!isPassword);
+  if (toggleConfirm && confirmInput) {
+    toggleConfirm.addEventListener("click", () => {
+      const isPassword = confirmInput.type === "password";
+      confirmInput.type = isPassword ? "text" : "password";
+      toggleConfirm.classList.toggle("bx-eye", isPassword);
+      toggleConfirm.classList.toggle("bx-eye-slash", !isPassword);
     });
   }
 });

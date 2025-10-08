@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:3000/api/users";
+import { login } from "./api.js";
 
+document.addEventListener("DOMContentLoaded", () => {
     // --- FONCTION : décoder le token ---
     function getTokenPayload() {
         const token = localStorage.getItem("token");
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- SUPPRIMER TOKEN ET REINITIALISER PAYLOAD ---
+    // --- SUPPRIMER TOKEN ---
     function clearToken() {
         localStorage.removeItem("token");
         payload = null;
@@ -21,14 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let payload = getTokenPayload();
 
-    // --- MODAL D'INFO ---
+    // --- MODAL ---
     function showModal(message, type = "info") {
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
         modal.innerHTML = `
             <div class="modal-content ${type}">
                 <p>${message}</p>
-                <button id="closeModalBtn" class="button-3d">OK</button>
+                <button id="closeModalBtn" class="button-3d" aria-label="Fermer le modal">OK</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (payload) {
         const role = payload.role?.toLowerCase();
         const currentPage = window.location.pathname;
-
         if (currentPage.endsWith("login.html")) {
             if (role === "admin") window.location.href = "/pages/admin/dashboard.html";
             else if (role === "client") window.location.href = "/pages/client/espace-client.html";
@@ -52,55 +51,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- LOGIN ---
     const form = document.getElementById("loginForm");
-    if (form) {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+    form?.addEventListener("submit", async e => {
+        e.preventDefault();
+        const email = document.getElementById("email")?.value.trim();
+        const password = document.getElementById("password")?.value.trim();
 
-            const email = document.getElementById("email")?.value.trim();
-            const password = document.getElementById("password")?.value.trim();
+        if (!email || !password) return showModal("Veuillez remplir tous les champs", "error");
 
-            if (!email || !password) {
-                showModal("Veuillez remplir tous les champs", "error");
-                return;
-            }
+        clearToken();
 
-            clearToken(); // Supprime l'ancien token
+        try {
+            const result = await login(email, password);
+            localStorage.setItem("token", result.token);
+            payload = getTokenPayload();
 
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password })
-                });
+            const role = payload?.role?.toLowerCase();
+            const redirect = role === "admin"
+                ? "/pages/admin/dashboard.html"
+                : "/pages/client/espace-client.html";
+            window.location.href = redirect;
+        } catch (err) {
+            showModal(err.message || "Identifiants incorrects", "error");
+        }
+    });
 
-                const result = await response.json();
-
-                if (response.ok && result.token) {
-                    localStorage.setItem("token", result.token);
-                    payload = getTokenPayload();
-
-                    const role = payload?.role?.toLowerCase();
-                    const redirect = result.redirect || (role === "admin"
-                        ? "/pages/admin/dashboard.html"
-                        : "/pages/client/espace-client.html");
-
-                    window.location.href = redirect;
-                } else {
-                    // Gestion des erreurs avec modal
-                    const messageMap = {
-                        "Utilisateur non trouvé.": "Adresse email introuvable",
-                        "Mot de passe incorrect.": "Mot de passe incorrect"
-                    };
-                    const errorMessage = messageMap[result.message] || "Identifiants incorrects";
-                    showModal(errorMessage, "error");
-                }
-            } catch {
-                showModal("Impossible de contacter le serveur", "error");
-            }
-        });
-    }
-
-    // --- NAVBAR & SIDEBAR DYNAMIQUE ---
+    // --- NAVBAR & SIDEBAR ---
     const authContainer = document.getElementById("authBtnContainer");
     const authContainerSidebar = document.getElementById("authBtnContainerSidebar");
 
@@ -147,10 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderNav(payload?.role?.toLowerCase());
 
     // --- LOGOUT ---
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", e => {
         if (e.target.closest("#logoutBtn") || e.target.closest("#logoutBtnSidebar")) {
             e.preventDefault();
             clearToken();
+            renderNav(null);
             window.location.href = "/pages/login.html";
         }
     });

@@ -9,10 +9,15 @@ require("dotenv").config();
 
 const saltRounds = 10;
 
-// ------------------ 🔹 SCHÉMAS DE VALIDATION YUP ------------------
+// ------------------ UTILITAIRE NETTOYAGE XSS ------------------
+// Supprime tous les tags HTML pour éviter les attaques XSS
+const clean = (str) => str.replace(/<[^>]*>/g, '');
 
+// ------------------ SCHÉMAS DE VALIDATION YUP ------------------
+// Validation des champs pour l'inscription
 const registerSchema = Yup.object({
   firstname: Yup.string()
+    // Supprime les espaces inutiles
     .trim()
     .required("Le prénom est obligatoire")
     .min(2, "Le prénom doit contenir au moins 2 caractères"),
@@ -21,11 +26,14 @@ const registerSchema = Yup.object({
     .required("Le nom est obligatoire")
     .min(2, "Le nom doit contenir au moins 2 caractères"),
   email: Yup.string()
+    // Vérifie le format email
     .email("Email invalide")
     .required("L’email est obligatoire"),
+  // Valeur autorisée
   role: Yup.string().oneOf(["admin", "client"], "Rôle invalide").default("client"),
 });
 
+// Validation du mot de passe
 const passwordSchema = Yup.string()
   .min(12, "12 caractères minimum")
   .matches(/[a-z]/, "Doit contenir une minuscule")
@@ -33,6 +41,7 @@ const passwordSchema = Yup.string()
   .matches(/\d/, "Doit contenir un chiffre")
   .required("Mot de passe requis");
 
+// Validation des champs pour la connexion
 const loginSchema = Yup.object({
   email: Yup.string().email("Email invalide").required("Email requis"),
   password: Yup.string().required("Mot de passe requis"),
@@ -41,17 +50,18 @@ const loginSchema = Yup.object({
 // ------------------ REGISTER ------------------
 exports.register = async (req, res) => {
   try {
-    // Validation avec Yup
+    // Valide les données envoyées par le client
     const validatedData = await registerSchema.validate(req.body, { abortEarly: false });
     const { firstname, lastname, email, role } = validatedData;
-
-    const userExists = await User.findOne({ where: { email } });
+    // Vérifie si l'email existe déjà
+    const userExists = await User.findOne({ where: { email: clean(email) } });
     if (userExists) return res.status(400).json({ message: "Cet email existe déjà." });
-
+    // Crée un nouvel utilisateur avec les champs nettoyés
     const newUser = await User.create({
-      firstname,
-      lastname,
-      email,
+      firstname: clean(firstname),
+      lastname: clean(lastname),
+      email: clean(email),
+      // mot de passe à définir plus tard (user le set après avoir reçu le mail)
       password: null,
       role: role || "client"
     });
@@ -79,16 +89,14 @@ exports.register = async (req, res) => {
 
     res.status(201).json({
       id: newUser.id,
-      firstname,
-      lastname,
-      email,
+      firstname: newUser.firstname,
+      lastname: newUser.lastname,
+      email: newUser.email,
       role: newUser.role,
       message: "Utilisateur créé. Un email d'activation a été envoyé."
     });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400).json({ message: err.errors });
-    }
+    if (err.name === "ValidationError") return res.status(400).json({ message: err.errors });
     console.error("Erreur register :", err);
     res.status(500).json({ message: "Erreur serveur lors de l'enregistrement." });
   }
@@ -122,7 +130,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = await loginSchema.validate(req.body, { abortEarly: false });
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email: clean(email) } });
     if (!user) return res.status(401).json({ message: "Utilisateur non trouvé." });
     if (!user.password) return res.status(403).json({ message: "Mot de passe non défini." });
 
@@ -209,9 +217,9 @@ exports.updateUser = async (req, res) => {
     if (!user) return res.status(404).json({ message: "Utilisateur introuvable." });
 
     await user.update({
-      lastname: lastname || user.lastname,
-      firstname: firstname || user.firstname,
-      email: email || user.email,
+      lastname: lastname ? clean(lastname) : user.lastname,
+      firstname: firstname ? clean(firstname) : user.firstname,
+      email: email ? clean(email) : user.email,
       role: role || user.role,
     });
 
@@ -281,7 +289,7 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
     await Yup.string().email("Email invalide").required("Email requis").validate(email);
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email: clean(email) } });
     if (!user) return res.json({ message: "Si ce compte existe, un email a été envoyé." });
 
     const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -293,7 +301,8 @@ exports.forgotPassword = async (req, res) => {
       `Réinitialisez votre mot de passe ici : ${resetUrl}`,
       `
       <div style="width:100%;background:#eaeaea;padding:20px;font-family:Arial,sans-serif;">
-        <div style="max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+        <div style="max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.2); color:#111;">
+          <img src="https://raw.githubusercontent.com/sisilass31/cda-project/main/frontend/assets/images/bystalindrive.png" style="width:180px;">
           <p>Réinitialisez votre mot de passe :</p>
           <a href="${resetUrl}" style="display:inline-block;padding:10px 20px;background:linear-gradient(90deg,#ef7f09,#e75617);color:#fff;text-decoration:none;border-radius:8px;">Réinitialiser</a>
         </div>
