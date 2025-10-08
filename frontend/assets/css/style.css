@@ -6,7 +6,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: all 0.4s ease;
 }
 
 :root {
@@ -843,7 +843,8 @@ header {
 }
 
 .profile-container {
-  min-width: 325px;
+  max-width: 510px;
+  width: 100%;
 }
 
 .password-wrapper {

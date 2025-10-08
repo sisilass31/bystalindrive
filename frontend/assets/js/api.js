@@ -3,7 +3,8 @@ const API_URL = "http://localhost:3000";
 
 // ---------------- CSRF ----------------
 export async function getCsrfToken() {
-  const res = await fetch(`${API_URL}/users/csrf-token`, { credentials: "include" });
+  const res = await fetch(`${API_URL}/api/users/csrf-token`, { credentials: "include" });
+  if (!res.ok) throw new Error("Impossible de récupérer le CSRF token");
   const data = await res.json();
   return data.csrfToken;
 }
@@ -36,7 +37,7 @@ export async function createUser(data, token) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`, // token admin obligatoire
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify(data)
@@ -51,7 +52,7 @@ export async function updateUser(id, data, token) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify(data)
@@ -61,12 +62,12 @@ export async function updateUser(id, data, token) {
 
 export async function updatePassword(id, oldPassword, newPassword, token) {
   const csrfToken = await getCsrfToken(); // <-- récupère le token exact
-  const res = await fetch(`${API_URL}/users/${id}/password`, {
+  const res = await fetch(`${API_URL}/api/users/${id}/password`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify({ oldPassword, newPassword })
@@ -80,7 +81,7 @@ export async function deleteUser(id, token) {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include"
   });
@@ -100,7 +101,7 @@ export async function createPost(data, token) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify(data)
@@ -115,7 +116,7 @@ export async function updatePost(id, data, token) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify(data)
@@ -129,7 +130,7 @@ export async function deletePost(id, token) {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`,
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include"
   });
@@ -139,9 +140,14 @@ export async function deletePost(id, token) {
 // ---------------- AUTH ----------------
 export async function login(email, password) {
   const csrfToken = await getCsrfToken();
+  if (!csrfToken) throw new Error("CSRF token manquant, impossible de se connecter");
+
   const res = await fetch(`${API_URL}/api/users/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken
+    },
     credentials: "include",
     body: JSON.stringify({ email, password })
   });
@@ -156,7 +162,7 @@ export async function register(firstname, lastname, email, password, token) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`, // token admin requis
-      "CSRF-Token": csrfToken
+      "X-CSRF-Token": csrfToken
     },
     credentials: "include",
     body: JSON.stringify({ firstname, lastname, email, password })
