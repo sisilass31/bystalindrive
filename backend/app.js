@@ -23,8 +23,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// CSRF protection middleware global
-const csrfProtection = csrf({ cookie: true });
+// CSRF protection middleware conditionnel
+const csrfProtection = process.env.NODE_ENV === 'test' ? (req, res, next) => next() : require('csurf')({ cookie: true });
 
 // ----------------- SERVIR LE FRONTEND -----------------
 

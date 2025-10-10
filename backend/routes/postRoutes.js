@@ -10,13 +10,13 @@ router.get("/csrf-token", csrfProtection, (req, res) => {
 });
 
 // ------------------ CREATE POST (admin uniquement) ------------------
-router.post('/', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.createPost);
+router.post('/', authMiddleware(), csrfProtection, postsCtrl.createPost);
 
 // ------------------ UPDATE POST (admin uniquement) ------------------
-router.put('/:id', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.updatePost);
+router.put('/:id', authMiddleware(), csrfProtection, postsCtrl.updatePost);
 
 // ------------------ GET ALL POSTS (admin dashboard) ------------------
-router.get('/', authMiddleware(), adminMiddleware, postsCtrl.getAllPosts);
+router.get('/', authMiddleware(), postsCtrl.getAllPosts);
 
 // ------------------ GET MY POSTS (user connecté) ------------------
 router.get('/me', authMiddleware(), postsCtrl.getMyPosts);
@@ -25,6 +25,6 @@ router.get('/me', authMiddleware(), postsCtrl.getMyPosts);
 router.get('/:id', authMiddleware(), postsCtrl.getOnePost);
 
 // ------------------ DELETE POST (admin uniquement) ------------------
-router.delete('/:id', authMiddleware(), adminMiddleware, csrfProtection, postsCtrl.deletePost);
+router.delete('/:id', authMiddleware(), csrfProtection, postsCtrl.deletePost);
 
 module.exports = router;

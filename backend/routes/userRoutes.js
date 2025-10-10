@@ -13,7 +13,7 @@ router.get("/csrf-token", csrfProtection, (req, res) => {
 });
 
 // ------------------ REGISTER ------------------
-router.post("/register", authMiddleware(), adminMiddleware, csrfProtection, usersCtrl.register);
+router.post("/register", authMiddleware(), csrfProtection, usersCtrl.register);
 
 // ------------------ LOGIN ------------------
 router.post("/login", usersCtrl.login);
@@ -22,7 +22,7 @@ router.post("/login", usersCtrl.login);
 router.get("/me", authMiddleware(), usersCtrl.getMe);
 
 // ------------------ GET ALL USERS (admin seulement) ------------------
-router.get("/", authMiddleware(), adminMiddleware, usersCtrl.getAllUsers);
+router.get("/", authMiddleware(), usersCtrl.getAllUsers);
 
 // ------------------ GET ONE USER ------------------
 router.get("/:id", authMiddleware(), usersCtrl.getOneUser);

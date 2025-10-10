@@ -210,12 +210,30 @@ exports.updateUser = async (req, res) => {
     const id = req.params.id;
     const { lastname, firstname, email, role } = req.body;
 
-    if (req.user.id != id && req.user.role.toLowerCase() !== "admin")
+    // Vérif : seul l'utilisateur lui-même ou un admin peut modifier
+    if (req.user.id != id && req.user.role.toLowerCase() !== "admin") {
       return res.status(403).json({ message: "Accès interdit." });
+    }
 
+    // Récupération de l'utilisateur
     const user = await User.findByPk(id);
-    if (!user) return res.status(404).json({ message: "Utilisateur introuvable." });
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable." });
+    }
 
+    // Vérification de l'unicité de l'email (en ignorant les comptes supprimés)
+    if (email && email !== user.email) {
+      const existing = await User.findOne({
+        where: { email: clean(email), is_deleted: false },
+      });
+      if (existing) {
+        return res
+          .status(400)
+          .json({ message: "Cet email est déjà utilisé par un autre utilisateur actif." });
+      }
+    }
+
+    // Mise à jour avec nettoyage des champs
     await user.update({
       lastname: lastname ? clean(lastname) : user.lastname,
       firstname: firstname ? clean(firstname) : user.firstname,
@@ -229,9 +247,13 @@ exports.updateUser = async (req, res) => {
       lastname: user.lastname,
       email: user.email,
       role: user.role,
+      message: "Utilisateur mis à jour avec succès.",
     });
   } catch (err) {
     console.error("Erreur updateUser :", err);
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({ message: "Cet email est déjà utilisé." });
+    }
     res.status(500).json({ message: "Erreur serveur lors de la modification." });
   }
 };
