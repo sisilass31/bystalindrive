@@ -1,5 +1,5 @@
 // URL de base de l'API
-const API_URL = window.location.hostname === 'development'
+const API_URL = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://bystalindrive.onrender.com";
 
