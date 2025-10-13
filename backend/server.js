@@ -27,7 +27,9 @@ const { sequelize } = require('./models');
     const port = process.env.PORT || 3000;
 
     // Démarre le serveur Express
-    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+    // app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+
   } catch (err) {
     // Gestion des erreurs de connexion ou de synchronisation
     console.error('Erreur lors de la connexion ou synchronisation :', err);
