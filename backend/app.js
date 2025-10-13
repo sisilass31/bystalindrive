@@ -15,7 +15,7 @@ app.use(helmet());
 
 // CORS : autorise uniquement ton frontend
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://bystalindrive.netlify.app",
   credentials: true // pour cookies (CSRF, JWT)
 }));
 
