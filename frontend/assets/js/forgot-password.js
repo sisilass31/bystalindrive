@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "http://localhost:3000/api/users";
+  const API_URL = window.location.hostname === "development"
+    ? "http://localhost:3000/api/users"
+    : "https://bystalindrive.onrender.com/api/users";
 
   // --- Sécurité : si déjà connecté, redirection selon rôle ---
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");

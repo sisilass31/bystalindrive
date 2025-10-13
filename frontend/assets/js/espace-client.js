@@ -1,3 +1,8 @@
+// URL de base de l'API
+const API_URL = window.location.hostname === "development"
+  ? "http://localhost:3000"
+  : "https://bystalindrive.onrender.com";
+
 document.addEventListener("DOMContentLoaded", async () => {
   const body = document.body;
   body.style.display = "none"; // Masquer le contenu au départ
@@ -21,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Récupérer les infos utilisateur
-    const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+    const res = await fetch(`${API_URL}/api/users/${userId}`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
 
@@ -51,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- Récupérer et afficher les séances ---
   async function fetchUserSessions() {
     try {
-      const res = await fetch("http://localhost:3000/api/posts/me", {
+      const res = await fetch(`${API_URL}/api/posts/me`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"

@@ -1,5 +1,7 @@
 // URL de base de l'API
-const API_URL = "http://localhost:3000";
+const API_URL = window.location.hostname === 'development'
+  ? "http://localhost:3000"
+  : "https://bystalindrive.onrender.com";
 
 // ---------------- CSRF ----------------
 export async function getCsrfToken() {

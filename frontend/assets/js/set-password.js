@@ -1,5 +1,9 @@
+// URL de base de l'API
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:3000/api/users"
+  : "https://bystalindrive.onrender.com/api/users";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:3000/api/users";
 
     // --- Récupération CSRF ---
     async function getCsrfToken() {
@@ -153,4 +157,5 @@ document.addEventListener("DOMContentLoaded", () => {
             showModal("Erreur serveur lors de l’activation du compte", "error");
         }
     });
+
 });

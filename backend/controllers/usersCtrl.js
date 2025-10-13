@@ -8,6 +8,9 @@ const Yup = require("yup");
 require("dotenv").config();
 
 const saltRounds = 10;
+const BASE_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000'
+  : 'https://bystalindrive.onrender.com';
 
 // ------------------ UTILITAIRE NETTOYAGE XSS ------------------
 // Supprime tous les tags HTML pour éviter les attaques XSS
@@ -67,7 +70,7 @@ exports.register = async (req, res) => {
     });
 
     const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    const link = `http://localhost:3000/pages/set-password.html?token=${token}`;
+    const link = `${BASE_URL}/pages/set-password.html?token=${token}`;
 
     await sendMail(
       newUser.email,
@@ -315,7 +318,7 @@ exports.forgotPassword = async (req, res) => {
     if (!user) return res.json({ message: "Si ce compte existe, un email a été envoyé." });
 
     const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "15m" });
-    const resetUrl = `http://localhost:3000/pages/reset-password.html?token=${resetToken}`;
+    const resetUrl = `${BASE_URL}/pages/reset-password.html?token=${resetToken}`;
 
     await sendMail(
       user.email,

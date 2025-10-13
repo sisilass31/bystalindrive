@@ -1,3 +1,8 @@
+// URL de base de l'API
+const API_URL = window.location.hostname === 'development'
+  ? "http://localhost:3000"
+  : "https://bystalindrive.onrender.com";
+
 // --- ADMIN ---
 export async function initAdmin() {
   const token = localStorage.getItem("token");
@@ -22,7 +27,7 @@ export async function initAdmin() {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/users/${payload.id}`, {
+    const res = await fetch(`${API_URL}/api/users/${payload.id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Impossible de récupérer les infos admin");

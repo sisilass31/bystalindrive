@@ -1,5 +1,9 @@
+// URL de base de l'API
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:3000/api/users"
+  : "https://bystalindrive.onrender.com/api/users";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:3000/api/users";
 
     // --- Sécurité : redirection si déjà connecté ---
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -179,4 +183,5 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleConfirm.classList.toggle("bx-eye-slash", !isPassword);
         });
     }
+
 });
