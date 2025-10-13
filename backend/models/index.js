@@ -12,7 +12,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 
 // Récupération de la config (config.json) selon l’environnement
-const config = require(path.join(__dirname, '/../config/config.json'))[env];
+const config = require(path.join(__dirname, '/../config/config.js'))[env];
 
 // Objet qui contiendra tous les modèles
 const db = {};

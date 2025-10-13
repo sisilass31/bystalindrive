@@ -29,7 +29,4 @@ build/
 backups/
 
 # Others
-
-seeders
-config
 coverage/
