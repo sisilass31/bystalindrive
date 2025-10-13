@@ -9,7 +9,7 @@ const db = mysql.createConnection({
   host: process.env.DB_HOST,      // hôte de la base
   port: process.env.DB_PORT,      // port MySQL
   user: process.env.DB_USER,      // utilisateur MySQL
-  password: process.env.DB_PASS,  // mot de passe MySQL
+  password: process.env.DB_PASSWORD,  // mot de passe MySQL
   database: process.env.DB_NAME,  // nom de la base de données
 });
 
