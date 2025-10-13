@@ -10,23 +10,27 @@ const app = express();
 
 // ----------------- MIDDLEWARE -----------------
 
+// URL frontend + backend
 const FRONT_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
     : 'https://bystalindrive.netlify.app';
 
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://bystalindrive.onrender.com';
+const API_URLS = [
+  'http://localhost:3000', // dev
+  'https://bystalindrive.onrender.com', // prod
+];
 
-// Helmet : protection XSS, clickjacking, etc.
+// Helmet : protection XSS, clickjacking, CSP
 app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", API_URL], // autorise l'API
+        connectSrc: ["'self'", ...API_URLS], // autorise l'API
+        imgSrc: ["'self'", "data:"], // si y'a des images inline/base64
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"], // si utilise style inline
       },
     },
   })
