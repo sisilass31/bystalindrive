@@ -27,10 +27,18 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", ...API_URLS], // autorise l'API
-        imgSrc: ["'self'", "data:"], // si y'a des images inline/base64
+        connectSrc: ["'self'", ...API_URLS], // ton API
+        imgSrc: ["'self'", "data:"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"], // si utilise style inline
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://cdn.boxicons.com",
+          "https://unpkg.com",
+          "https://fonts.googleapis.com"
+        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.boxicons.com", "https://unpkg.com"],
+
       },
     },
   })
