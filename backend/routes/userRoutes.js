@@ -37,7 +37,7 @@ router.put("/:id/password", authMiddleware(), csrfProtection, usersCtrl.updatePa
 router.post("/forgot-password", usersCtrl.forgotPassword);
 
 // ------------------ RESET PASSWORD ------------------
-router.post("/reset-password", csrfProtection, usersCtrl.resetPassword);
+router.post("/reset-password", usersCtrl.resetPassword);
 
 // ------------------ SET PASSWORD ------------------
 router.post("/set-password", usersCtrl.setPassword);
