@@ -24,7 +24,7 @@ app.use(
       useDefaults: false, // ignore les directives par défaut
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "http://localhost:3000", "https://bystalindrive.onrender.com"],
+        connectSrc: ["'self'", "http://localhost:3000", "https://bystalindrive.onrender.com", "https://bystalindrive.netlify.app"],
         imgSrc: ["'self'", "data:"],
         scriptSrc: ["'self'"],
         styleSrc: [
