@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const Sequelize = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const process = require('process');
 
 // Nom du fichier courant (index.js)
@@ -56,7 +56,7 @@ fs
     }
 
     // On exécute la fonction pour créer le modèle avec sequelize et DataTypes
-    const model = modelFactory(sequelize, Sequelize.DataTypes);
+    const model = modelFactory(sequelize, DataTypes);
 
     // On stocke le modèle dans l’objet db
     db[model.name] = model;
