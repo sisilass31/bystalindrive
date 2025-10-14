@@ -16,15 +16,12 @@ const FRONT_URL =
     ? 'http://localhost:3000'
     : 'https://bystalindrive.netlify.app';
 
-const API_URLS = [
-  'http://localhost:3000', // dev
-  'https://bystalindrive.onrender.com', // prod
-];
-
+// Helmet : protection XSS, clickjacking, CSP
 // Helmet : protection XSS, clickjacking, CSP
 app.use(
   helmet({
     contentSecurityPolicy: {
+      useDefaults: false, // ignore les directives par défaut
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: ["'self'", "http://localhost:3000", "https://bystalindrive.onrender.com"],
