@@ -10,7 +10,7 @@ require("dotenv").config();
 const saltRounds = 10;
 const BASE_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000'
-  : 'https://bystalindrive.onrender.com';
+  : 'https://bystalindrive.netlify.app';
 
 // ------------------ UTILITAIRE NETTOYAGE XSS ------------------
 // Supprime tous les tags HTML pour éviter les attaques XSS
@@ -53,18 +53,16 @@ const loginSchema = Yup.object({
 // ------------------ REGISTER ------------------
 exports.register = async (req, res) => {
   try {
-    // Valide les données envoyées par le client
     const validatedData = await registerSchema.validate(req.body, { abortEarly: false });
     const { firstname, lastname, email, role } = validatedData;
-    // Vérifie si l'email existe déjà
+
     const userExists = await User.findOne({ where: { email: clean(email) } });
     if (userExists) return res.status(400).json({ message: "Cet email existe déjà." });
-    // Crée un nouvel utilisateur avec les champs nettoyés
+
     const newUser = await User.create({
       firstname: clean(firstname),
       lastname: clean(lastname),
       email: clean(email),
-      // mot de passe à définir plus tard (user le set après avoir reçu le mail)
       password: null,
       role: role || "client"
     });
@@ -72,23 +70,28 @@ exports.register = async (req, res) => {
     const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     const link = `${BASE_URL}/pages/set-password.html?token=${token}`;
 
-    await sendMail(
-      newUser.email,
-      "Activez votre compte - Auto-école By Stalindrive",
-      `Bonjour ${newUser.firstname} ${newUser.lastname}, définissez votre mot de passe ici: ${link}`,
-      `
-      <div style="width:100%;background-color:#eaeaea;padding:20px;font-family:Arial,sans-serif;">
-        <div style="max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.2);color:#111;">
-          <div style="margin-bottom:20px;">
-            <img src="https://raw.githubusercontent.com/sisilass31/cda-project/main/frontend/assets/images/bystalindrive.png" style="width:180px;">
+    try {
+      await sendMail(
+        newUser.email,
+        "Activez votre compte - Auto-école By Stalindrive",
+        `Bonjour ${newUser.firstname} ${newUser.lastname}, définissez votre mot de passe ici: ${link}`,
+        `
+        <div style="width:100%;background-color:#eaeaea;padding:20px;font-family:Arial,sans-serif;">
+          <div style="max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.2);color:#111;">
+            <div style="margin-bottom:20px;">
+              <img src="https://raw.githubusercontent.com/sisilass31/cda-project/main/frontend/assets/images/bystalindrive.png" style="width:180px;">
+            </div>
+            <p>Bonjour <strong>${newUser.firstname} ${newUser.lastname}</strong>,</p>
+            <p>Votre compte a été créé. Pour l’activer, définissez votre mot de passe :</p>
+            <a href="${link}" style="display:inline-block;padding:10px 20px;background:linear-gradient(90deg,#ef7f09,#e75617);color:#fff;text-decoration:none;border-radius:8px;">Activer mon compte</a>
+            <p style="font-size:12px;color:#555;margin-top:20px">Ce lien est valide 1 heure.</p>
           </div>
-          <p>Bonjour <strong>${newUser.firstname} ${newUser.lastname}</strong>,</p>
-          <p>Votre compte a été créé. Pour l’activer, définissez votre mot de passe :</p>
-          <a href="${link}" style="display:inline-block;padding:10px 20px;background:linear-gradient(90deg,#ef7f09,#e75617);color:#fff;text-decoration:none;border-radius:8px;">Activer mon compte</a>
-          <p style="font-size:12px;color:#555;margin-top:20px">Ce lien est valide 1 heure.</p>
-        </div>
-      </div>`
-    );
+        </div>`
+      );
+      console.log("Email envoyé ✅");
+    } catch (err) {
+      console.error("Erreur envoi mail :", err);
+    }
 
     res.status(201).json({
       id: newUser.id,

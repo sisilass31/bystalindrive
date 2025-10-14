@@ -1,17 +1,21 @@
-const transporter = require("../config/mailer");
+const sgMail = require('@sendgrid/mail');
+require('dotenv').config();
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function sendMail(to, subject, text, html) {
   try {
-    const info = await transporter.sendMail({
-      from: `"BystalinDrive" <${process.env.SMTP_USER}>`,
+    const msg = {
       to,
+      from: process.env.SMTP_USER, // ton email expéditeur
       subject,
       text,
-      html
-    });
-    console.log("Email envoyé :", info.messageId);
+      html,
+    };
+    await sgMail.send(msg);
+    console.log('Email envoyé ✅');
   } catch (err) {
-    console.error("Erreur envoi mail :", err);
+    console.error('Erreur envoi mail :', err);
   }
 }
 
