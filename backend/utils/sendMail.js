@@ -7,7 +7,7 @@ async function sendMail(to, subject, text, html) {
   try {
     const msg = {
       to,
-      from: process.env.SMTP_USER, // ton email expéditeur
+      from: '"Bystalin Drive" <bystalindrive80@gmail.com>',
       subject,
       text,
       html,
@@ -15,7 +15,7 @@ async function sendMail(to, subject, text, html) {
     await sgMail.send(msg);
     console.log('Email envoyé ✅');
   } catch (err) {
-    console.error('Erreur envoi mail :', err);
+    console.error('Erreur envoi mail :', err.response?.body || err);
   }
 }
 

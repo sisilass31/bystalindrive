@@ -1,8 +1,6 @@
 const { User, Post } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
 const sendMail = require("../utils/sendMail");
 const Yup = require("yup");
 require("dotenv").config();
