@@ -17,16 +17,17 @@ const FRONT_URL =
     : 'https://bystalindrive.netlify.app';
 
 // Helmet : protection XSS, clickjacking, CSP
-// Helmet : protection XSS, clickjacking, CSP
 app.use(
   helmet({
     contentSecurityPolicy: {
-      useDefaults: false, // ignore les directives par défaut
+      useDefaults: true, // conserve les directives par défaut
       directives: {
-        defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "http://localhost:3000", "https://bystalindrive.onrender.com", "https://bystalindrive.netlify.app"],
-        imgSrc: ["'self'", "data:"],
-        scriptSrc: ["'self'"],
+        connectSrc: [
+          "'self'",
+          "http://localhost:3000",
+          "https://bystalindrive.onrender.com",
+          "https://bystalindrive.netlify.app"
+        ],
         styleSrc: [
           "'self'",
           "'unsafe-inline'",
@@ -39,7 +40,8 @@ app.use(
           "https://fonts.gstatic.com",
           "https://cdn.boxicons.com",
           "https://unpkg.com"
-        ]
+        ],
+        imgSrc: ["'self'", "data:"]
       },
     },
   })
