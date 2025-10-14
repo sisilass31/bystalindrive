@@ -27,7 +27,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", ...API_URLS], // ton API
+        connectSrc: ["'self'", "http://localhost:3000", "https://bystalindrive.onrender.com"],
         imgSrc: ["'self'", "data:"],
         scriptSrc: ["'self'"],
         styleSrc: [
@@ -37,8 +37,12 @@ app.use(
           "https://unpkg.com",
           "https://fonts.googleapis.com"
         ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.boxicons.com", "https://unpkg.com"],
-
+        fontSrc: [
+          "'self'",
+          "https://fonts.gstatic.com",
+          "https://cdn.boxicons.com",
+          "https://unpkg.com"
+        ]
       },
     },
   })
