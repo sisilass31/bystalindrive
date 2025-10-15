@@ -1144,6 +1144,7 @@ select {
 .users-table th {
   background: transparent;
   text-align: left;
+  font-weight: 500;
 }
 
 .actions-col {
@@ -1823,7 +1824,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   }
 
   .user-card-actions button {
-    width: auto;
+    width: 50%;
   }
 
   /* home */
