@@ -44,7 +44,7 @@ async function handleResponse(res) {
 }
 
 // ---------------- USERS ----------------
-export async function getUsers(token) {
+export async function getUsers(token) {  
   const res = await fetchWithLoader(`${API_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
