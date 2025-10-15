@@ -9,6 +9,7 @@
   "scripts": {
     "test": "NODE_ENV=test jest",
     "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
     "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {

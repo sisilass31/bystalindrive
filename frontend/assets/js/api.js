@@ -1,11 +1,33 @@
-// URL de base de l'API
+// ---------------- LOADER GLOBAL ----------------
+function showLoader() {
+  const loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'flex';
+}
+
+function hideLoader() {
+  const loader = document.getElementById('loader');
+  if (loader) loader.style.display = 'none';
+}
+
+// Wrapper pour fetch avec loader automatique
+async function fetchWithLoader(url, options = {}) {
+  showLoader();
+  try {
+    const res = await fetch(url, options);
+    return res;
+  } finally {
+    hideLoader();
+  }
+}
+
+// ---------------- URL DE BASE ----------------
 const API_URL = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://bystalindrive.onrender.com";
 
 // ---------------- CSRF ----------------
 export async function getCsrfToken() {
-  const res = await fetch(`${API_URL}/api/users/csrf-token`, { credentials: "include" });
+  const res = await fetchWithLoader(`${API_URL}/api/users/csrf-token`, { credentials: "include" });
   if (!res.ok) throw new Error("Impossible de récupérer le CSRF token");
   const data = await res.json();
   return data.csrfToken;
@@ -23,22 +45,22 @@ async function handleResponse(res) {
 
 // ---------------- USERS ----------------
 export async function getUsers(token) {
-  const res = await fetch(`${API_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
 
 export async function getUser(id, token) {
-  const res = await fetch(`${API_URL}/api/users/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
 
 export async function createUser(data, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/users/register`, {
+  const res = await fetchWithLoader(`${API_URL}/api/users/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`, // token admin obligatoire
+      "Authorization": `Bearer ${token}`,
       "X-CSRF-Token": csrfToken
     },
     credentials: "include",
@@ -49,7 +71,7 @@ export async function createUser(data, token) {
 
 export async function updateUser(id, data, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/users/${id}`, {
+  const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -63,8 +85,8 @@ export async function updateUser(id, data, token) {
 }
 
 export async function updatePassword(id, oldPassword, newPassword, token) {
-  const csrfToken = await getCsrfToken(); // <-- récupère le token exact
-  const res = await fetch(`${API_URL}/api/users/${id}/password`, {
+  const csrfToken = await getCsrfToken();
+  const res = await fetchWithLoader(`${API_URL}/api/users/${id}/password`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -79,7 +101,7 @@ export async function updatePassword(id, oldPassword, newPassword, token) {
 
 export async function deleteUser(id, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/users/${id}`, {
+  const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -91,35 +113,24 @@ export async function deleteUser(id, token) {
 }
 
 // ---------------- POSTS ----------------
-
-// Récupérer tous les posts (admin)
 export async function getPosts(token) {
-  const res = await fetch(`${API_URL}/api/posts`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
+  const res = await fetchWithLoader(`${API_URL}/api/posts`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
 
-// Récupérer ses propres posts (user connecté)
 export async function getMyPosts(token) {
-  const res = await fetch(`${API_URL}/api/posts/me`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
+  const res = await fetchWithLoader(`${API_URL}/api/posts/me`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
 
-// Récupérer un post précis
 export async function getPost(id, token) {
-  const res = await fetch(`${API_URL}/api/posts/${id}`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  });
+  const res = await fetchWithLoader(`${API_URL}/api/posts/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
   return handleResponse(res);
 }
 
-// Créer un post (admin)
 export async function createPost(data, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/posts`, {
+  const res = await fetchWithLoader(`${API_URL}/api/posts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -132,10 +143,9 @@ export async function createPost(data, token) {
   return handleResponse(res);
 }
 
-// Mettre à jour un post (admin)
 export async function updatePost(id, data, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/posts/${id}`, {
+  const res = await fetchWithLoader(`${API_URL}/api/posts/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -148,10 +158,9 @@ export async function updatePost(id, data, token) {
   return handleResponse(res);
 }
 
-// Supprimer un post (admin)
 export async function deletePost(id, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/posts/${id}`, {
+  const res = await fetchWithLoader(`${API_URL}/api/posts/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -162,13 +171,12 @@ export async function deletePost(id, token) {
   return handleResponse(res);
 }
 
-
 // ---------------- AUTH ----------------
 export async function login(email, password) {
   const csrfToken = await getCsrfToken();
   if (!csrfToken) throw new Error("CSRF token manquant, impossible de se connecter");
 
-  const res = await fetch(`${API_URL}/api/users/login`, {
+  const res = await fetchWithLoader(`${API_URL}/api/users/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -180,14 +188,13 @@ export async function login(email, password) {
   return handleResponse(res);
 }
 
-// Register pour admin uniquement
 export async function register(firstname, lastname, email, password, token) {
   const csrfToken = await getCsrfToken();
-  const res = await fetch(`${API_URL}/api/users/register`, {
+  const res = await fetchWithLoader(`${API_URL}/api/users/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`, // token admin requis
+      "Authorization": `Bearer ${token}`,
       "X-CSRF-Token": csrfToken
     },
     credentials: "include",

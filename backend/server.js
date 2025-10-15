@@ -10,16 +10,12 @@ const { sequelize } = require('./models');
     // Vérifie si la connexion à la base de données fonctionne
     await sequelize.authenticate();
     console.log('Connecté à MySQL ✅');
-
-    // Si on est en environnement de développement
     if (process.env.NODE_ENV === 'development') {
-      // Synchronise tous les modèles avec la base de données
-      // 'force: true' supprime et recrée toutes les tables à chaque lancement
-      // 'logging: console.log' affiche les requêtes SQL dans la console
-      await sequelize.sync({ force: true, logging: console.log });
-      console.log('BDD réinitialisée en dev');
+      // Crée les tables manquantes, ne supprime jamais les données
+      await sequelize.sync({ alter: true, logging: false });
+      console.log('BDD synchronisée en dev');
     } else {
-      // En production, on synchronise sans forcer et sans afficher les logs SQL
+      // En production, synchronise sans logs et sans altérer la BDD
       await sequelize.sync({ logging: false });
     }
 
@@ -28,7 +24,13 @@ const { sequelize } = require('./models');
 
     // Démarre le serveur Express
     // app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
-    app.listen(port, () => console.log(`Server running on port ${port}`));
+    app.listen(port, () => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Server running on http://localhost:${port}`);
+      } else {
+        console.log(`Server running. Frontend disponible sur https://bystalindrive.netlify.app/`);
+      }
+    });
 
   } catch (err) {
     // Gestion des erreurs de connexion ou de synchronisation
