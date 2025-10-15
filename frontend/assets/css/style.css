@@ -1788,6 +1788,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     gap: 12px !important;
   }
 
+
+  .mentions-politique h1 {
+    font-size: 25px;
+  }
 }
 
 /* ≤ 576px — petit mobile grand écran */
@@ -1904,6 +1908,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
   .img-no-sessions {
     width: 100%;
+  }
+
+  .mentions-politique h1 {
+    font-size: 20px;
   }
 }
 
