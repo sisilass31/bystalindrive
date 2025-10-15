@@ -9,7 +9,7 @@ async function sendMail(to, subject, text, html) {
       to,
       from: {
         name: 'Bystalindrive',
-        address: 'bystalindrive80@gmail.com'
+        email: 'bystalindrive80@gmail.com'
       },
       subject,
       text,
