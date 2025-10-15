@@ -25,4 +25,8 @@ module.exports = {
 
   // Temps maximum (en ms) qu'un test peut prendre avant d'échouer
   testTimeout: 10000, // 10 secondes
+
+  // Fichier de setup exécuté automatiquement avant tous les tests
+  // Ici, on utilise setup.js pour créer la BDD SQLite en mémoire et fermer la connexion après les tests
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.js"]
 };
