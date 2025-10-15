@@ -27,7 +27,9 @@ const API_URL = window.location.hostname === "localhost"
 
 // ---------------- CSRF ----------------
 export async function getCsrfToken() {
-  const res = await fetchWithLoader(`${API_URL}/api/users/csrf-token`, { credentials: "include" });
+  const res = await fetchWithLoader(`${API_URL}/api/users/csrf-token`, {
+    credentials: "include"
+  });
   if (!res.ok) throw new Error("Impossible de récupérer le CSRF token");
   const data = await res.json();
   return data.csrfToken;
@@ -44,13 +46,19 @@ async function handleResponse(res) {
 }
 
 // ---------------- USERS ----------------
-export async function getUsers(token) {  
-  const res = await fetchWithLoader(`${API_URL}/api/users`, { headers: { "Authorization": `Bearer ${token}` } });
+export async function getUsers(token) {
+  const res = await fetchWithLoader(`${API_URL}/api/users`, {
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
   return handleResponse(res);
 }
 
 export async function getUser(id, token) {
-  const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, {
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
   return handleResponse(res);
 }
 
@@ -114,17 +122,26 @@ export async function deleteUser(id, token) {
 
 // ---------------- POSTS ----------------
 export async function getPosts(token) {
-  const res = await fetchWithLoader(`${API_URL}/api/posts`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/posts`, {
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
   return handleResponse(res);
 }
 
 export async function getMyPosts(token) {
-  const res = await fetchWithLoader(`${API_URL}/api/posts/me`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/posts/me`, {
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
   return handleResponse(res);
 }
 
 export async function getPost(id, token) {
-  const res = await fetchWithLoader(`${API_URL}/api/posts/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
+  const res = await fetchWithLoader(`${API_URL}/api/posts/${id}`, {
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
   return handleResponse(res);
 }
 
