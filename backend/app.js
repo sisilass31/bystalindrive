@@ -63,7 +63,13 @@ app.use(cookieParser());
 const csrfProtection =
   process.env.NODE_ENV === 'test'
     ? (req, res, next) => next()
-    : csrf({ cookie: true });
+    : csrf({
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development', // secure seulement en prod HTTPS
+        sameSite: 'None' // obligatoire pour cross-domain sur mobile
+      }
+    });
 
 // ----------------- SERVIR LE FRONTEND -----------------
 
