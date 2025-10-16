@@ -1,25 +1,51 @@
 // URL de base de l'API
 const API_URL = window.location.hostname === "localhost"
-  ? "http://localhost:3000/api/users"
-  : "https://bystalindrive.onrender.com/api/users";
+    ? "http://localhost:3000/api/users"
+    : "https://bystalindrive.onrender.com/api/users";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // --- Modal simple ---
+    // --- MODAL ---
     function showModal(message, type = "info") {
+        // Création de l'overlay
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
-        modal.innerHTML = `
-            <div class="modal-content ${type}">
-                <p>${message}</p>
-                <button id="closeModalBtn" class="button-3d">OK</button>
-            </div>
-        `;
+
+        // Création du contenu de la modal
+        const modalContent = document.createElement("div");
+        modalContent.className = `modal-content ${type}`;
+
+        // Création du paragraphe du message
+        const p = document.createElement("p");
+        p.textContent = message;
+
+        // Création du bouton OK
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "button-3d";
+        closeBtn.textContent = "OK";
+        closeBtn.id = "closeModalBtn";
+
+        // Assemblage
+        modalContent.appendChild(p);
+        modalContent.appendChild(closeBtn);
+        modal.appendChild(modalContent);
         document.body.appendChild(modal);
+
+        // 🔒 Bloquer le scroll de l'arrière-plan
+        document.body.style.overflow = "hidden";
+
         modal.style.display = "flex";
-        modal.querySelector("#closeModalBtn").addEventListener("click", () => modal.remove());
-        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+
+        const closeModal = () => {
+            modal.remove();
+            // 🔓 Réactiver le scroll
+            document.body.style.overflow = "auto";
+        };
+
+        closeBtn.addEventListener("click", closeModal);
+        modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
     }
+
 
     // --- Vérification mot de passe ---
     function checkPassword(pwd = "") {

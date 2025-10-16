@@ -51,10 +51,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       confirmBtn.textContent = confirmText;
       modal.style.display = "flex";
 
+      // 🔒 Bloquer le scroll de l'arrière-plan
+      document.body.style.overflow = "hidden";
+
       function cleanUp() {
         confirmBtn.removeEventListener("click", onConfirm);
         cancelBtn.removeEventListener("click", onCancel);
         modal.style.display = "none";
+
+        // 🔓 Réactiver le scroll à la fermeture
+        document.body.style.overflow = "auto";
       }
       function onConfirm() { cleanUp(); resolve(true); }
       function onCancel() { cleanUp(); resolve(false); }
@@ -63,7 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       cancelBtn.addEventListener("click", onCancel);
     });
   }
-
   // Modal d’information
   const infoModal = document.createElement("div");
   infoModal.id = "infoModal";

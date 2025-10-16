@@ -23,19 +23,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- MODAL ---
     function showModal(message, type = "info") {
+        // Overlay
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
-        modal.innerHTML = `
-            <div class="modal-content ${type}">
-                <p>${message}</p>
-                <button id="closeModalBtn" class="button-3d" aria-label="Fermer le modal">OK</button>
-            </div>
-        `;
+
+        // Contenu du modal
+        const content = document.createElement("div");
+        content.className = `modal-content ${type}`;
+
+        // Message
+        const msg = document.createElement("p");
+        msg.textContent = message;
+
+        // Bouton
+        const btn = document.createElement("button");
+        btn.id = "closeModalBtn";
+        btn.className = "button-3d";
+        btn.setAttribute("aria-label", "Fermer le modal");
+        btn.textContent = "OK";
+
+        // Assemblage
+        content.appendChild(msg);
+        content.appendChild(btn);
+        modal.appendChild(content);
         document.body.appendChild(modal);
+
+        // 🔒 Bloquer le scroll de l'arrière-plan
+        document.body.style.overflow = "hidden";
+
         modal.style.display = "flex";
 
-        modal.querySelector("#closeModalBtn").addEventListener("click", () => modal.remove());
-        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+        // Fonction fermeture
+        const closeModal = () => {
+            modal.remove();
+            // 🔓 Réactiver le scroll
+            document.body.style.overflow = "auto";
+        };
+
+        btn.addEventListener("click", closeModal);
+        modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
     }
 
     // --- REDIRECTION SI CONNECTÉ ---
@@ -80,44 +106,80 @@ document.addEventListener("DOMContentLoaded", () => {
     const authContainerSidebar = document.getElementById("authBtnContainerSidebar");
 
     function renderNav(role) {
-        let navbarHtml = "", sidebarHtml = "";
+        // Vider les containers avant de remplir
+        if (authContainer) authContainer.textContent = "";
+        if (authContainerSidebar) authContainerSidebar.textContent = "";
+
+        const createLink = (href, text, className, iconClass = "") => {
+            const a = document.createElement("a");
+            a.href = href;
+            a.className = className;
+            if (iconClass) {
+                const i = document.createElement("i");
+                i.className = iconClass;
+                a.appendChild(i);
+            }
+            const span = document.createElement("span");
+            span.textContent = text;
+            a.appendChild(span);
+            return a;
+        };
+
+        const createSidebarLink = (href, text, iconClass, extraClass = "") => {
+            const a = document.createElement("a");
+            a.href = href;
+            a.className = `sidebar-link ${extraClass}`.trim();
+            if (iconClass) {
+                const i = document.createElement("i");
+                i.className = iconClass;
+                a.appendChild(i);
+            }
+            a.appendChild(document.createTextNode(text));
+            return a;
+        };
 
         if (role === "admin") {
-            navbarHtml = `
-                <a href="/pages/admin/dashboard.html" class="navlinks"><span>Dashboard</span></a>
-                <a href="/pages/admin/users-dashboard.html" class="navlinks"><span>Utilisateurs</span></a>
-                <a href="/pages/admin/posts-dashboard.html" class="navlinks"><span>Séances</span></a>
-                <a href="#" id="logoutBtn" class="button-3d height-32"><span>Déconnexion</span><i class='bx bx-log-out'></i></a>
-            `;
-            sidebarHtml = `
-                <div class="flex-sidebar">
-                    <a href="/pages/admin/dashboard.html" class="sidebar-link"><i class='bx bx-home'></i>Dashboard</a>
-                    <a href="/pages/admin/users-dashboard.html" class="sidebar-link"><i class='bx bx-user'></i>Utilisateurs</a>
-                    <a href="/pages/admin/posts-dashboard.html" class="sidebar-link"><i class='bx bx-news'></i>Séances</a>
-                </div>
-                <a href="#" id="logoutBtnSidebar" class="sidebar-link logout"><i class='bx bx-log-out'></i>Déconnexion</a>
-            `;
-        } else if (role === "client") {
-            navbarHtml = `
-                <a href="/pages/client/espace-client.html" class="navlinks"><span>Espace Client</span></a>
-                <a href="/pages/client/profile.html" class="navlinks"><span>Mon Profil</span></a>
-                <a href="#" id="logoutBtn" class="button-3d height-32"><span>Déconnexion</span><i class='bx bx-log-out'></i></a>
-            `;
-            sidebarHtml = `
-                <div class="flex-sidebar">
-                    <a href="/pages/client/espace-client.html" class="sidebar-link"><i class='bx bx-user-circle'></i>Espace Client</a>
-                    <a href="/pages/client/profile.html" class="sidebar-link"><i class='bx bx-id-card'></i>Mon Profil</a>
-                </div>
-                <a href="#" id="logoutBtnSidebar" class="sidebar-link logout"><i class='bx bx-log-out'></i>Déconnexion</a>
-            `;
-        } else {
-            navbarHtml = `<a href="/pages/login.html" class="gradient-button height-32"><span>Connexion</span><i class='bx bx-log-in'></i></a>`;
-            sidebarHtml = `<a href="/pages/login.html" class="sidebar-link"><i class='bx bx-log-in'></i> Connexion</a>`;
-        }
+            authContainer.appendChild(createLink("/pages/admin/dashboard.html", "Dashboard", "navlinks"));
+            authContainer.appendChild(createLink("/pages/admin/users-dashboard.html", "Utilisateurs", "navlinks"));
+            authContainer.appendChild(createLink("/pages/admin/posts-dashboard.html", "Séances", "navlinks"));
+            const logoutBtn = createLink("#", "Déconnexion", "button-3d height-32", "bx bx-log-out");
+            logoutBtn.id = "logoutBtn";
+            authContainer.appendChild(logoutBtn);
 
-        if (authContainer) authContainer.innerHTML = navbarHtml;
-        if (authContainerSidebar) authContainerSidebar.innerHTML = sidebarHtml;
+            const sidebarDiv = document.createElement("div");
+            sidebarDiv.className = "flex-sidebar";
+            sidebarDiv.appendChild(createSidebarLink("/pages/admin/dashboard.html", "Dashboard", "bx bx-home"));
+            sidebarDiv.appendChild(createSidebarLink("/pages/admin/users-dashboard.html", "Utilisateurs", "bx bx-user"));
+            sidebarDiv.appendChild(createSidebarLink("/pages/admin/posts-dashboard.html", "Séances", "bx bx-news"));
+            authContainerSidebar.appendChild(sidebarDiv);
+
+            const logoutSidebar = createSidebarLink("#", "Déconnexion", "bx bx-log-out", "logout");
+            logoutSidebar.id = "logoutBtnSidebar";
+            authContainerSidebar.appendChild(logoutSidebar);
+
+        } else if (role === "client") {
+            authContainer.appendChild(createLink("/pages/client/espace-client.html", "Espace Client", "navlinks"));
+            authContainer.appendChild(createLink("/pages/client/profile.html", "Mon Profil", "navlinks"));
+            const logoutBtn = createLink("#", "Déconnexion", "button-3d height-32", "bx bx-log-out");
+            logoutBtn.id = "logoutBtn";
+            authContainer.appendChild(logoutBtn);
+
+            const sidebarDiv = document.createElement("div");
+            sidebarDiv.className = "flex-sidebar";
+            sidebarDiv.appendChild(createSidebarLink("/pages/client/espace-client.html", "Espace Client", "bx bx-user-circle"));
+            sidebarDiv.appendChild(createSidebarLink("/pages/client/profile.html", "Mon Profil", "bx bx-id-card"));
+            authContainerSidebar.appendChild(sidebarDiv);
+
+            const logoutSidebar = createSidebarLink("#", "Déconnexion", "bx bx-log-out", "logout");
+            logoutSidebar.id = "logoutBtnSidebar";
+            authContainerSidebar.appendChild(logoutSidebar);
+
+        } else {
+            authContainer.appendChild(createLink("/pages/login.html", "Connexion", "gradient-button height-32", "bx bx-log-in"));
+            authContainerSidebar.appendChild(createSidebarLink("/pages/login.html", "Connexion", "bx bx-log-in"));
+        }
     }
+
 
     renderNav(payload?.role?.toLowerCase());
 

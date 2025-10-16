@@ -1,7 +1,7 @@
 // URL de base de l'API
 const API_URL = window.location.hostname === "localhost"
-  ? "http://localhost:3000/api/users"
-  : "https://bystalindrive.onrender.com/api/users";
+    ? "http://localhost:3000/api/users"
+    : "https://bystalindrive.onrender.com/api/users";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -42,9 +42,21 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.appendChild(content);
         document.body.appendChild(modal);
 
+        // 🔒 Bloquer le scroll de l'arrière-plan
+        document.body.style.overflow = "hidden";
+
         modal.style.display = "flex";
-        btn.addEventListener("click", () => modal.remove());
-        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+
+        // 🔓 Fonction pour fermer et réactiver le scroll
+        const closeModal = () => {
+            modal.remove();
+            document.body.style.overflow = "auto";
+        };
+
+        btn.addEventListener("click", closeModal);
+        modal.addEventListener("click", e => {
+            if (e.target === modal) closeModal();
+        });
     }
 
     // --- Vérification conformité mot de passe ---

@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Afficher le prénom
     const welcome = document.getElementById("welcome");
-    if (welcome) welcome.innerText = `Bienvenue ${user.firstname} !`;
+    if (welcome) welcome.textContent = `Bienvenue ${user.firstname} !`;
 
   } catch (err) {
     console.error(err);
