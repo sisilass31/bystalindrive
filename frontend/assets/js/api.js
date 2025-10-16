@@ -52,9 +52,7 @@ export async function getUser(id, token) {
 
 // ---------------- CREATE / REGISTER USER ----------------
 export async function createUser(data, token) {
-  const headers = {
-    "Content-Type": "application/json",
-  };
+  const headers = { "Content-Type": "application/json" };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const res = await fetchWithLoader(`${API_URL}/api/users/register`, {
@@ -94,6 +92,43 @@ export async function deleteUser(id, token) {
   const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, {
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res);
+}
+
+// ---------------- PASSWORD ----------------
+export async function forgotPassword(email) {
+  const res = await fetchWithLoader(`${API_URL}/api/users/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  });
+  return handleResponse(res);
+}
+
+export async function resetPassword(token, password) {
+  const res = await fetchWithLoader(`${API_URL}/api/users/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password })
+  });
+  return handleResponse(res);
+}
+
+export async function setPassword(token, password) {
+  const res = await fetchWithLoader(`${API_URL}/api/users/set-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password })
+  });
+  return handleResponse(res);
+}
+
+export async function checkToken(token) {
+  const res = await fetchWithLoader(`${API_URL}/api/users/check-token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token })
   });
   return handleResponse(res);
 }

@@ -111,21 +111,38 @@ exports.setPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
 
+    if (!token) return res.status(400).json({ message: "Token manquant." });
+    if (!password) return res.status(400).json({ message: "Mot de passe manquant." });
+
+    // Vérification du mot de passe selon le schéma
     await passwordSchema.validate(password);
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Décodage du token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(400).json({ message: "Token invalide ou expiré." });
+    }
+
+    // Récupération de l'utilisateur
     const user = await User.findByPk(decoded.userId);
     if (!user) return res.status(404).json({ message: "Utilisateur non trouvé." });
+
+    // Vérifier si le mot de passe est déjà défini
     if (user.password) return res.status(400).json({ message: "Mot de passe déjà défini." });
 
+    // Hash du nouveau mot de passe et sauvegarde
     user.password = await bcrypt.hash(password, saltRounds);
     await user.save();
 
     res.json({ message: "Mot de passe défini avec succès. Vous pouvez maintenant vous connecter." });
   } catch (err) {
-    if (err.name === "ValidationError") return res.status(400).json({ message: err.errors });
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ message: err.errors });
+    }
     console.error("Erreur setPassword :", err);
-    res.status(400).json({ message: "Lien invalide ou expiré." });
+    res.status(500).json({ message: "Erreur serveur lors de la définition du mot de passe." });
   }
 };
 

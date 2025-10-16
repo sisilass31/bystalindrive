@@ -1,5 +1,5 @@
 // URL de base de l'API
-const API_URL = window.location.hostname === "development"
+const API_URL = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://bystalindrive.onrender.com";
 
@@ -17,16 +17,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Décoder le token
     const payload = JSON.parse(atob(token.split('.')[1]));
-    const userId = payload.id;
     const role = payload.role.toLowerCase();
 
+    // Redirection si ce n'est pas un client
     if (role !== "client") {
       window.location.href = "/pages/admin/posts-dashboard.html";
       return;
     }
 
-    // Récupérer les infos utilisateur
-    const res = await fetch(`${API_URL}/api/users/${userId}`, {
+    // 🔹 Récupérer les infos de l'utilisateur connecté
+    const res = await fetch(`${API_URL}/api/users/me`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
 
@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     user = await res.json();
-    // console.log("Utilisateur connecté :", user);
 
     // Afficher le prénom
     const welcome = document.getElementById("welcome");
@@ -153,6 +152,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const sessions = await fetchUserSessions();
-  //console.log("Sessions récupérées :", JSON.stringify(sessions, null, 2)); // log clair pour debug
   renderSessions(sessions);
 });

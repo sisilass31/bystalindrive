@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postsCtrl = require('../controllers/postsCtrl');
-const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware');
+const { authMiddleware } = require('../middlewares/authMiddleware');
 
 // ------------------ CREATE POST (admin uniquement) ------------------
 router.post('/', authMiddleware(), postsCtrl.createPost);
