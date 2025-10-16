@@ -3,12 +3,6 @@ const router = express.Router();
 const postsCtrl = require('../controllers/postsCtrl');
 const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware');
 
-// ------------------ ROUTE CSRF TOKEN ------------------
-// CSRF déjà appliqué globalement depuis app.js
-router.get("/csrf-token", (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
-});
-
 // ------------------ CREATE POST (admin uniquement) ------------------
 router.post('/', authMiddleware(), postsCtrl.createPost);
 

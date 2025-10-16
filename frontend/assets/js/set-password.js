@@ -5,13 +5,6 @@ const API_URL = window.location.hostname === "localhost"
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // --- Récupération CSRF ---
-    async function getCsrfToken() {
-        const res = await fetch(`${API_URL}/csrf-token`, { credentials: "include" });
-        const data = await res.json();
-        return data.csrfToken;
-    }
-
     // --- Modal simple ---
     function showModal(message, type = "info") {
         const modal = document.createElement("div");
@@ -136,14 +129,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Object.values(checkPassword(password)).every(Boolean)) return showModal("Mot de passe non conforme", "error");
 
         try {
-            const csrfToken = await getCsrfToken();
             const res = await fetch(`${API_URL}/set-password`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "CSRF-Token": csrfToken
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
                 body: JSON.stringify({ token, password })
             });
             const data = await res.json();

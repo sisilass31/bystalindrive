@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
-const cookieParser = require('cookie-parser'); // pour CSRF
-const csrf = require('csurf');
 require('dotenv').config();
 
 const app = express();
@@ -51,30 +49,11 @@ app.use(
 app.use(
   cors({
     origin: FRONT_URL,
-    credentials: true, // pour cookies (CSRF, JWT)
   })
 );
 
 // Parse JSON + cookies
 app.use(express.json());
-app.use(cookieParser());
-
-// ----------------- CSRF -----------------
-
-// CSRF protection middleware conditionnel
-const csrfProtection =
-  process.env.NODE_ENV === 'test'
-    ? (req, res, next) => next()
-    : csrf({
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS obligatoire en prod
-        sameSite:
-          process.env.NODE_ENV === 'development'
-            ? 'Lax'  // local dev
-            : 'None' // prod cross-domain (Netlify <-> Render)
-      }
-    });
 
 // ----------------- SERVIR LE FRONTEND -----------------
 app.use(express.static(path.resolve(__dirname, '../frontend')));
@@ -83,8 +62,8 @@ app.use(express.static(path.resolve(__dirname, '../frontend')));
 const userRoutes = require('./routes/userRoutes');
 const postsRoutes = require('./routes/postRoutes');
 
-app.use('/api/users', csrfProtection, userRoutes);
-app.use('/api/posts', csrfProtection, postsRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postsRoutes);
 
 // ----------------- GESTION DES 404 -----------------
 app.use((req, res) => {

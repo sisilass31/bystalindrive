@@ -1,15 +1,5 @@
 import { getUser, updatePassword } from "./api.js";
 
-// --- Fonction pour récupérer un cookie par nom ---
-export async function getCsrfToken() {
-  const res = await fetch(`${API_URL}/users/csrf-token`, {
-    credentials: "include"
-  });
-  const data = await res.json();
-  return data.csrfToken;
-}
-
-
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
   if (!token) return window.location.href = "/pages/login.html";

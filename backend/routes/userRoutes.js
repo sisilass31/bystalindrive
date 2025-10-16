@@ -5,12 +5,6 @@ const usersCtrl = require("../controllers/usersCtrl");
 // Import des middlewares
 const { authMiddleware } = require("../middlewares/authMiddleware");
 
-// ------------------ ROUTE CSRF TOKEN ------------------
-// Même remarque : CSRF déjà appliqué globalement depuis app.js
-router.get("/csrf-token", (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
-});
-
 // ------------------ REGISTER ------------------
 router.post("/register", authMiddleware(), usersCtrl.register);
 
