@@ -10,7 +10,7 @@ const app = express();
 
 // ----------------- MIDDLEWARE -----------------
 
-// URL frontend + backend
+// URL frontend
 const FRONT_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
@@ -20,7 +20,7 @@ const FRONT_URL =
 app.use(
   helmet({
     contentSecurityPolicy: {
-      useDefaults: true, // conserve les directives par défaut
+      useDefaults: true,
       directives: {
         connectSrc: [
           "'self'",
@@ -59,6 +59,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// ----------------- CSRF -----------------
+
 // CSRF protection middleware conditionnel
 const csrfProtection =
   process.env.NODE_ENV === 'test'
@@ -66,30 +68,30 @@ const csrfProtection =
     : csrf({
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development', // secure seulement en prod HTTPS
-        sameSite: 'None' // obligatoire pour cross-domain sur mobile
+        secure: process.env.NODE_ENV === 'production', // HTTPS obligatoire en prod
+        sameSite:
+          process.env.NODE_ENV === 'development'
+            ? 'Lax'  // local dev
+            : 'None' // prod cross-domain (Netlify <-> Render)
       }
     });
-
-// ----------------- SERVIR LE FRONTEND -----------------
-
-app.use(express.static(path.resolve(__dirname, '../frontend')));
-
-// ----------------- ROUTES API -----------------
-
+    
 // Route pour fournir le token CSRF au frontend
 app.get('/api/csrf-token', csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
+// ----------------- SERVIR LE FRONTEND -----------------
+app.use(express.static(path.resolve(__dirname, '../frontend')));
+
+// ----------------- ROUTES API -----------------
 const userRoutes = require('./routes/userRoutes');
 const postsRoutes = require('./routes/postRoutes');
 
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postsRoutes);
+app.use('/api/users', csrfProtection, userRoutes);
+app.use('/api/posts', csrfProtection, postsRoutes);
 
 // ----------------- GESTION DES 404 -----------------
-
 app.use((req, res) => {
   res.status(404).sendFile(
     path.resolve(__dirname, '../frontend/pages/error-404.html')

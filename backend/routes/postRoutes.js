@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const postsCtrl = require('../controllers/postsCtrl');
-const csrfProtection = require('csurf')({ cookie: true });
 const { authMiddleware, adminMiddleware } = require('../middlewares/authMiddleware');
 
-// Route pour récupérer le token CSRF
-router.get("/csrf-token", csrfProtection, (req, res) => {
+// ------------------ ROUTE CSRF TOKEN ------------------
+// CSRF déjà appliqué globalement depuis app.js
+router.get("/csrf-token", (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 });
 
 // ------------------ CREATE POST (admin uniquement) ------------------
-router.post('/', authMiddleware(), csrfProtection, postsCtrl.createPost);
+router.post('/', authMiddleware(), postsCtrl.createPost);
 
 // ------------------ UPDATE POST (admin uniquement) ------------------
-router.put('/:id', authMiddleware(), csrfProtection, postsCtrl.updatePost);
+router.put('/:id', authMiddleware(), postsCtrl.updatePost);
 
 // ------------------ GET ALL POSTS (admin dashboard) ------------------
 router.get('/', authMiddleware(), postsCtrl.getAllPosts);
@@ -25,6 +25,6 @@ router.get('/me', authMiddleware(), postsCtrl.getMyPosts);
 router.get('/:id', authMiddleware(), postsCtrl.getOnePost);
 
 // ------------------ DELETE POST (admin uniquement) ------------------
-router.delete('/:id', authMiddleware(), csrfProtection, postsCtrl.deletePost);
+router.delete('/:id', authMiddleware(), postsCtrl.deletePost);
 
 module.exports = router;

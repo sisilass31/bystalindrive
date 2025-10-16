@@ -1,19 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const usersCtrl = require("../controllers/usersCtrl");
-const csrfProtection = require('csurf')({ cookie: true });
 
 // Import des middlewares
 const { authMiddleware, adminMiddleware } = require("../middlewares/authMiddleware");
 
-
-// Route pour récupérer le token CSRF
-router.get("/csrf-token", csrfProtection, (req, res) => {
+// ------------------ ROUTE CSRF TOKEN ------------------
+// Même remarque : CSRF déjà appliqué globalement depuis app.js
+router.get("/csrf-token", (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 });
 
 // ------------------ REGISTER ------------------
-router.post("/register", authMiddleware(), csrfProtection, usersCtrl.register);
+router.post("/register", authMiddleware(), usersCtrl.register);
 
 // ------------------ LOGIN ------------------
 router.post("/login", usersCtrl.login);
@@ -28,10 +27,10 @@ router.get("/", authMiddleware(), usersCtrl.getAllUsers);
 router.get("/:id", authMiddleware(), usersCtrl.getOneUser);
 
 // ------------------ UPDATE USER BY ADMIN ------------------
-router.put("/:id", authMiddleware(), csrfProtection, usersCtrl.updateUser);
+router.put("/:id", authMiddleware(), usersCtrl.updateUser);
 
 // ------------------ UPDATE PASSWORD USER ------------------
-router.put("/:id/password", authMiddleware(), csrfProtection, usersCtrl.updatePassword);
+router.put("/:id/password", authMiddleware(), usersCtrl.updatePassword);
 
 // ------------------ FORGOT PASSWORD ------------------
 router.post("/forgot-password", usersCtrl.forgotPassword);
@@ -43,6 +42,6 @@ router.post("/reset-password", usersCtrl.resetPassword);
 router.post("/set-password", usersCtrl.setPassword);
 
 // ------------------ DELETE USER ------------------
-router.delete("/:id", authMiddleware(), csrfProtection, usersCtrl.deleteUser);
+router.delete("/:id", authMiddleware(), usersCtrl.deleteUser);
 
 module.exports = router;
