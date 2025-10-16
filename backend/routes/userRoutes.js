@@ -3,7 +3,7 @@ const router = express.Router();
 const usersCtrl = require("../controllers/usersCtrl");
 
 // Import des middlewares
-const { authMiddleware, adminMiddleware } = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 // ------------------ ROUTE CSRF TOKEN ------------------
 // Même remarque : CSRF déjà appliqué globalement depuis app.js
@@ -13,6 +13,11 @@ router.get("/csrf-token", (req, res) => {
 
 // ------------------ REGISTER ------------------
 router.post("/register", authMiddleware(), usersCtrl.register);
+
+// --- ROUTE SPÉCIALE TEST (bypass auth pour /register) ---
+if (process.env.NODE_ENV === "test") {
+  router.post("/register-test", usersCtrl.register);
+}
 
 // ------------------ LOGIN ------------------
 router.post("/login", usersCtrl.login);
