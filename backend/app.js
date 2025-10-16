@@ -49,6 +49,7 @@ app.use(
 app.use(
   cors({
     origin: FRONT_URL,
+    credentials: true,
   })
 );
 
