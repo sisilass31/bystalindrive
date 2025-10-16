@@ -75,11 +75,6 @@ const csrfProtection =
             : 'None' // prod cross-domain (Netlify <-> Render)
       }
     });
-    
-// Route pour fournir le token CSRF au frontend
-app.get('/api/csrf-token', csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
 
 // ----------------- SERVIR LE FRONTEND -----------------
 app.use(express.static(path.resolve(__dirname, '../frontend')));

@@ -28,7 +28,7 @@ const API_URL = window.location.hostname === "localhost"
 // ---------------- CSRF ----------------
 export async function getCsrfToken() {
   const res = await fetchWithLoader(`${API_URL}/api/users/csrf-token`, {
-    credentials: "include"
+    credentials: "include" // essentiel pour mobile
   });
   if (!res.ok) throw new Error("Impossible de récupérer le CSRF token");
   const data = await res.json();
@@ -62,21 +62,25 @@ export async function getUser(id, token) {
   return handleResponse(res);
 }
 
+// ---------------- CREATE / REGISTER USER ----------------
 export async function createUser(data, token) {
   const csrfToken = await getCsrfToken();
+  const headers = {
+    "Content-Type": "application/json",
+    "X-CSRF-Token": csrfToken
+  };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
   const res = await fetchWithLoader(`${API_URL}/api/users/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-      "X-CSRF-Token": csrfToken
-    },
+    headers,
     credentials: "include",
     body: JSON.stringify(data)
   });
   return handleResponse(res);
 }
 
+// ---------------- UPDATE / DELETE USERS ----------------
 export async function updateUser(id, data, token) {
   const csrfToken = await getCsrfToken();
   const res = await fetchWithLoader(`${API_URL}/api/users/${id}`, {
@@ -201,21 +205,6 @@ export async function login(email, password) {
     },
     credentials: "include",
     body: JSON.stringify({ email, password })
-  });
-  return handleResponse(res);
-}
-
-export async function register(firstname, lastname, email, password, token) {
-  const csrfToken = await getCsrfToken();
-  const res = await fetchWithLoader(`${API_URL}/api/users/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-      "X-CSRF-Token": csrfToken
-    },
-    credentials: "include",
-    body: JSON.stringify({ firstname, lastname, email, password })
   });
   return handleResponse(res);
 }
