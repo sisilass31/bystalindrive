@@ -1088,7 +1088,7 @@ select {
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100%; /* pour couvrir tout le contenu */
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: none;
   align-items: center;
@@ -1115,7 +1115,7 @@ select {
 }
 
 .modal-actions button {
-  flex: 1;
+  width: 50%;
 }
 
 /* loader */
