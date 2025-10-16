@@ -50,16 +50,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       modalText.textContent = message;
       confirmBtn.textContent = confirmText;
       modal.style.display = "flex";
-
-      // 🔒 Bloquer le scroll de l'arrière-plan
       document.body.style.overflow = "hidden";
 
       function cleanUp() {
         confirmBtn.removeEventListener("click", onConfirm);
         cancelBtn.removeEventListener("click", onCancel);
         modal.style.display = "none";
-
-        // 🔓 Réactiver le scroll à la fermeture
         document.body.style.overflow = "auto";
       }
       function onConfirm() { cleanUp(); resolve(true); }
@@ -69,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       cancelBtn.addEventListener("click", onCancel);
     });
   }
+
   // Modal d’information
   const infoModal = document.createElement("div");
   infoModal.id = "infoModal";
@@ -134,6 +131,52 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   });
 
+  // --- Select heures (création + render) ---
+  const startSelect = document.getElementById("start");
+  const endSelect = document.getElementById("end");
+
+  function generateTimeOptions(startHour = 7, endHour = 20) {
+    const options = [];
+    for (let h = startHour; h <= endHour; h++) {
+      options.push(`${h.toString().padStart(2, '0')}:00`);
+      if (h < endHour) options.push(`${h.toString().padStart(2, '0')}:30`);
+    }
+    return options;
+  }
+
+  // Remplir select début
+  generateTimeOptions().forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    startSelect.appendChild(opt);
+  });
+
+  function updateEndOptions() {
+    const startTime = startSelect.value;
+    if (!startTime) return;
+    const [hStart, mStart] = startTime.split(":").map(Number);
+    const startMinutes = hStart * 60 + mStart;
+    endSelect.innerHTML = "";
+
+    generateTimeOptions(7, 20)
+      .filter(t => {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m > startMinutes;
+      })
+      .forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        endSelect.appendChild(opt);
+      });
+
+    if (endSelect.options.length) endSelect.selectedIndex = 0;
+  }
+
+  startSelect.addEventListener("change", updateEndOptions);
+  updateEndOptions();
+
   // --- Gestion du formulaire ---
   const form = document.querySelector(".planification-container form");
   const container = document.querySelector(".cards-container");
@@ -173,15 +216,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const startGroup = document.createElement("div"); startGroup.className = "form-group";
       const startLabel = document.createElement("label"); startLabel.textContent = "Heure début";
-      const startInput = document.createElement("input"); startInput.type = "time";
-      startInput.value = session.start_time.slice(0, 5); startInput.disabled = true;
-      startGroup.append(startLabel, startInput);
+      const startSelect = document.createElement("select"); startSelect.disabled = true;
+      generateTimeOptions().forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        if (t === session.start_time.slice(0, 5)) opt.selected = true;
+        startSelect.appendChild(opt);
+      });
+      startGroup.append(startLabel, startSelect);
 
       const endGroup = document.createElement("div"); endGroup.className = "form-group";
       const endLabel = document.createElement("label"); endLabel.textContent = "Heure fin";
-      const endInput = document.createElement("input"); endInput.type = "time";
-      endInput.value = session.end_time.slice(0, 5); endInput.disabled = true;
-      endGroup.append(endLabel, endInput);
+      const endSelect = document.createElement("select"); endSelect.disabled = true;
+      generateTimeOptions(7, 20).forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        if (t === session.end_time.slice(0, 5)) opt.selected = true;
+        endSelect.appendChild(opt);
+      });
+      endGroup.append(endLabel, endSelect);
 
       hoursDiv.append(startGroup, endGroup);
       flexGroup.append(dateGroup, hoursDiv);
@@ -216,8 +271,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     const eleveName = eleveInput.value;
     const appointment_date = dateInput.value;
-    const start = document.getElementById("start").value;
-    const end = document.getElementById("end").value;
+    const start = startSelect.value;
+    const end = endSelect.value;
 
     if (!eleveName || !appointment_date || !start || !end)
       return showInfoModal("Champs manquants", "Veuillez remplir tous les champs.");
@@ -242,6 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await createPost(postData, token);
       await showInfoModal("Succès", "Séance créée !");
       form.reset();
+      updateEndOptions(); // reset fin
       await fetchAndRenderSessions();
     } catch (err) {
       console.error(err);
@@ -257,6 +313,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const session = sessions.find(s => s.id === sessionId);
     if (!session) return;
     const card = btn.closest(".card-admin");
+    const selects = card.querySelectorAll("select");
     const inputs = card.querySelectorAll("input");
 
     // Supprimer
@@ -285,8 +342,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const updatedData = {
           appointment_date: inputs[0].value,
-          start_time: inputs[1].value,
-          end_time: inputs[2].value
+          start_time: selects[0].value,
+          end_time: selects[1].value
         };
 
         const selectedDate = new Date(updatedData.appointment_date);
@@ -302,6 +359,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           showInfoModal("Erreur", "Impossible de modifier");
         }
       } else {
+        selects.forEach(s => s.disabled = false);
         inputs.forEach(i => i.disabled = false);
         btn.dataset.editing = "true";
         btn.querySelector("p").textContent = "Enregistrer";
