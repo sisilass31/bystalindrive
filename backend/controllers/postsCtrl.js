@@ -20,12 +20,30 @@ const postSchema = Yup.object({
     .required("L'heure de fin est obligatoire"),
 });
 
+// Fonction pour vérifier l'heure
+function isValidRoundedTime(time) {
+  const [hour, minute] = time.split(':').map(Number);
+  if (hour < 7 || hour > 20) return false; // entre 7h et 20h
+  if (minute !== 0 && minute !== 30) return false; // minutes = 0 ou 30
+  return true;
+}
+
 // ------------------ CREATE ------------------
 exports.createPost = async (req, res) => {
   try {
-    // ✅ Validation avec Yup
+    // Validation avec Yup
     const validatedData = await postSchema.validate(req.body, { abortEarly: false });
     const { id_client, appointment_date, start_time, end_time } = validatedData;
+
+    // Validation horaires arrondis
+    if (!isValidRoundedTime(start_time) || !isValidRoundedTime(end_time)) {
+      return res.status(400).json({ message: "Les heures doivent être entre 7h et 20h et arrondies à 00 ou 30" });
+    }
+
+    // Vérifie que end_time > start_time
+    if (start_time >= end_time) {
+      return res.status(400).json({ message: "L'heure de fin doit être après l'heure de début" });
+    }
 
     // Vérifie que le client existe
     const user = await User.findByPk(id_client);
@@ -73,7 +91,7 @@ exports.createPost = async (req, res) => {
       return res.status(400).json({ message: "Cet élève a déjà un rendez-vous à cet horaire." });
     }
 
-    // ✅ Création du RDV
+    // Création du RDV
     const post = await Post.create({
       id_admin: req.user.id,
       id_client,
@@ -98,15 +116,24 @@ exports.updatePost = async (req, res) => {
     const { id } = req.params;
     const { id_client, appointment_date, start_time, end_time } = req.body;
 
-    // ✅ Validation conditionnelle avec Yup (champs optionnels)
+    // Validation conditionnelle avec Yup
     const updateSchema = Yup.object({
       id_client: Yup.number().positive().integer(),
       appointment_date: Yup.date().typeError("Date invalide"),
       start_time: Yup.string().matches(/^([0-1]\d|2[0-3]):[0-5]\d$/, "Heure de début invalide"),
       end_time: Yup.string().matches(/^([0-1]\d|2[0-3]):[0-5]\d$/, "Heure de fin invalide"),
     });
-
     await updateSchema.validate(req.body, { abortEarly: false });
+
+    // Validation horaires arrondis
+    if ((start_time && !isValidRoundedTime(start_time)) || (end_time && !isValidRoundedTime(end_time))) {
+      return res.status(400).json({ message: "Les heures doivent être entre 7h et 20h et arrondies à 00 ou 30" });
+    }
+
+    // Vérifie que end_time > start_time si les deux sont présents
+    if (start_time && end_time && start_time >= end_time) {
+      return res.status(400).json({ message: "L'heure de fin doit être après l'heure de début" });
+    }
 
     const post = await Post.findByPk(id);
     if (!post) return res.status(404).json({ message: 'RDV introuvable' });
