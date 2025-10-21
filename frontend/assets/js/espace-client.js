@@ -1,4 +1,4 @@
-import { showLoader, hideLoader } from "../assets/js/api.js";
+import { showLoader, hideLoader } from "./api.js";
 
 // URL de base de l'API
 const API_URL = window.location.hostname === "localhost"
