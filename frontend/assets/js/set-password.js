@@ -1,3 +1,5 @@
+import { showLoader, hideLoader } from "../assets/js/api.js";
+
 // URL de base de l'API
 const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:3000/api/users"
@@ -9,56 +11,58 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
-    // Redirection si pas de token
     if (!token) {
         window.location.href = "/pages/login.html";
         return;
-    } else {
-        try {
-            const res = await fetch(`${API_URL}/check-token`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token })
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                showModal(data.message || "Lien invalide ou expiré.", "error", () => {
-                    window.location.href = "/pages/login.html";
-                });
-                return;
-            }
-        } catch (err) {
-            console.error("Erreur vérification token :", err);
-            showModal("Erreur serveur lors de la vérification du lien.", "error", () => {
+    }
+
+    try {
+        showLoader();
+        const res = await fetch(`${API_URL}/check-token`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showModal(data.message || "Lien invalide ou expiré.", "error", () => {
                 window.location.href = "/pages/login.html";
             });
             return;
         }
+    } catch (err) {
+        console.error("Erreur vérification token :", err);
+        showModal("Erreur serveur lors de la vérification du lien.", "error", () => {
+            window.location.href = "/pages/login.html";
+        });
+        return;
+    } finally {
+        hideLoader();
     }
 
     // Bloquer accès si déjà connecté
     const userToken = localStorage.getItem("token");
     if (userToken) {
         try {
+            showLoader();
             const res = await fetch(`${API_URL.replace("/api/users", "/api/users/me")}`, {
                 headers: { Authorization: `Bearer ${userToken}` }
             });
-
             if (res.ok) {
                 const user = await res.json();
-                if (user.role === "admin") {
-                    window.location.href = "/pages/admin/dashboard.html";
-                } else {
-                    window.location.href = "/pages/client/espace-client.html";
-                }
+                window.location.href = user.role === "admin"
+                    ? "/pages/admin/dashboard.html"
+                    : "/pages/client/espace-client.html";
                 return;
             }
         } catch (err) {
             console.error("Erreur lors de la vérification du rôle :", err);
+        } finally {
+            hideLoader();
         }
     }
 
-    // Fonction pour afficher une modal avec callback sur fermeture
+    // --- Modal ---
     function showModal(message, type = "info", onClose = null) {
         const modal = document.createElement("div");
         modal.className = "modal-overlay";
@@ -89,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
     }
 
-    // Vérification mot de passe
+    // --- Vérification mot de passe ---
     function checkPassword(pwd = "") {
         return {
             length: /.{12,}/.test(pwd),
@@ -100,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Initialisation critères et correspondance
+    // --- Critères ---
     function initCriteria(passId, confirmId, criteriaId, matchId) {
         const passEl = document.getElementById(passId);
         const confirmEl = document.getElementById(confirmId);
@@ -177,7 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initCriteria("setPassword", "setConfirmPassword", "setPasswordMessage", "setMatchMessage");
 
-    // Toggle visibilité mot de passe
+    // Toggle visibilité
     function setupToggle(toggleId, inputId) {
         const toggle = document.getElementById(toggleId);
         const input = document.getElementById(inputId);
@@ -192,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupToggle("toggleSetPassword", "setPassword");
     setupToggle("toggleSetConfirm", "setConfirmPassword");
 
-    // Formulaire set-password
+    // --- Formulaire set-password ---
     const form = document.getElementById("setPasswordForm");
     form?.addEventListener("submit", async e => {
         e.preventDefault();
@@ -203,6 +207,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (password !== confirm) return showModal("Les mots de passe ne correspondent pas", "error");
         if (!Object.values(checkPassword(password)).every(Boolean)) return showModal("Mot de passe non conforme", "error");
 
+        showLoader();
         try {
             const res = await fetch(`${API_URL}/set-password`, {
                 method: "POST",
@@ -222,6 +227,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         } catch {
             showModal("Erreur serveur lors de l’activation du compte", "error");
+        } finally {
+            hideLoader();
         }
     });
 });

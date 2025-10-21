@@ -1,5 +1,7 @@
+import { showLoader, hideLoader } from "../assets/js/api.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = window.location.hostname === "development"
+  const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:3000/api/users"
     : "https://bystalindrive.onrender.com/api/users";
 
@@ -49,6 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    showLoader();
+
     try {
       const res = await fetch(`${API_URL}/forgot-password`, {
         method: "POST",
@@ -95,13 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Assembler tout
         receiveContainer.append(h2, imgDiv, p, a);
         container.appendChild(receiveContainer);
-
       } else {
         showMessage(`${data.message || "Erreur serveur"}`);
       }
     } catch (err) {
       showMessage("Erreur serveur, réessayez plus tard.");
       console.error(err);
+    } finally {
+      hideLoader();
     }
   });
 });

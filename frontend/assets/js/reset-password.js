@@ -1,3 +1,5 @@
+import { showLoader, hideLoader } from "../assets/js/api.js";
+
 // URL de base de l'API
 const API_URL = window.location.hostname === "localhost"
     ? "http://localhost:3000/api/users"
@@ -6,10 +8,10 @@ const API_URL = window.location.hostname === "localhost"
 document.addEventListener("DOMContentLoaded", () => {
 
     // --- Sécurité : redirection si déjà connecté ---
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (token) {
+    const tokenStorage = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (tokenStorage) {
         try {
-            const payload = JSON.parse(atob(token.split(".")[1]));
+            const payload = JSON.parse(atob(tokenStorage.split(".")[1]));
             const role = payload.role?.toLowerCase();
             if (role === "admin") return window.location.href = "/pages/admin/dashboard.html";
             if (role === "user" || role === "client") return window.location.href = "/pages/client/espace-client.html";
@@ -42,12 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.appendChild(content);
         document.body.appendChild(modal);
 
-        // 🔒 Bloquer le scroll de l'arrière-plan
-        document.body.style.overflow = "hidden";
-
+        document.body.style.overflow = "hidden"; // bloquer scroll
         modal.style.display = "flex";
 
-        // 🔓 Fonction pour fermer et réactiver le scroll
         const closeModal = () => {
             modal.remove();
             document.body.style.overflow = "auto";
@@ -142,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resetForm) {
         resetForm.addEventListener("submit", async e => {
             e.preventDefault();
+
             const params = new URLSearchParams(window.location.search);
             const token = params.get("token");
             const password = document.getElementById("resetPassword")?.value;
@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = evaluatePassword(password);
             if (!Object.values(result).every(Boolean)) return showModal("Le mot de passe n'est pas conforme", "error");
 
+            showLoader();
             try {
                 const res = await fetch(`${API_URL}/reset-password`, {
                     method: "POST",
@@ -160,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify({ token, newPassword: password })
                 });
                 const data = await res.json();
+
                 if (res.ok) {
                     showModal("Mot de passe réinitialisé avec succès", "success");
                     window.location.href = "/pages/login.html";
@@ -168,6 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } catch {
                 showModal("Erreur serveur lors de la réinitialisation", "error");
+            } finally {
+                hideLoader();
             }
         });
     }
