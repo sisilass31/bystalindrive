@@ -50,8 +50,16 @@ app.use(
   cors({
     origin: FRONT_URL,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+// Prévol automatique
+app.options('*', cors({
+  origin: FRONT_URL,
+  credentials: true,
+}));
 
 // Parse JSON + cookies
 app.use(express.json());
