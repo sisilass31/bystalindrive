@@ -1,12 +1,14 @@
-import { showLoader, hideLoader } from "./api.js";
+import { fetchWithLoader } from "./api.js"; // wrapper fetch avec loader
 
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = window.location.hostname === "localhost"
-    ? "http://localhost:3000/api/users"
-    : "https://bystalindrive.onrender.com/api/users";
+  const API_URL =
+    window.location.hostname === "development"
+      ? "http://localhost:3000/api/users"
+      : "https://bystalindrive.onrender.com/api/users";
 
   // --- Sécurité : si déjà connecté, redirection selon rôle ---
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
   if (token) {
     try {
       const payload = JSON.parse(atob(token.split(".")[1])); // décodage payload JWT
@@ -42,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     messageEl.style.color = color;
   }
 
-  form.addEventListener("submit", async e => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
 
@@ -51,13 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    showLoader();
-
     try {
-      const res = await fetch(`${API_URL}/forgot-password`, {
+      const res = await fetchWithLoader(`${API_URL}/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
@@ -88,7 +88,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const strong = document.createElement("strong");
         strong.textContent = email;
         p.appendChild(strong);
-        p.appendChild(document.createTextNode(" pour obtenir des instructions sur la façon de réinitialiser votre mot de passe."));
+        p.appendChild(
+          document.createTextNode(
+            " pour obtenir des instructions sur la façon de réinitialiser votre mot de passe."
+          )
+        );
 
         // Lien retour
         const a = document.createElement("a");
@@ -105,8 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       showMessage("Erreur serveur, réessayez plus tard.");
       console.error(err);
-    } finally {
-      hideLoader();
     }
   });
 });

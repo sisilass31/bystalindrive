@@ -1,16 +1,16 @@
 // ---------------- LOADER GLOBAL ----------------
-export function showLoader() {
+function showLoader() {
   const loader = document.getElementById('loader');
   if (loader) loader.style.display = 'flex';
 }
 
-export function hideLoader() {
+function hideLoader() {
   const loader = document.getElementById('loader');
   if (loader) loader.style.display = 'none';
 }
 
 // Wrapper pour fetch avec loader automatique
-async function fetchWithLoader(url, options = {}) {
+export async function fetchWithLoader(url, options = {}) {
   showLoader();
   try {
     const res = await fetch(url, options);
