@@ -22,7 +22,7 @@ export async function initAdmin() {
   }
 
   if (payload.role !== "admin") {
-    window.location.href = "/pages/error-404.html";
+    window.location.href = "/404.html";
     return null;
   }
 

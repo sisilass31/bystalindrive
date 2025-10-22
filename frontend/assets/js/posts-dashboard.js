@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!token) return window.location.href = "/pages/login.html";
 
   const payload = JSON.parse(atob(token.split('.')[1]));
-  if (payload.role !== 'admin') return window.location.href = "/pages/error-404.html";
+  if (payload.role !== 'admin') return window.location.href = "/404.html";
 
   console.log("Admin connecté :", payload);
 

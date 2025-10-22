@@ -69,7 +69,7 @@ app.use('/api/posts', postsRoutes);
 // ----------------- GESTION DES 404 -----------------
 app.use((req, res) => {
   res.status(404).sendFile(
-    path.resolve(__dirname, '../frontend/pages/error-404.html')
+    path.resolve(__dirname, '../frontend/404.html')
   );
 });
 
