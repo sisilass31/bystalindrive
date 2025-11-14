@@ -1298,7 +1298,7 @@ select {
   z-index: 1000;
 }
 
-#infoOkBtn {
+#infoOkBtn, #messageModalOk {
   width: 100% !important;
 }
 
