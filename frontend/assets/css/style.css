@@ -1298,6 +1298,10 @@ select {
   z-index: 1000;
 }
 
+#infoOkBtn {
+  width: 100% !important;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
