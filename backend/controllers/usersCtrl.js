@@ -65,7 +65,7 @@ exports.register = async (req, res) => {
       role: role || "client"
     });
 
-    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET, { expiresIn: "24h" });
     const link = `${BASE_URL}/pages/set-password.html?token=${token}`;
 
     try {
@@ -82,7 +82,7 @@ exports.register = async (req, res) => {
             <p>Bonjour <strong>${newUser.firstname} ${newUser.lastname}</strong>,</p>
             <p>Votre compte a été créé. Pour l’activer, définissez votre mot de passe :</p>
             <a href="${link}" style="display:inline-block;padding:10px 20px;background:linear-gradient(90deg,#ef7f09,#e75617);color:#fff;text-decoration:none;border-radius:8px;">Activer mon compte</a>
-            <p style="font-size:12px;color:#555;margin-top:20px">Ce lien est valide 1 heure.</p>
+            <p style="font-size:12px;color:#555;margin-top:20px">Ce lien est valide 24 heures.</p>
           </div>
         </div>`
       );
